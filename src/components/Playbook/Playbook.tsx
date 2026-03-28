@@ -172,7 +172,7 @@ export default function Playbook() {
                   <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#a3a3a3' }}>
                       <ExternalLink size={14} />
-                      <span style={{ fontFamily: "'Fira Code', 'Fira Code', monospace" }}>
+                      <span style={{ fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace" }}>
                         {entry.source}
                       </span>
                     </div>

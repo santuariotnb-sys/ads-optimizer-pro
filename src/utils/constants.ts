@@ -85,6 +85,35 @@ export const COLORS = {
   pink: '#f97316',
 } as const;
 
+export const COLORS_LIGHT = {
+  bg: '#fafafa',
+  bgBase: '#ffffff',
+  surface: '#ffffff',
+  surface2: '#f5f5f5',
+  surface3: '#e5e5e5',
+  surfaceHover: '#ebebeb',
+  border: 'rgba(0, 0, 0, 0.06)',
+  borderHover: 'rgba(0, 0, 0, 0.12)',
+  borderActive: 'rgba(16, 185, 129, 0.3)',
+  text: '#171717',
+  textSecondary: '#525252',
+  textMuted: '#a3a3a3',
+  textDim: '#d4d4d4',
+  accent: '#10b981',
+  accentHover: '#059669',
+  accentDeep: '#047857',
+  accentGlow: 'rgba(16, 185, 129, 0.12)',
+  secondary: '#06b6d4',
+  success: '#22c55e',
+  danger: '#ef4444',
+  warning: '#eab308',
+  info: '#06b6d4',
+  orange: '#f97316',
+  accentLight: '#34d399',
+  purple: '#06b6d4',
+  pink: '#f97316',
+} as const;
+
 export const NAV_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
   { id: 'campaigns', label: 'Campanhas', icon: 'Megaphone' },

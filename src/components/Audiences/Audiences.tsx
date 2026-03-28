@@ -31,7 +31,7 @@ function SaturationGauge({ percent }: { percent: number }) {
         style={{ transform: 'rotate(-90deg)', transformOrigin: '50% 50%', transition: 'stroke-dashoffset 0.6s ease' }}
       />
       <text x={36} y={36} textAnchor="middle" dominantBaseline="central"
-        style={{ fill: color, fontSize: 13, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+        style={{ fill: color, fontSize: 13, fontWeight: 700, fontFamily: "'Satoshi', sans-serif" }}>
         {percent}%
       </text>
     </svg>
@@ -69,7 +69,7 @@ function OverlapBar({ percent }: { percent: number }) {
           transition: 'width 0.4s ease', boxShadow: `0 0 8px ${color}60`,
         }} />
       </div>
-      <span style={{ fontSize: 12, fontWeight: 600, fontFamily: "'Plus Jakarta Sans', sans-serif", color, minWidth: 36 }}>
+      <span style={{ fontSize: 12, fontWeight: 600, fontFamily: "'Satoshi', sans-serif", color, minWidth: 36 }}>
         {percent}%
       </span>
     </div>
@@ -104,7 +104,7 @@ export default function Audiences() {
             <Users size={20} color="#fff" />
           </div>
           <div>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'DM Sans', sans-serif" }}>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'General Sans', sans-serif" }}>
               Audiencias
             </h2>
             <span style={{ fontSize: 13, color: '#a3a3a3' }}>
@@ -166,7 +166,7 @@ export default function Audiences() {
             {/* Card Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', marginBottom: 4, fontFamily: "'DM Sans', sans-serif" }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', marginBottom: 4, fontFamily: "'General Sans', sans-serif" }}>
                   {aud.name}
                 </div>
                 <div style={{ fontSize: 12, color: '#a3a3a3' }}>
@@ -183,20 +183,20 @@ export default function Audiences() {
             }}>
               <div>
                 <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>CPA</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Satoshi', sans-serif" }}>
                   {formatCurrency(aud.cpa)}
                 </div>
               </div>
               <div>
                 <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>ROAS</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Satoshi', sans-serif" }}>
                   {aud.roas.toFixed(1)}x
                 </div>
               </div>
               <div>
                 <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Freq.</div>
                 <div style={{
-                  fontSize: 16, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: 16, fontWeight: 700, fontFamily: "'Satoshi', sans-serif",
                   color: aud.frequency > 2.5 ? '#ef4444' : '#f5f5f5',
                 }}>
                   {aud.frequency.toFixed(1)}

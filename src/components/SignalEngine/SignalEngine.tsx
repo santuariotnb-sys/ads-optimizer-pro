@@ -44,7 +44,7 @@ function StatCards() {
             {c.label}
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontSize: 28, fontWeight: 800, color: c.color, lineHeight: 1, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{c.value}</span>
+            <span style={{ fontSize: 28, fontWeight: 800, color: c.color, lineHeight: 1, fontFamily: "'Satoshi', sans-serif" }}>{c.value}</span>
             <span style={{ fontSize: 12, color: COLORS.textMuted }}>{c.sub}</span>
           </div>
         </div>
@@ -268,7 +268,7 @@ function CAPIPayloadPreview() {
       }}>
         <pre style={{
           margin: 0, padding: isMobile ? 10 : 14, fontSize: isMobile ? 9 : 10, lineHeight: 1.5,
-          fontFamily: '"Fira Code", "Fira Code", monospace',
+          fontFamily: '"JetBrains Mono", "JetBrains Mono", monospace',
           color: COLORS.text, whiteSpace: 'pre-wrap', wordBreak: 'break-all',
           overflowX: 'auto',
         }}>{jsonString}</pre>
@@ -365,7 +365,7 @@ function SyntheticEventsSummary() {
               width: 6, height: 6, borderRadius: '50%', background: COLORS.success,
               boxShadow: `0 0 6px ${COLORS.success}`,
             }} />
-            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Fira Code', 'Fira Code', monospace", flex: 1 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace", flex: 1 }}>
               {rule.event_name}
             </span>
             <span style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{rule.fires_24h}</span>

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import Sidebar from './Sidebar';
@@ -7,17 +8,21 @@ import { Menu } from 'lucide-react';
 const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { sidebarCollapsed, toggleSidebar } = useStore();
+  const { sidebarCollapsed, toggleSidebar, theme } = useStore();
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   return (
     <div
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: '#000000',
-        color: '#f5f5f5',
-        fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        background: theme === 'light' ? '#fafafa' : '#000000',
+        color: theme === 'light' ? '#171717' : '#f5f5f5',
+        fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       <Sidebar />

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import type { Campaign, AdSet, Ad, Creative, Audience, Alert, DashboardMetrics, Period, AppMode, ChatMessage } from '../types/meta';
 
 interface AppState {
+  theme: 'dark' | 'light';
   mode: AppMode;
   accessToken: string | null;
   adAccountId: string | null;
@@ -40,10 +41,12 @@ interface AppState {
   setSelectedCampaign: (id: string | null) => void;
   setCurrentModule: (module: string) => void;
   toggleSidebar: () => void;
+  toggleTheme: () => void;
   setIsLoading: (loading: boolean) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
+  theme: 'dark',
   mode: 'demo',
   accessToken: null,
   adAccountId: null,
@@ -84,5 +87,6 @@ export const useStore = create<AppState>((set) => ({
   setSelectedCampaign: (id) => set({ selectedCampaign: id }),
   setCurrentModule: (module) => set({ currentModule: module }),
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
+  toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
   setIsLoading: (loading) => set({ isLoading: loading }),
 }));

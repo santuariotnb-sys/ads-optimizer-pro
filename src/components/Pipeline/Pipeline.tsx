@@ -352,7 +352,7 @@ export default function Pipeline() {
                           fontWeight: 700,
                           color: stage.color,
                           marginBottom: 2,
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontFamily: "'Satoshi', sans-serif",
                         }}
                       >
                         {m.value}

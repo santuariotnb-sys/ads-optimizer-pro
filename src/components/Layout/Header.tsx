@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
-import { Search, Settings, Wifi, WifiOff } from 'lucide-react';
+import { Search, Settings, Wifi, WifiOff, Sun, Moon } from 'lucide-react';
 import { openMetaLogin } from '../../services/metaAuth';
 import type { Period } from '../../types/meta';
 
@@ -29,7 +29,7 @@ const periods: { value: Period; label: string }[] = [
 ];
 
 export default function Header() {
-  const { currentModule, selectedPeriod, setSelectedPeriod, mode } = useStore();
+  const { currentModule, selectedPeriod, setSelectedPeriod, mode, theme, toggleTheme } = useStore();
   const [hoveredPeriod, setHoveredPeriod] = useState<string | null>(null);
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const isMobile = useIsMobile();
@@ -56,7 +56,7 @@ export default function Header() {
       <h1
         style={{
           fontSize: isMobile ? 16 : 20,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontFamily: "'Satoshi', sans-serif",
           fontWeight: 700,
           color: '#f5f5f5',
           letterSpacing: '-0.02em',
@@ -177,6 +177,32 @@ export default function Header() {
         {/* Divider - hidden on mobile */}
         {!isMobile && (
           <div style={{ width: 1, height: 24, background: 'rgba(255, 255, 255, 0.05)' }} />
+        )}
+
+        {/* Theme toggle */}
+        {!isMobile && (
+          <button
+            onClick={toggleTheme}
+            onMouseEnter={() => setHoveredIcon('theme')}
+            onMouseLeave={() => setHoveredIcon(null)}
+            aria-label={theme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 8,
+              border: '1px solid rgba(255, 255, 255, 0.05)',
+              background: hoveredIcon === 'theme' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(255, 255, 255, 0.02)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: hoveredIcon === 'theme' ? '#10b981' : '#737373',
+              transition: `all 0.2s ${easing}`,
+              outline: 'none',
+            }}
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
         )}
 
         {/* Search icon - hidden on mobile */}

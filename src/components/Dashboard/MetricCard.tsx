@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface MetricCardProps {
@@ -14,19 +15,37 @@ function MiniSparkline({ data, color, width = 80, height = 32 }: { data: number[
   const max = Math.max(...data);
   const range = max - min || 1;
   const points = data.map((v, i) => `${(i / (data.length - 1)) * width},${height - ((v - min) / range) * height}`).join(' ');
+  const lastX = width;
+  const lastY = height - ((data[data.length - 1] - min) / range) * height;
+
   return (
     <svg width={width} height={height} style={{ overflow: 'visible' }}>
       <defs>
         <linearGradient id={`sg-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity={0.3} />
-          <stop offset="100%" stopColor={color} stopOpacity={0} />
+          <stop offset="0%" stopColor={color} stopOpacity={0.45} />
+          <stop offset="100%" stopColor={color} stopOpacity={0.02} />
         </linearGradient>
       </defs>
-      <polyline fill="none" stroke={color} strokeWidth={1.5} points={points} />
+      <polyline fill="none" stroke={color} strokeWidth={1.5} points={points} strokeLinejoin="round" strokeLinecap="round" />
       <polygon fill={`url(#sg-${color.replace('#', '')})`} points={`0,${height} ${points} ${width},${height}`} />
+      {/* Glow dot at end of sparkline */}
+      <circle
+        cx={lastX}
+        cy={lastY}
+        r={3}
+        fill={color}
+        style={{ filter: `drop-shadow(0 0 4px ${color})` }}
+      >
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+      </circle>
     </svg>
   );
 }
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0 },
+};
 
 const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline, invertChange = false }) => {
   const isMobile = useIsMobile();
@@ -34,42 +53,46 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
   const isGood = invertChange ? !isPositiveChange : isPositiveChange;
   const changeColor = isGood ? '#22c55e' : '#ef4444';
   const sparkColor = '#10b981';
-  const arrow = isPositiveChange ? '↑' : '↓';
+  const arrow = isPositiveChange ? '\u2191' : '\u2193';
 
   return (
-    <div
+    <motion.div
+      variants={cardVariants}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{
+        y: -3,
+        transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+      }}
       style={{
-        background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
-        border: '1px solid rgba(255, 255, 255, 0.06)',
+        background: 'rgba(10, 10, 10, 0.8)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        borderTop: '1px solid rgba(255,255,255,0.1)',
         borderRadius: 20,
-        boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
-        padding: isMobile ? 12 : 20,
+        padding: isMobile ? 14 : 22,
+        boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 1px 0 0 rgba(255,255,255,0.06) inset, 0 -1px 0 0 rgba(0,0,0,0.4) inset, 0 2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25), 0 24px 48px rgba(0,0,0,0.15)',
+        cursor: 'default',
+        position: 'relative',
+        overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
-        position: 'relative',
-        overflow: 'hidden',
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-        cursor: 'default',
-        animation: 'fadeInUp 0.5s ease-out both',
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget;
-        el.style.border = '1px solid rgba(255, 255, 255, 0.14)';
-        el.style.boxShadow = '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25), 0 0 30px rgba(16,185,129,0.06)';
-        el.style.transform = 'translateY(-1px)';
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget;
-        el.style.border = '1px solid rgba(255, 255, 255, 0.06)';
-        el.style.boxShadow = '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)';
-        el.style.transform = 'translateY(0)';
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      {/* Shimmer light reflection */}
+      <div style={{
+        position: 'absolute',
+        top: 0, left: 0, right: 0, height: '50%',
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)',
+        borderRadius: '20px 20px 0 0',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
         <span
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Satoshi', 'General Sans', sans-serif",
             fontSize: 11,
             fontWeight: 600,
             textTransform: 'uppercase',
@@ -97,12 +120,12 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
         </div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
         <span
           style={{
-            fontSize: isMobile ? 22 : 28,
-            fontWeight: 700,
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: isMobile ? 24 : 32,
+            fontWeight: 800,
+            fontFamily: "'Satoshi', 'General Sans', sans-serif",
             color: '#f5f5f5',
             lineHeight: 1,
           }}
@@ -111,7 +134,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
         </span>
         <MiniSparkline data={sparkline} color={sparkColor} width={isMobile ? 48 : 80} />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

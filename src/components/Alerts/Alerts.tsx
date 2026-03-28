@@ -69,7 +69,7 @@ export default function Alerts() {
           <Bell size={20} color="#fff" />
         </div>
         <div>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'DM Sans', sans-serif" }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'General Sans', sans-serif" }}>
             Central de Alertas
           </h2>
           <span style={{ fontSize: 13, color: '#a3a3a3' }}>
@@ -91,7 +91,7 @@ export default function Alerts() {
               onClick={() => setActiveTab(tab.key)}
               style={{
                 padding: '8px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', outline: 'none',
-                fontSize: 13, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13, fontWeight: 600, fontFamily: "'General Sans', sans-serif",
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
                 background: isActive ? `${severityColor}20` : 'rgba(255,255,255,0.04)',
                 color: isActive ? severityColor : '#a3a3a3',
@@ -141,14 +141,14 @@ export default function Alerts() {
               {/* Content */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', fontFamily: "'General Sans', sans-serif" }}>
                     {alert.title}
                   </span>
                   {alert.campaign_id && (
                     <span style={{
                       fontSize: 10, padding: '2px 8px', borderRadius: 8,
                       background: 'rgba(16,185,129,0.15)', color: '#34d399',
-                      fontFamily: "'Fira Code', monospace",
+                      fontFamily: "'JetBrains Mono', monospace",
                     }}>
                       {alert.campaign_id}
                     </span>

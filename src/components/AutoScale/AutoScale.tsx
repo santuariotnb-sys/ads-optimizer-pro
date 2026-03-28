@@ -96,7 +96,7 @@ export default function AutoScale() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>{stat.icon}</div>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{stat.value}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Satoshi', sans-serif" }}>{stat.value}</div>
                 <div style={{ fontSize: 13, color: '#a3a3a3' }}>{stat.label}</div>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function AutoScale() {
                   </button>
                 </div>
                 <div style={{
-                  fontFamily: "'Fira Code', 'Fira Code', monospace",
+                  fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace",
                   fontSize: 12, color: '#a3a3a3', marginBottom: 12,
                   padding: '6px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: 6,
                 }}>{rule.condition}</div>
@@ -212,7 +212,7 @@ export default function AutoScale() {
                 boxShadow: `0 0 8px ${logColors[entry.type]}60`,
               }} />
               <span style={{
-                fontSize: 12, fontFamily: "'Fira Code', 'Fira Code', monospace",
+                fontSize: 12, fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace",
                 color: '#a3a3a3', minWidth: 120, flexShrink: 0,
               }}>{entry.time}</span>
               <span style={{ fontSize: 14, color: logColors[entry.type] }}>{entry.action}</span>

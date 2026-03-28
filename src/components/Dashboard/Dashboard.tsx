@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import MetricCard from './MetricCard';
 import AccountScore from './AccountScore';
 import { mockMetricCards, mockCampaigns, mockDashboardMetrics } from '../../data/mockData';
@@ -20,31 +21,33 @@ const Dashboard: React.FC = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {/* Global animation styles */}
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
-
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      style={{ display: 'flex', flexDirection: 'column', gap: 24 }}
+    >
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+      >
         <div>
           <h1
             style={{
-              fontSize: isMobile ? 20 : 24,
+              fontSize: isMobile ? 22 : 28,
               fontWeight: 700,
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "'Satoshi', 'General Sans', sans-serif",
               color: '#f5f5f5',
               margin: 0,
             }}
           >
             Dashboard
           </h1>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#a3a3a3', margin: '4px 0 0' }}>
-            Visão geral da performance das campanhas
+          <p style={{ fontFamily: "'General Sans', 'DM Sans', sans-serif", fontSize: 13, color: '#a3a3a3', margin: '4px 0 0' }}>
+            Visao geral da performance das campanhas
           </p>
         </div>
         <div
@@ -77,43 +80,63 @@ const Dashboard: React.FC = () => {
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Metric Cards Grid + Account Score */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 220px', gap: 24, alignItems: 'start' }}>
-        <div
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.08 } },
+          }}
           style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
             gap: isMobile ? 10 : 16,
           }}
         >
-          {mockMetricCards.map((card, i) => (
-            <div key={card.label} style={{ animationDelay: `${i * 60}ms` }}>
-              <MetricCard
-                label={card.label}
-                value={card.value}
-                change={card.change}
-                sparkline={card.sparkline}
-                invertChange={INVERT_LABELS.includes(card.label)}
-              />
-            </div>
+          {mockMetricCards.map((card) => (
+            <MetricCard
+              key={card.label}
+              label={card.label}
+              value={card.value}
+              change={card.change}
+              sparkline={card.sparkline}
+              invertChange={INVERT_LABELS.includes(card.label)}
+            />
           ))}
-        </div>
+        </motion.div>
         <AccountScore score={mockDashboardMetrics.accountScore} />
       </div>
 
       {/* Campaigns Table */}
-      <div
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
         style={{
-          background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          background: 'rgba(10, 10, 10, 0.8)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          borderTop: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 20,
-          boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+          boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 1px 0 0 rgba(255,255,255,0.06) inset, 0 -1px 0 0 rgba(0,0,0,0.4) inset, 0 2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25), 0 24px 48px rgba(0,0,0,0.15)',
           overflow: 'hidden',
-          animation: 'fadeInUp 0.7s ease-out both',
+          position: 'relative',
         }}
       >
+        {/* Shimmer overlay */}
+        <div style={{
+          position: 'absolute',
+          top: 0, left: 0, right: 0, height: '40%',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%)',
+          borderRadius: '20px 20px 0 0',
+          pointerEvents: 'none',
+        }} />
+
         <div
           style={{
             padding: '16px 20px',
@@ -121,20 +144,21 @@ const Dashboard: React.FC = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
+            position: 'relative',
           }}
         >
           <h2
             style={{
               fontSize: 16,
               fontWeight: 700,
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "'Satoshi', 'General Sans', sans-serif",
               color: '#f5f5f5',
               margin: 0,
             }}
           >
             Campanhas
           </h2>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#a3a3a3' }}>
+          <span style={{ fontFamily: "'General Sans', 'DM Sans', sans-serif", fontSize: 12, color: '#a3a3a3' }}>
             {mockCampaigns.length} campanhas
           </span>
         </div>
@@ -143,8 +167,8 @@ const Dashboard: React.FC = () => {
           <table role="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr role="row">
-                {['Nome', 'Status', 'Gasto', 'ROAS', 'CPA', 'CTR', 'Frequência', 'Score']
-                  .filter((h) => !(isMobile && ['Frequência', 'CPM', 'CTR'].includes(h)))
+                {['Nome', 'Status', 'Gasto', 'ROAS', 'CPA', 'CTR', 'Frequencia', 'Score']
+                  .filter((h) => !(isMobile && ['Frequencia', 'CPM', 'CTR'].includes(h)))
                   .map((h) => (
                   <th
                     key={h}
@@ -156,9 +180,10 @@ const Dashboard: React.FC = () => {
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
                       color: '#525252',
-                      background: '#080808',
+                      background: 'rgba(8, 8, 8, 0.8)',
                       textAlign: h === 'Nome' ? 'left' : 'right',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                      fontFamily: "'Satoshi', 'General Sans', sans-serif",
                     }}
                   >
                     {h}
@@ -175,14 +200,17 @@ const Dashboard: React.FC = () => {
                     key={campaign.id}
                     role="row"
                     style={{
-                      transition: 'background 0.2s',
+                      transition: 'background 0.2s, border-color 0.2s',
                       cursor: 'pointer',
+                      borderLeft: '3px solid transparent',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = 'rgba(16, 185, 129, 0.04)';
+                      e.currentTarget.style.borderLeft = '3px solid #10b981';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.borderLeft = '3px solid transparent';
                     }}
                   >
                     <td
@@ -197,6 +225,7 @@ const Dashboard: React.FC = () => {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
+                        fontFamily: "'General Sans', 'DM Sans', sans-serif",
                       }}
                     >
                       {campaign.name}
@@ -262,14 +291,16 @@ const Dashboard: React.FC = () => {
                           display: 'inline-flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          width: 36,
-                          height: 24,
-                          borderRadius: 6,
+                          minWidth: 40,
+                          height: 26,
+                          borderRadius: 20,
                           fontSize: 12,
                           fontWeight: 700,
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
+                          fontFamily: "'Satoshi', 'General Sans', sans-serif",
                           background: `${scoreColor}18`,
                           color: scoreColor,
+                          boxShadow: `0 0 8px ${scoreColor}20 inset`,
+                          padding: '0 10px',
                         }}
                       >
                         {campaign.opportunity_score}
@@ -282,12 +313,12 @@ const Dashboard: React.FC = () => {
           </table>
           {mockCampaigns.length === 0 && (
             <div style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#a3a3a3' }}>Nenhuma campanha encontrada</div>
+              <div style={{ fontFamily: "'General Sans', 'DM Sans', sans-serif", fontSize: 14, color: '#a3a3a3' }}>Nenhuma campanha encontrada</div>
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -298,7 +329,7 @@ const cellStyle: React.CSSProperties = {
   color: '#d4d4d4',
   textAlign: 'right',
   borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
-  fontFamily: "'Fira Code', monospace",
+  fontFamily: "'JetBrains Mono', monospace",
 };
 
 const mobileCellStyle: React.CSSProperties = {
@@ -308,7 +339,7 @@ const mobileCellStyle: React.CSSProperties = {
   color: '#d4d4d4',
   textAlign: 'right',
   borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
-  fontFamily: "'Fira Code', monospace",
+  fontFamily: "'JetBrains Mono', monospace",
 };
 
 export default Dashboard;

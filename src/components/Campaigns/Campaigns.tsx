@@ -58,7 +58,7 @@ const Campaigns: React.FC = () => {
             style={{
               fontSize: isMobile ? 20 : 24,
               fontWeight: 700,
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "'Satoshi', sans-serif",
               color: '#f1f5f9',
               margin: 0,
             }}
@@ -220,7 +220,7 @@ const Campaigns: React.FC = () => {
                       style={{
                         fontSize: 14,
                         fontWeight: 700,
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontFamily: "'Satoshi', sans-serif",
                         color: scoreColor,
                       }}
                     >
@@ -261,7 +261,7 @@ const Campaigns: React.FC = () => {
                       style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontFamily: "'Satoshi', sans-serif",
                         color: m.color,
                       }}
                     >
@@ -473,7 +473,7 @@ const Campaigns: React.FC = () => {
                                 style={{
                                   fontSize: 12,
                                   fontWeight: 600,
-                                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                                  fontFamily: "'Satoshi', sans-serif",
                                   color: '#94a3b8',
                                 }}
                               >

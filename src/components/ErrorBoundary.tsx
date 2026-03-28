@@ -15,7 +15,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          minHeight: '100vh', background: '#0a0a0a', color: '#f5f5f5', fontFamily: "'DM Sans', sans-serif",
+          minHeight: '100vh', background: '#0a0a0a', color: '#f5f5f5', fontFamily: "'General Sans', sans-serif",
           padding: 32, textAlign: 'center',
         }}>
           <div style={{
@@ -26,7 +26,7 @@ export default class ErrorBoundary extends Component<Props, State> {
             boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠</div>
-            <h1 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <h1 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, fontFamily: "'Satoshi', sans-serif" }}>
               Algo deu errado
             </h1>
             <p style={{ color: '#a3a3a3', fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>

@@ -110,7 +110,7 @@ export default function Sidebar() {
           <span
             style={{
               fontSize: 16,
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "'Satoshi', sans-serif",
               fontWeight: 700,
               color: '#f5f5f5',
               whiteSpace: 'nowrap',
@@ -209,7 +209,7 @@ export default function Sidebar() {
                 <span
                   style={{
                     fontSize: 14,
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "'General Sans', sans-serif",
                     fontWeight: isActive ? 600 : 500,
                     color: isActive ? '#f5f5f5' : isHovered ? '#a3a3a3' : '#737373',
                     whiteSpace: 'nowrap',

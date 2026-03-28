@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { getScoreColor, getScoreLabel } from '../../utils/formatters';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
@@ -19,21 +20,37 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
   const dashoffset = circumference - progress;
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
       style={{
-        background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
-        border: '1px solid rgba(255, 255, 255, 0.06)',
+        background: 'rgba(10, 10, 10, 0.8)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        borderTop: '1px solid rgba(255,255,255,0.1)',
         borderRadius: 20,
-        boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+        boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 1px 0 0 rgba(255,255,255,0.06) inset, 0 -1px 0 0 rgba(0,0,0,0.4) inset, 0 2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25), 0 24px 48px rgba(0,0,0,0.15)',
         padding: 32,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 12,
-        animation: 'fadeInUp 0.6s ease-out both',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
+      {/* Shimmer light reflection */}
+      <div style={{
+        position: 'absolute',
+        top: 0, left: 0, right: 0, height: '50%',
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)',
+        borderRadius: '20px 20px 0 0',
+        pointerEvents: 'none',
+      }} />
+
       <svg width={svgSize} height={svgSize} style={{ transform: 'rotate(-90deg)' }}>
         <defs>
           <linearGradient id="score-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -42,8 +59,8 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
             <stop offset="100%" stopColor={color} stopOpacity={1} />
           </linearGradient>
           <filter id="score-glow">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur" />
-            <feFlood floodColor="#10b981" floodOpacity="0.3" result="amberGlow" />
+            <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+            <feFlood floodColor="#10b981" floodOpacity="0.35" result="amberGlow" />
             <feComposite in="amberGlow" in2="coloredBlur" operator="in" result="tintedGlow" />
             <feMerge>
               <feMergeNode in="tintedGlow" />
@@ -51,6 +68,15 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
             </feMerge>
           </filter>
         </defs>
+        {/* Outer background ring (decorative) */}
+        <circle
+          cx={center}
+          cy={center}
+          r={radius + 6}
+          fill="none"
+          stroke="rgba(255, 255, 255, 0.02)"
+          strokeWidth={1}
+        />
         {/* Background track */}
         <circle
           cx={center}
@@ -77,7 +103,7 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
             animation: 'scoreRingIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) both',
           }}
         />
-        {/* Score text — rotated back to normal */}
+        {/* Score text -- rotated back to normal */}
         <text
           x={center}
           y={center}
@@ -86,9 +112,9 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
           style={{
             transform: 'rotate(90deg)',
             transformOrigin: `${center}px ${center}px`,
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: isMobile ? 36 : 48,
-            fontWeight: 700,
+            fontFamily: "'Satoshi', 'General Sans', sans-serif",
+            fontSize: isMobile ? 40 : 56,
+            fontWeight: 900,
             fill: '#f5f5f5',
           }}
         >
@@ -99,7 +125,7 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
       <div style={{ textAlign: 'center' }}>
         <div
           style={{
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Satoshi', 'General Sans', sans-serif",
             fontSize: 13,
             fontWeight: 600,
             textTransform: 'uppercase',
@@ -133,7 +159,7 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
           to { stroke-dashoffset: ${dashoffset}; }
         }
       `}</style>
-    </div>
+    </motion.div>
   );
 };
 

@@ -93,7 +93,7 @@ function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 11, fontWeight: 700, color, fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontSize: 11, fontWeight: 700, color, fontFamily: "'Satoshi', sans-serif",
       }}>
         {score}
       </div>
@@ -219,7 +219,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
               textAlign: 'center',
             }}>
               <div style={{ fontSize: 9, color: COLORS.textMuted, marginBottom: 2 }}>{m.label}</div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{m.value}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Satoshi', sans-serif" }}>{m.value}</div>
             </div>
           ))}
         </div>
