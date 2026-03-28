@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { EMQAnalysis } from '../../types/capi';
 import { Activity, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface Props {
   analysis: EMQAnalysis;
@@ -9,11 +10,12 @@ interface Props {
 
 export default function EMQMonitorAdvanced({ analysis }: Props) {
   const [hoveredParam, setHoveredParam] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const score = analysis.overall_score;
   const gaugeColor = score >= 9 ? COLORS.success : score >= 8 ? '#4ade80' : score >= 6 ? COLORS.warning : COLORS.danger;
 
-  const radius = 62;
+  const radius = isMobile ? 50 : 62;
   const circumference = 2 * Math.PI * radius;
   const scorePercent = Math.min(score / 10, 1);
   const offset = circumference - scorePercent * circumference;
@@ -33,7 +35,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
   return (
     <div style={{
       background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-      borderRadius: 16, padding: 24, height: '100%',
+      borderRadius: 16, padding: isMobile ? 16 : 24, height: '100%',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -51,8 +53,8 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
       </div>
 
       {/* Circular Gauge */}
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20, position: 'relative' }}>
-        <svg width={152} height={152} style={{ transform: 'rotate(-90deg)' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: isMobile ? 14 : 20, position: 'relative' }}>
+        <svg width={isMobile ? 120 : 152} height={isMobile ? 120 : 152} style={{ transform: 'rotate(-90deg)' }}>
           <defs>
             <filter id="emq-adv-glow">
               <feGaussianBlur stdDeviation="4" result="blur" />
@@ -63,14 +65,14 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
               <stop offset="100%" stopColor={gaugeColor} />
             </linearGradient>
           </defs>
-          <circle cx={76} cy={76} r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={10} />
-          <circle cx={76} cy={76} r={radius} fill="none"
-            stroke="url(#emq-gradient)" strokeWidth={10}
+          <circle cx={isMobile ? 60 : 76} cy={isMobile ? 60 : 76} r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={isMobile ? 8 : 10} />
+          <circle cx={isMobile ? 60 : 76} cy={isMobile ? 60 : 76} r={radius} fill="none"
+            stroke="url(#emq-gradient)" strokeWidth={isMobile ? 8 : 10}
             strokeDasharray={circumference} strokeDashoffset={offset}
             strokeLinecap="round"
             style={{ transition: 'stroke-dashoffset 0.8s ease' }}
           />
-          <circle cx={76} cy={76} r={radius} fill="none"
+          <circle cx={isMobile ? 60 : 76} cy={isMobile ? 60 : 76} r={radius} fill="none"
             stroke={gaugeColor} strokeWidth={3} opacity={0.25}
             strokeDasharray={circumference} strokeDashoffset={offset}
             strokeLinecap="round" filter="url(#emq-adv-glow)" />
@@ -79,7 +81,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         }}>
-          <span style={{ fontSize: 34, fontWeight: 800, color: gaugeColor, lineHeight: 1,
+          <span style={{ fontSize: isMobile ? 26 : 34, fontWeight: 800, color: gaugeColor, lineHeight: 1,
             textShadow: `0 0 20px ${gaugeColor}44` }}>
             {score.toFixed(1)}
           </span>

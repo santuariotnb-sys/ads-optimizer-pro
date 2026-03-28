@@ -2,12 +2,14 @@ import { useState } from 'react';
 import type { CAPIEventLog } from '../../types/capi';
 import { FileText, CheckCircle, XCircle, RefreshCw, Zap } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface Props {
   logs: CAPIEventLog[];
 }
 
 export default function EventLogPanel({ logs }: Props) {
+  const isMobile = useIsMobile();
   const [filter, setFilter] = useState<'all' | 'synthetic' | 'failed'>('all');
 
   const filtered = logs.filter(log => {
@@ -41,16 +43,17 @@ export default function EventLogPanel({ logs }: Props) {
   const filterBtnStyle = (active: boolean): React.CSSProperties => ({
     background: active ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
     border: `1px solid ${active ? 'rgba(99, 102, 241, 0.3)' : COLORS.border}`,
-    borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 500,
+    borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
     color: active ? COLORS.accent : COLORS.textMuted, cursor: 'pointer',
+    minHeight: isMobile ? 36 : undefined,
   });
 
   return (
     <div style={{
       background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-      borderRadius: 16, padding: 24,
+      borderRadius: 16, padding: isMobile ? 14 : 24,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', marginBottom: 16, flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 10 : 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <FileText size={18} color={COLORS.accent} />
           <span style={{ color: COLORS.text, fontSize: 15, fontWeight: 600 }}>Event Log</span>
@@ -59,7 +62,7 @@ export default function EventLogPanel({ logs }: Props) {
             fontSize: 11, fontWeight: 600, color: COLORS.accent,
           }}>{filtered.length}</span>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div style={{ display: 'flex', gap: 6, overflowX: 'auto', WebkitOverflowScrolling: 'touch' as never }}>
           <button onClick={() => setFilter('all')} style={filterBtnStyle(filter === 'all')}>Todos</button>
           <button onClick={() => setFilter('synthetic')} style={filterBtnStyle(filter === 'synthetic')}>Sintéticos</button>
           <button onClick={() => setFilter('failed')} style={filterBtnStyle(filter === 'failed')}>Falhas</button>
@@ -69,7 +72,8 @@ export default function EventLogPanel({ logs }: Props) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
         {filtered.map(log => (
           <div key={log.id} style={{
-            display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
+            display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 8 : 10, padding: isMobile ? '10px 10px' : '10px 14px',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
             background: log.status === 'failed' ? 'rgba(248, 113, 113, 0.04)' : 'rgba(12, 12, 20, 0.4)',
             border: `1px solid ${log.status === 'failed' ? 'rgba(248, 113, 113, 0.12)' : COLORS.border}`,
             borderRadius: 10,
@@ -89,7 +93,7 @@ export default function EventLogPanel({ logs }: Props) {
               </div>
             </div>
 
-            {log.value !== undefined && (
+            {!isMobile && log.value !== undefined && (
               <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.success, fontFamily: 'monospace' }}>
                 R$ {log.value.toFixed(2)}
               </span>
@@ -106,12 +110,14 @@ export default function EventLogPanel({ logs }: Props) {
               </span>
             </div>
 
-            <span style={{
-              fontSize: 10, fontWeight: 500, color: statusColor(log.status),
-              minWidth: 36, textAlign: 'right',
-            }}>
-              {log.response_code || '—'}
-            </span>
+            {!isMobile && (
+              <span style={{
+                fontSize: 10, fontWeight: 500, color: statusColor(log.status),
+                minWidth: 36, textAlign: 'right',
+              }}>
+                {log.response_code || '—'}
+              </span>
+            )}
           </div>
         ))}
       </div>

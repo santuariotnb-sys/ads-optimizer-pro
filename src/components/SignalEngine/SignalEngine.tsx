@@ -3,7 +3,7 @@ import { SIGNAL_LEVELS, COLORS } from '../../utils/constants';
 import { mockCAPIState, mockCAPIEvent, mockFunnelConfig } from '../../data/capiMockData';
 import {
   Radio, Shield, Zap, Brain, Activity, ChevronRight, Copy, Check,
-  Settings, Sparkles,
+  Settings, Sparkles, Send,
 } from 'lucide-react';
 import EMQMonitorAdvanced from './EMQMonitorAdvanced';
 import EventLogPanel from './EventLogPanel';
@@ -53,10 +53,11 @@ function StatCards() {
 
 // ── Signal Level Ladder (compact) ──
 function SignalLadder() {
+  const isMobile = useIsMobile();
   return (
     <div style={{
       background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-      borderRadius: 16, padding: 24, position: 'relative', overflow: 'hidden',
+      borderRadius: 16, padding: isMobile ? 16 : 24, position: 'relative', overflow: 'hidden',
     }}>
       <div style={{
         position: 'absolute', top: '50%', left: '50%', width: 200, height: 200,
@@ -143,6 +144,7 @@ function SignalLadder() {
 function CAPIPayloadPreview() {
   const isMobile = useIsMobile();
   const [copied, setCopied] = useState(false);
+  const [sendStatus, setSendStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
   const jsonString = JSON.stringify(mockCAPIEvent, null, 2);
 
   const handleCopy = () => {
@@ -150,6 +152,15 @@ function CAPIPayloadPreview() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  const handleSendEvent = () => {
+    setSendStatus('sending');
+    // Demo mode: simulate sending after 500ms
+    setTimeout(() => {
+      setSendStatus('sent');
+      setTimeout(() => setSendStatus('idle'), 3000);
+    }, 500);
   };
 
   const ud = mockCAPIEvent.user_data;
@@ -189,16 +200,31 @@ function CAPIPayloadPreview() {
           <Shield size={16} color={COLORS.accent} />
           <span style={{ color: COLORS.text, fontSize: 14, fontWeight: 600 }}>CAPI Payload</span>
         </div>
-        <button onClick={handleCopy} style={{
-          background: copied ? 'rgba(74, 222, 128, 0.15)' : 'rgba(99, 102, 241, 0.15)',
-          border: `1px solid ${copied ? 'rgba(74,222,128,0.3)' : 'rgba(99,102,241,0.3)'}`,
-          borderRadius: 6, padding: '4px 10px', color: copied ? COLORS.success : COLORS.accent,
-          fontSize: 11, fontWeight: 500, cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 4,
-        }}>
-          {copied ? <Check size={12} /> : <Copy size={12} />}
-          {copied ? 'Copiado!' : 'JSON'}
-        </button>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button onClick={handleSendEvent} disabled={sendStatus === 'sending'} style={{
+            background: sendStatus === 'sent' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(99, 102, 241, 0.15)',
+            border: `1px solid ${sendStatus === 'sent' ? 'rgba(74,222,128,0.3)' : 'rgba(99,102,241,0.3)'}`,
+            borderRadius: 6, padding: '4px 10px',
+            color: sendStatus === 'sent' ? COLORS.success : COLORS.accent,
+            fontSize: 11, fontWeight: 500, cursor: sendStatus === 'sending' ? 'wait' : 'pointer',
+            display: 'flex', alignItems: 'center', gap: 4,
+            opacity: sendStatus === 'sending' ? 0.6 : 1,
+            transition: 'all 0.2s ease',
+          }}>
+            {sendStatus === 'sent' ? <Check size={12} /> : <Send size={12} />}
+            {sendStatus === 'idle' ? 'Enviar Evento' : sendStatus === 'sending' ? 'Enviando...' : 'Evento enviado com sucesso!'}
+          </button>
+          <button onClick={handleCopy} style={{
+            background: copied ? 'rgba(74, 222, 128, 0.15)' : 'rgba(99, 102, 241, 0.15)',
+            border: `1px solid ${copied ? 'rgba(74,222,128,0.3)' : 'rgba(99,102,241,0.3)'}`,
+            borderRadius: 6, padding: '4px 10px', color: copied ? COLORS.success : COLORS.accent,
+            fontSize: 11, fontWeight: 500, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 4,
+          }}>
+            {copied ? <Check size={12} /> : <Copy size={12} />}
+            {copied ? 'Copiado!' : 'JSON'}
+          </button>
+        </div>
       </div>
 
       <div style={{ marginBottom: 10 }}>
@@ -300,12 +326,13 @@ function FunnelFlow() {
 
 // ── Synthetic Events Summary ──
 function SyntheticEventsSummary() {
+  const isMobile = useIsMobile();
   const rules = mockCAPIState.syntheticRules.filter(r => r.enabled && r.fires_24h > 0);
 
   return (
     <div style={{
       background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-      borderRadius: 16, padding: 24,
+      borderRadius: 16, padding: isMobile ? 16 : 24,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <Zap size={18} color={COLORS.warning} />

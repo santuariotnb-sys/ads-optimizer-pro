@@ -138,7 +138,7 @@ export default function CampaignCreator() {
   });
 
   const renderStepIndicator = () => (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: isMobile ? 24 : 40 }}>
+    <div role="progressbar" aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={stepLabels.length} aria-label={`Etapa ${step + 1} de ${stepLabels.length}: ${stepLabels[step]}`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: isMobile ? 24 : 40 }}>
       {stepLabels.map((label, i) => {
         const isCompleted = i < step;
         const isActive = i === step;
@@ -188,6 +188,7 @@ export default function CampaignCreator() {
       <div>
         <label style={labelStyle}>Nome da Campanha</label>
         <input
+          aria-label="Nome da Campanha"
           style={getInputStyle('campaignName')}
           placeholder="Ex: ASC — Protocolo Detox — Março"
           value={form.campaignName}
@@ -199,6 +200,7 @@ export default function CampaignCreator() {
       <div>
         <label style={labelStyle}>Objetivo</label>
         <select
+          aria-label="Objetivo"
           style={getSelectStyle('objective')}
           value={form.objective}
           onChange={e => updateForm('objective', e.target.value)}
@@ -215,6 +217,7 @@ export default function CampaignCreator() {
       <div>
         <label style={labelStyle}>Estratégia de Lance</label>
         <select
+          aria-label="Estratégia de Lance"
           style={getSelectStyle('bidStrategy')}
           value={form.bidStrategy}
           onChange={e => updateForm('bidStrategy', e.target.value)}
@@ -230,6 +233,7 @@ export default function CampaignCreator() {
         <label style={labelStyle}>Budget Diário (R$)</label>
         <input
           type="number"
+          aria-label="Budget Diário"
           style={getInputStyle('dailyBudget')}
           placeholder="Ex: 500"
           value={form.dailyBudget}
@@ -292,6 +296,7 @@ export default function CampaignCreator() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <input
+            aria-label="Adicionar país"
             style={{ ...getInputStyle('newCountry'), flex: 1 }}
             placeholder="Adicionar país..."
             value={form.newCountry}
@@ -312,13 +317,13 @@ export default function CampaignCreator() {
       <div style={{ display: 'flex', gap: 16 }}>
         <div style={{ flex: 1 }}>
           <label style={labelStyle}>Idade Mínima</label>
-          <input type="number" min={18} max={65} style={getInputStyle('ageMin')} value={form.ageMin}
+          <input type="number" min={18} max={65} aria-label="Idade Mínima" style={getInputStyle('ageMin')} value={form.ageMin}
             onChange={e => updateForm('ageMin', Number(e.target.value))}
             onFocus={() => setFocusedField('ageMin')} onBlur={() => setFocusedField(null)} />
         </div>
         <div style={{ flex: 1 }}>
           <label style={labelStyle}>Idade Máxima</label>
-          <input type="number" min={18} max={65} style={getInputStyle('ageMax')} value={form.ageMax}
+          <input type="number" min={18} max={65} aria-label="Idade Máxima" style={getInputStyle('ageMax')} value={form.ageMax}
             onChange={e => updateForm('ageMax', Number(e.target.value))}
             onFocus={() => setFocusedField('ageMax')} onBlur={() => setFocusedField(null)} />
         </div>
@@ -360,7 +365,7 @@ export default function CampaignCreator() {
       {/* Optimization Goal */}
       <div>
         <label style={labelStyle}>Meta de Otimização</label>
-        <select style={getSelectStyle('optimizationGoal')} value={form.optimizationGoal}
+        <select aria-label="Meta de Otimização" style={getSelectStyle('optimizationGoal')} value={form.optimizationGoal}
           onChange={e => updateForm('optimizationGoal', e.target.value)}
           onFocus={() => setFocusedField('optimizationGoal')} onBlur={() => setFocusedField(null)}>
           <option value="OFFSITE_CONVERSIONS">Conversões Externas (OFFSITE_CONVERSIONS)</option>
@@ -515,6 +520,7 @@ export default function CampaignCreator() {
       <div>
         <label style={labelStyle}>Nome do Anúncio</label>
         <input
+          aria-label="Nome do Anúncio"
           style={getInputStyle('adName')}
           placeholder="Ex: Static Antes/Depois — v1"
           value={form.adName}

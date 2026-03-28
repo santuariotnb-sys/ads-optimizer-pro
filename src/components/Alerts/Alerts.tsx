@@ -121,6 +121,7 @@ export default function Alerts() {
           return (
             <div
               key={alert.id}
+              role={alert.severity === 'critical' || alert.severity === 'warning' ? 'alert' : undefined}
               style={{
                 ...glassCard,
                 padding: isMobile ? 12 : 16,
@@ -166,6 +167,7 @@ export default function Alerts() {
               {!alert.dismissed && (
                 <button
                   onClick={() => handleDismiss(alert.id)}
+                  aria-label="Dispensar alerta"
                   style={{
                     background: 'rgba(255,255,255,0.04)', border: 'none', cursor: 'pointer',
                     borderRadius: 8, padding: 6, flexShrink: 0,

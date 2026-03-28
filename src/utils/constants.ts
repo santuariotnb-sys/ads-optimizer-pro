@@ -1,3 +1,7 @@
+export const META_APP_ID = import.meta.env.VITE_META_APP_ID || '';
+export const META_REDIRECT_URI = import.meta.env.VITE_META_REDIRECT_URI || 'http://localhost:5173/auth/callback';
+export const ANTHROPIC_API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || '';
+
 export const API_VERSION = 'v21.0';
 export const GRAPH_API_BASE = 'https://graph.facebook.com';
 export const RATE_LIMIT_PER_HOUR = 200;

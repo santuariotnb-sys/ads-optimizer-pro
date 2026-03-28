@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ValueRule } from '../../types/capi';
 import { TrendingUp, Plus } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface Props {
   rules: ValueRule[];
@@ -10,6 +11,7 @@ interface Props {
 
 export default function ValueRulesPanel({ rules, onToggle }: Props) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const multiplierColor = (m: number) => {
     if (m > 1) return COLORS.success;
@@ -35,24 +37,24 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
   return (
     <div style={{
       background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-      borderRadius: 16, padding: 24,
+      borderRadius: 16, padding: isMobile ? 14 : 24,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <div style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'space-between', marginBottom: 16, flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 10 : 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <TrendingUp size={18} color={COLORS.purple} />
-          <span style={{ color: COLORS.text, fontSize: 15, fontWeight: 600 }}>Value Rules</span>
-          <span style={{
+          <span style={{ color: COLORS.text, fontSize: isMobile ? 14 : 15, fontWeight: 600 }}>Value Rules</span>
+          {!isMobile && <span style={{
             background: 'rgba(167, 139, 250, 0.12)', borderRadius: 6, padding: '2px 8px',
             fontSize: 10, fontWeight: 600, color: COLORS.purple,
           }}>
             +46% ROAS case study
-          </span>
+          </span>}
         </div>
         <button style={{
           display: 'flex', alignItems: 'center', gap: 4,
           background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
-          borderRadius: 8, padding: '5px 10px', fontSize: 11, color: COLORS.textMuted,
-          cursor: 'pointer',
+          borderRadius: 8, padding: isMobile ? '10px 14px' : '5px 10px', fontSize: isMobile ? 12 : 11, color: COLORS.textMuted,
+          cursor: 'pointer', minHeight: isMobile ? 40 : undefined,
         }}>
           <Plus size={12} /> Nova Regra
         </button>
@@ -66,8 +68,9 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
               onMouseEnter={() => setHoveredId(rule.id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '12px 16px',
+                display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 10 : 12,
+                padding: isMobile ? '10px 12px' : '12px 16px',
+                flexWrap: isMobile ? 'wrap' : 'nowrap',
                 background: rule.enabled ? 'rgba(167, 139, 250, 0.04)' : 'rgba(12, 12, 20, 0.4)',
                 border: `1px solid ${rule.enabled ? 'rgba(167, 139, 250, 0.12)' : COLORS.border}`,
                 borderRadius: 10,
@@ -79,7 +82,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
               <button
                 onClick={() => onToggle(rule.id)}
                 style={{
-                  width: 36, height: 20, borderRadius: 10,
+                  width: isMobile ? 44 : 36, height: isMobile ? 24 : 20, borderRadius: 12,
                   background: rule.enabled
                     ? `linear-gradient(90deg, ${COLORS.purple}, ${COLORS.pink})`
                     : 'rgba(255,255,255,0.08)',
@@ -88,9 +91,9 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
                 }}
               >
                 <div style={{
-                  width: 16, height: 16, borderRadius: '50%', background: '#fff',
-                  position: 'absolute', top: 2,
-                  left: rule.enabled ? 18 : 2,
+                  width: isMobile ? 18 : 16, height: isMobile ? 18 : 16, borderRadius: '50%', background: '#fff',
+                  position: 'absolute', top: isMobile ? 3 : 2,
+                  left: rule.enabled ? (isMobile ? 23 : 18) : 2,
                   transition: 'left 0.2s ease',
                   boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
                 }} />

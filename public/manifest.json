@@ -1,0 +1,12 @@
+{
+  "name": "Ads Optimizer Pro",
+  "short_name": "AdsOptimizer",
+  "description": "Plataforma de otimizacao de campanhas Meta Ads",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c0c14",
+  "theme_color": "#0c0c14",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

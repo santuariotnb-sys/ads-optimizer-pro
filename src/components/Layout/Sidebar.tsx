@@ -60,6 +60,8 @@ export default function Sidebar() {
         />
       )}
       <nav
+        role="navigation"
+        aria-label="Menu principal"
         style={{
           position: 'fixed',
           top: 0,
@@ -170,6 +172,8 @@ export default function Sidebar() {
               onClick={() => handleNavClick(item.id)}
               onMouseEnter={() => setHoveredItem(item.id)}
               onMouseLeave={() => setHoveredItem(null)}
+              aria-current={isActive ? 'page' : undefined}
+              aria-label={collapsed ? item.label : undefined}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -341,6 +345,8 @@ export default function Sidebar() {
         {/* Collapse toggle */}
         <button
           onClick={toggleSidebar}
+          role="button"
+          aria-label={collapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'}
           style={{
             display: isMobile ? 'none' : 'flex',
             alignItems: 'center',

@@ -3,6 +3,7 @@ import type { FunnelConfig, SyntheticEventRule } from '../../types/capi';
 import { generateTrackingScript, generateInstallSnippet } from '../../services/capi/tracking';
 import { Code, Copy, Check, Terminal } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface Props {
   config: FunnelConfig;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function TrackingScriptPanel({ config, rules }: Props) {
+  const isMobile = useIsMobile();
   const [copied, setCopied] = useState<'full' | 'snippet' | null>(null);
   const [showFull, setShowFull] = useState(false);
 
@@ -26,11 +28,11 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
   return (
     <div style={{
       background: COLORS.surface, border: `1px solid ${COLORS.border}`,
-      borderRadius: 16, padding: 24,
+      borderRadius: 16, padding: isMobile ? 14 : 24,
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <Code size={18} color={COLORS.info} />
-        <span style={{ color: COLORS.text, fontSize: 15, fontWeight: 600 }}>Tracking Script</span>
+        <span style={{ color: COLORS.text, fontSize: isMobile ? 14 : 15, fontWeight: 600 }}>Tracking Script</span>
       </div>
 
       {/* Quick install snippet */}
@@ -43,8 +45,9 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
             display: 'flex', alignItems: 'center', gap: 4,
             background: copied === 'snippet' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(96, 165, 250, 0.15)',
             border: `1px solid ${copied === 'snippet' ? 'rgba(74,222,128,0.3)' : 'rgba(96,165,250,0.3)'}`,
-            borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 500,
+            borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
             color: copied === 'snippet' ? COLORS.success : COLORS.info, cursor: 'pointer',
+            minHeight: isMobile ? 36 : undefined,
           }}>
             {copied === 'snippet' ? <Check size={12} /> : <Copy size={12} />}
             {copied === 'snippet' ? 'Copiado!' : 'Copiar'}
@@ -52,11 +55,13 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
         </div>
         <div style={{
           background: 'rgba(12, 12, 20, 0.6)', border: `1px solid ${COLORS.border}`,
-          borderRadius: 10, padding: 14,
+          borderRadius: 10, padding: isMobile ? 10 : 14, overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch' as never,
         }}>
           <code style={{
-            fontSize: 11, color: COLORS.info,
+            fontSize: isMobile ? 10 : 11, color: COLORS.info,
             fontFamily: '"JetBrains Mono", "Fira Code", monospace',
+            wordBreak: 'break-all',
           }}>{snippet}</code>
         </div>
       </div>
@@ -65,7 +70,8 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
       <button onClick={() => setShowFull(!showFull)} style={{
         display: 'flex', alignItems: 'center', gap: 6, width: '100%',
         background: 'rgba(255,255,255,0.04)', border: `1px solid ${COLORS.border}`,
-        borderRadius: 8, padding: '8px 14px', fontSize: 12, color: COLORS.textMuted,
+        borderRadius: 8, padding: isMobile ? '12px 14px' : '8px 14px', fontSize: 12, color: COLORS.textMuted,
+        minHeight: isMobile ? 44 : undefined,
         cursor: 'pointer',
       }}>
         <Terminal size={14} />
@@ -79,8 +85,9 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
               display: 'flex', alignItems: 'center', gap: 4,
               background: copied === 'full' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(99, 102, 241, 0.15)',
               border: `1px solid ${copied === 'full' ? 'rgba(74,222,128,0.3)' : 'rgba(99,102,241,0.3)'}`,
-              borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 500,
+              borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
               color: copied === 'full' ? COLORS.success : COLORS.accent, cursor: 'pointer',
+              minHeight: isMobile ? 36 : undefined,
             }}>
               {copied === 'full' ? <Check size={12} /> : <Copy size={12} />}
               {copied === 'full' ? 'Copiado!' : 'Copiar Script Completo'}

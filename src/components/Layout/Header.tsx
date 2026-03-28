@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { Search, Settings, Wifi, WifiOff } from 'lucide-react';
+import { openMetaLogin } from '../../services/metaAuth';
 import type { Period } from '../../types/meta';
 
 const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -37,6 +38,7 @@ export default function Header() {
 
   return (
     <header
+      role="banner"
       style={{
         height: isMobile ? 'auto' : 64,
         display: 'flex',
@@ -90,6 +92,8 @@ export default function Header() {
                 onClick={() => setSelectedPeriod(p.value)}
                 onMouseEnter={() => setHoveredPeriod(p.value)}
                 onMouseLeave={() => setHoveredPeriod(null)}
+                aria-label={`Período: ${p.label}`}
+                aria-pressed={selectedPeriod === p.value}
                 style={{
                   padding: '6px 14px',
                   borderRadius: 8,
@@ -119,7 +123,7 @@ export default function Header() {
         {mode === 'demo' ? (
           <button
             onClick={() => {
-              /* Connect Meta flow placeholder */
+              openMetaLogin();
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.boxShadow = '0 0 20px rgba(99,102,241,0.3)';

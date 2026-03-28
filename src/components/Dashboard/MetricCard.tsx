@@ -44,7 +44,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
         WebkitBackdropFilter: 'blur(16px)',
         border: '1px solid rgba(255, 255, 255, 0.06)',
         borderRadius: 16,
-        padding: isMobile ? 14 : 20,
+        padding: isMobile ? 12 : 20,
         display: 'flex',
         flexDirection: 'column',
         gap: 8,
@@ -100,7 +100,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <span
           style={{
-            fontSize: isMobile ? 22 : 28,
+            fontSize: isMobile ? 18 : 28,
             fontWeight: 700,
             fontFamily: "'Space Grotesk', sans-serif",
             color: '#f1f5f9',
@@ -109,7 +109,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
         >
           {value}
         </span>
-        <MiniSparkline data={sparkline} color={sparkColor} width={isMobile ? 60 : 80} />
+        <MiniSparkline data={sparkline} color={sparkColor} width={isMobile ? 48 : 80} />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import type { FunnelConfig, FunnelType, FunnelValues } from '../../types/capi';
 import { calculatePredictedLTV, calculateEPV } from '../../services/capi/enrichment';
 import { Settings, Package, Briefcase, Monitor, Users, Wrench, Save, Wifi, Eye, ChevronDown, ChevronUp } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const FUNNEL_TEMPLATES: { type: FunnelType; label: string; icon: typeof Package; desc: string }[] = [
   { type: 'infoproduto', label: 'Infoproduto', icon: Package, desc: 'VSL → Checkout → Bumps → Upsell' },
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function FunnelBuilder({ config, onSave, onTestConnection, onBack }: Props) {
+  const isMobile = useIsMobile();
   const [funnel, setFunnel] = useState<FunnelConfig>(config);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [enabledEvents, setEnabledEvents] = useState<Set<string>>(
@@ -94,7 +96,7 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
         borderRadius: 16, padding: 24, marginBottom: 20,
       }}>
         <div style={labelStyle}>Tipo de Negócio</div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10, marginTop: 8 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', gap: 10, marginTop: 8 }}>
           {FUNNEL_TEMPLATES.map(t => {
             const Icon = t.icon;
             const isActive = funnel.type === t.type;
@@ -121,7 +123,7 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
         borderRadius: 16, padding: 24, marginBottom: 20,
       }}>
         <div style={labelStyle}>Valores do Funil</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 80px', gap: 12, marginTop: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 80px' : '1fr 1fr 80px', gap: 12, marginTop: 12 }}>
           {/* Front-end */}
           <div style={{ gridColumn: '1 / -1' }}>
             <label style={labelStyle}>Front-end (R$)</label>
@@ -153,7 +155,8 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
 
         {/* Calculated Values */}
         <div style={{
-          display: 'flex', gap: 20, marginTop: 20, padding: '16px 20px',
+          display: 'flex', gap: isMobile ? 12 : 20, marginTop: 20, padding: isMobile ? '12px 14px' : '16px 20px',
+        flexWrap: isMobile ? 'wrap' : 'nowrap',
           background: 'rgba(99, 102, 241, 0.06)', border: '1px solid rgba(99, 102, 241, 0.15)',
           borderRadius: 10,
         }}>
@@ -186,7 +189,7 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
         borderRadius: 16, padding: 24, marginBottom: 20,
       }}>
         <div style={labelStyle}>Configuração CAPI</div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 12, marginTop: 12 }}>
           <div>
             <label style={labelStyle}>Pixel ID</label>
             <input type="text" value={funnel.pixel_id} placeholder="Ex: 123456789012345" style={inputStyle}
@@ -253,7 +256,7 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
       </div>
 
       {/* Actions */}
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
+      <div style={{ display: 'flex', gap: 12, justifyContent: isMobile ? 'stretch' : 'flex-end', flexDirection: isMobile ? 'column' : 'row' }}>
         <button onClick={onTestConnection} style={{
           display: 'flex', alignItems: 'center', gap: 6,
           background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,

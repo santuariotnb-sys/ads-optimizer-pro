@@ -207,8 +207,8 @@ const inputStyle: React.CSSProperties = {
 };
 
 const sendButtonStyle: React.CSSProperties = {
-  width: 38,
-  height: 38,
+  width: 44,
+  height: 44,
   borderRadius: 10,
   border: 'none',
   background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
@@ -478,7 +478,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
       </div>
 
       {/* Messages */}
-      <div ref={messagesContainerRef} style={{ ...messagesContainerStyle, padding: isMobile ? '14px 12px' : '20px 24px' }}>
+      <div ref={messagesContainerRef} role="log" aria-label="Mensagens do chat" style={{ ...messagesContainerStyle, padding: isMobile ? '14px 12px' : '20px 24px' }}>
         {messages.map((msg) =>
           msg.role === 'user' ? (
             <div key={msg.id} style={{ ...userMessageStyle, maxWidth: isMobile ? '90%' : '75%' }}>
@@ -499,7 +499,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
 
         {/* Typing Indicator */}
         {isTyping && (
-          <div style={assistantMessageStyle}>
+          <div style={assistantMessageStyle} aria-live="polite">
             <div style={botAvatarStyle}>
               <Bot size={16} color="#fff" />
             </div>
@@ -548,6 +548,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
             onClick={handleSend}
             onMouseEnter={() => setHoveredSend(true)}
             onMouseLeave={() => setHoveredSend(false)}
+            aria-label="Enviar mensagem"
             style={{
               ...sendButtonStyle,
               transform: hoveredSend ? 'scale(1.05)' : 'scale(1)',

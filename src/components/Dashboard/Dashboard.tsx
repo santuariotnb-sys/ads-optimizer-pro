@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
           style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
-            gap: 16,
+            gap: isMobile ? 10 : 16,
           }}
         >
           {mockMetricCards.map((card, i) => (
@@ -140,15 +140,16 @@ const Dashboard: React.FC = () => {
           </span>
         </div>
 
-        <div style={{ overflowX: 'auto', scrollBehavior: 'smooth' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <div style={{ overflowX: 'auto', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' as never }}>
+          <table role="table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
+              <tr role="row">
                 {['Nome', 'Status', 'Gasto', 'ROAS', 'CPA', 'CTR', 'Frequência', 'Score']
-                  .filter((h) => !(isMobile && (h === 'Frequência' || h === 'CPM')))
+                  .filter((h) => !(isMobile && ['Frequência', 'CPM', 'CTR'].includes(h)))
                   .map((h) => (
                   <th
                     key={h}
+                    role="columnheader"
                     style={{
                       padding: isMobile ? '10px 10px' : '12px 16px',
                       fontSize: isMobile ? 10 : 11,
@@ -172,6 +173,7 @@ const Dashboard: React.FC = () => {
                 return (
                   <tr
                     key={campaign.id}
+                    role="row"
                     style={{
                       transition: 'background 0.2s',
                       cursor: 'pointer',
@@ -184,6 +186,7 @@ const Dashboard: React.FC = () => {
                     }}
                   >
                     <td
+                      role="cell"
                       style={{
                         padding: isMobile ? '10px 10px' : '14px 16px',
                         fontSize: isMobile ? 12 : 13,
@@ -199,6 +202,7 @@ const Dashboard: React.FC = () => {
                       {campaign.name}
                     </td>
                     <td
+                      role="cell"
                       style={{
                         padding: '14px 16px',
                         textAlign: 'right',
@@ -240,9 +244,11 @@ const Dashboard: React.FC = () => {
                     <td style={isMobile ? mobileCellStyle : cellStyle}>
                       {formatCurrency(campaign.cpa)}
                     </td>
-                    <td style={isMobile ? mobileCellStyle : cellStyle}>
-                      {campaign.ctr.toFixed(1)}%
-                    </td>
+                    {!isMobile && (
+                      <td style={cellStyle}>
+                        {campaign.ctr.toFixed(1)}%
+                      </td>
+                    )}
                     {!isMobile && (
                       <td style={cellStyle}>
                         <span style={{ color: campaign.frequency > 2.5 ? '#f87171' : '#94a3b8' }}>

@@ -365,12 +365,13 @@ const Campaigns: React.FC = () => {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: 6,
-                        padding: '6px 14px',
+                        padding: isMobile ? '10px 14px' : '6px 14px',
                         borderRadius: 8,
                         border: `1px solid ${btn.color}30`,
                         background: `${btn.color}10`,
                         color: btn.color,
-                        fontSize: 12,
+                        fontSize: isMobile ? 13 : 12,
+                        minHeight: isMobile ? 44 : undefined,
                         fontWeight: 600,
                         cursor: 'pointer',
                         transition: 'all 0.2s',
@@ -411,11 +412,10 @@ const Campaigns: React.FC = () => {
                           key={adSet.id}
                           style={{
                             display: 'grid',
-                            gridTemplateColumns: '1.5fr repeat(5, 1fr)',
-                            alignItems: 'center',
-                            gap: 12,
-                            padding: '10px 14px',
-                            minWidth: isMobile ? 600 : undefined,
+                            gridTemplateColumns: isMobile ? '1fr 1fr' : '1.5fr repeat(5, 1fr)',
+                            alignItems: isMobile ? 'start' : 'center',
+                            gap: isMobile ? 8 : 12,
+                            padding: isMobile ? '12px 12px' : '10px 14px',
                             borderRadius: 10,
                             background: 'rgba(255, 255, 255, 0.02)',
                             border: '1px solid rgba(255, 255, 255, 0.04)',
@@ -428,7 +428,7 @@ const Campaigns: React.FC = () => {
                             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
                           }}
                         >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, gridColumn: isMobile ? '1 / -1' : undefined }}>
                             <span
                               style={{
                                 width: 6,

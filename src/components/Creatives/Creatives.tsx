@@ -208,7 +208,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
 
         {/* Metrics grid */}
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
           gap: 6, marginBottom: 10,
         }}>
           {metrics.map(m => (
@@ -345,9 +345,10 @@ export default function Creatives() {
                 background: sortBy === s.key ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
                 border: `1px solid ${sortBy === s.key ? 'rgba(99, 102, 241, 0.3)' : COLORS.border}`,
                 borderRadius: 6,
-                padding: '4px 10px',
+                padding: isMobile ? '8px 12px' : '4px 10px',
                 color: sortBy === s.key ? COLORS.accent : COLORS.textMuted,
                 fontSize: 12,
+                minHeight: isMobile ? 36 : undefined,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
               }}
