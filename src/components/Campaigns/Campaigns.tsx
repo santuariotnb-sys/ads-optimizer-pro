@@ -13,10 +13,10 @@ const statusLabel: Record<string, string> = {
 };
 
 const statusBorderColor: Record<string, string> = {
-  ACTIVE: '#4ade80',
-  PAUSED: '#64748b',
-  LEARNING: '#facc15',
-  LEARNING_LIMITED: '#f87171',
+  ACTIVE: '#84cc16',
+  PAUSED: '#a8a29e',
+  LEARNING: '#f59e0b',
+  LEARNING_LIMITED: '#ef4444',
 };
 
 const Campaigns: React.FC = () => {
@@ -58,14 +58,14 @@ const Campaigns: React.FC = () => {
             style={{
               fontSize: isMobile ? 20 : 24,
               fontWeight: 700,
-              fontFamily: "'Space Grotesk', sans-serif",
+              fontFamily: "'Sora', sans-serif",
               color: '#f1f5f9',
               margin: 0,
             }}
           >
             Campanhas
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(148, 163, 184, 0.7)', margin: '4px 0 0' }}>
+          <p style={{ fontSize: 13, color: 'rgba(168, 162, 158, 0.7)', margin: '4px 0 0' }}>
             Gerencie e otimize suas campanhas
           </p>
         </div>
@@ -76,16 +76,16 @@ const Campaigns: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: `1px solid ${searchFocused ? 'rgba(99,102,241,0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
+            background: 'rgba(255, 200, 120, 0.04)',
+            border: `1px solid ${searchFocused ? 'rgba(245,158,11,0.4)' : 'rgba(255, 200, 120, 0.08)'}`,
             borderRadius: 10,
             padding: '8px 14px',
             width: isMobile ? '100%' : 280,
             transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: searchFocused ? '0 0 0 3px rgba(99,102,241,0.1)' : 'none',
+            boxShadow: searchFocused ? '0 0 0 3px rgba(245,158,11,0.1)' : 'none',
           }}
         >
-          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="rgba(148,163,184,0.5)" strokeWidth={2}>
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="rgba(168,162,158,0.5)" strokeWidth={2}>
             <circle cx={11} cy={11} r={8} />
             <path d="m21 21-4.35-4.35" />
           </svg>
@@ -100,7 +100,7 @@ const Campaigns: React.FC = () => {
               background: 'transparent',
               border: 'none',
               outline: 'none',
-              color: '#e2e8f0',
+              color: '#fafaf9',
               fontSize: 13,
               width: '100%',
               fontFamily: 'inherit',
@@ -113,22 +113,21 @@ const Campaigns: React.FC = () => {
       {filtered.length === 0 && (
         <div
           style={{
-            background: 'rgba(22,22,32,0.85)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: 16,
+            background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+            border: '1px solid rgba(255, 200, 120, 0.06)',
+            borderRadius: 20,
             padding: 40,
             textAlign: 'center',
+            boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
           }}
         >
-          <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma campanha encontrada</div>
+          <div style={{ fontSize: 14, color: '#a8a29e' }}>Nenhuma campanha encontrada</div>
         </div>
       )}
       {filtered.map((campaign, idx) => {
         const expanded = expandedIds.has(campaign.id);
         const adSets = mockAdSetsData.filter((as) => as.campaign_id === campaign.id);
-        const borderColor = statusBorderColor[campaign.status] || '#64748b';
+        const borderColor = statusBorderColor[campaign.status] || '#a8a29e';
         const scoreColor = getScoreColor(campaign.opportunity_score);
         const hasLearning = campaign.status === 'LEARNING' || campaign.status === 'LEARNING_LIMITED';
         const learningProgress = campaign.learning_conversions && campaign.learning_days
@@ -139,25 +138,24 @@ const Campaigns: React.FC = () => {
           <div
             key={campaign.id}
             style={{
-              background: 'rgba(22, 22, 32, 0.85)',
-              backdropFilter: 'blur(16px)',
-              WebkitBackdropFilter: 'blur(16px)',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
+              background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+              border: '1px solid rgba(255, 200, 120, 0.06)',
               borderLeft: `3px solid ${borderColor}`,
-              borderRadius: 16,
+              borderRadius: 20,
               overflow: 'hidden',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
               animation: `fadeInUp 0.5s ease-out ${idx * 80}ms both`,
+              boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.border = `1px solid rgba(255, 255, 255, 0.12)`;
+              e.currentTarget.style.border = `1px solid rgba(255, 200, 120, 0.14)`;
               e.currentTarget.style.borderLeft = `3px solid ${borderColor}`;
-              e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.25)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+              e.currentTarget.style.border = '1px solid rgba(255, 200, 120, 0.06)';
               e.currentTarget.style.borderLeft = `3px solid ${borderColor}`;
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)';
             }}
           >
             {/* Card Header */}
@@ -178,7 +176,7 @@ const Campaigns: React.FC = () => {
                     style={{
                       fontSize: 14,
                       fontWeight: 600,
-                      color: '#e2e8f0',
+                      color: '#fafaf9',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -217,12 +215,12 @@ const Campaigns: React.FC = () => {
                       background: `${scoreColor}12`,
                     }}
                   >
-                    <span style={{ fontSize: 11, color: 'rgba(148,163,184,0.6)' }}>Score</span>
+                    <span style={{ fontSize: 11, color: 'rgba(168,162,158,0.6)' }}>Score</span>
                     <span
                       style={{
                         fontSize: 14,
                         fontWeight: 700,
-                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontFamily: "'Sora', sans-serif",
                         color: scoreColor,
                       }}
                     >
@@ -231,9 +229,9 @@ const Campaigns: React.FC = () => {
                   </div>
 
                   {expanded ? (
-                    <ChevronUp size={18} color="rgba(148,163,184,0.5)" />
+                    <ChevronUp size={18} color="rgba(168,162,158,0.5)" />
                   ) : (
-                    <ChevronDown size={18} color="rgba(148,163,184,0.5)" />
+                    <ChevronDown size={18} color="rgba(168,162,158,0.5)" />
                   )}
                 </div>
               </div>
@@ -241,7 +239,7 @@ const Campaigns: React.FC = () => {
               {/* Metrics row */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? 10 : 16 }}>
                 {[
-                  { label: 'ROAS', value: `${campaign.roas.toFixed(1)}x`, color: campaign.roas >= 3 ? '#4ade80' : campaign.roas >= 2 ? '#facc15' : '#f87171' },
+                  { label: 'ROAS', value: `${campaign.roas.toFixed(1)}x`, color: campaign.roas >= 3 ? '#84cc16' : campaign.roas >= 2 ? '#f59e0b' : '#ef4444' },
                   { label: 'CPA', value: formatCurrency(campaign.cpa), color: '#94a3b8' },
                   { label: 'CTR', value: `${campaign.ctr.toFixed(1)}%`, color: '#94a3b8' },
                   { label: 'Gasto', value: formatCurrency(campaign.spend), color: '#94a3b8' },
@@ -253,7 +251,7 @@ const Campaigns: React.FC = () => {
                         fontWeight: 600,
                         textTransform: 'uppercase',
                         letterSpacing: '0.06em',
-                        color: 'rgba(148,163,184,0.5)',
+                        color: 'rgba(168,162,158,0.5)',
                         marginBottom: 2,
                       }}
                     >
@@ -263,7 +261,7 @@ const Campaigns: React.FC = () => {
                       style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontFamily: "'Sora', sans-serif",
                         color: m.color,
                       }}
                     >
@@ -276,13 +274,13 @@ const Campaigns: React.FC = () => {
               {/* Learning Phase Indicator */}
               {hasLearning && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <AlertTriangle size={14} color="#facc15" />
+                  <AlertTriangle size={14} color="#f59e0b" />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontSize: 11, color: '#facc15', fontWeight: 600 }}>
+                      <span style={{ fontSize: 11, color: '#f59e0b', fontWeight: 600 }}>
                         Fase de Aprendizado
                       </span>
-                      <span style={{ fontSize: 11, color: 'rgba(148,163,184,0.6)' }}>
+                      <span style={{ fontSize: 11, color: 'rgba(168,162,158,0.6)' }}>
                         {campaign.learning_conversions || 0}/50 conversões
                       </span>
                     </div>
@@ -291,7 +289,7 @@ const Campaigns: React.FC = () => {
                         width: '100%',
                         height: 4,
                         borderRadius: 2,
-                        background: 'rgba(255, 255, 255, 0.06)',
+                        background: 'rgba(255, 200, 120, 0.06)',
                         overflow: 'hidden',
                       }}
                     >
@@ -300,7 +298,7 @@ const Campaigns: React.FC = () => {
                           width: `${learningProgress}%`,
                           height: '100%',
                           borderRadius: 2,
-                          background: campaign.status === 'LEARNING_LIMITED' ? '#f87171' : '#facc15',
+                          background: campaign.status === 'LEARNING_LIMITED' ? '#ef4444' : '#f59e0b',
                           transition: 'width 0.6s ease-out',
                         }}
                       />
@@ -318,12 +316,12 @@ const Campaigns: React.FC = () => {
                     gap: 8,
                     padding: '8px 12px',
                     borderRadius: 8,
-                    background: 'rgba(139, 92, 246, 0.08)',
-                    border: '1px solid rgba(139, 92, 246, 0.15)',
+                    background: 'rgba(251, 191, 36, 0.08)',
+                    border: '1px solid rgba(251, 191, 36, 0.15)',
                   }}
                 >
-                  <TrendingUp size={14} color="#a78bfa" />
-                  <span style={{ fontSize: 12, color: '#c4b5fd' }}>
+                  <TrendingUp size={14} color="#d97706" />
+                  <span style={{ fontSize: 12, color: '#fbbf24' }}>
                     Sugestão: ajustar orçamento diário para{' '}
                     <strong>{formatCurrency(campaign.budget_suggestion)}</strong>
                     {campaign.budget_suggestion > campaign.daily_budget
@@ -338,7 +336,7 @@ const Campaigns: React.FC = () => {
             {expanded && (
               <div
                 style={{
-                  borderTop: '1px solid rgba(255, 255, 255, 0.04)',
+                  borderTop: '1px solid rgba(255, 200, 120, 0.04)',
                   animation: 'expandIn 0.3s ease-out both',
                   overflow: 'hidden',
                 }}
@@ -350,13 +348,13 @@ const Campaigns: React.FC = () => {
                     display: 'flex',
                     flexDirection: isMobile ? 'column' : 'row',
                     gap: 8,
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderBottom: '1px solid rgba(255, 200, 120, 0.04)',
                   }}
                 >
                   {[
-                    { icon: <Pause size={13} />, label: 'Pausar', color: '#64748b' },
-                    { icon: <TrendingUp size={13} />, label: 'Escalar +20%', color: '#4ade80' },
-                    { icon: <Copy size={13} />, label: 'Duplicar', color: '#60a5fa' },
+                    { icon: <Pause size={13} />, label: 'Pausar', color: '#a8a29e' },
+                    { icon: <TrendingUp size={13} />, label: 'Escalar +20%', color: '#84cc16' },
+                    { icon: <Copy size={13} />, label: 'Duplicar', color: '#06b6d4' },
                   ].map((btn) => (
                     <button
                       key={btn.label}
@@ -398,7 +396,7 @@ const Campaigns: React.FC = () => {
                       fontWeight: 600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
-                      color: 'rgba(148,163,184,0.5)',
+                      color: 'rgba(168,162,158,0.5)',
                       marginBottom: 10,
                     }}
                   >
@@ -417,15 +415,15 @@ const Campaigns: React.FC = () => {
                             gap: isMobile ? 8 : 12,
                             padding: isMobile ? '12px 12px' : '10px 14px',
                             borderRadius: 10,
-                            background: 'rgba(255, 255, 255, 0.02)',
-                            border: '1px solid rgba(255, 255, 255, 0.04)',
+                            background: 'rgba(255, 200, 120, 0.02)',
+                            border: '1px solid rgba(255, 200, 120, 0.04)',
                             transition: 'background 0.2s',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
+                            e.currentTarget.style.background = 'rgba(255, 200, 120, 0.04)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                            e.currentTarget.style.background = 'rgba(255, 200, 120, 0.02)';
                           }}
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, gridColumn: isMobile ? '1 / -1' : undefined }}>
@@ -465,7 +463,7 @@ const Campaigns: React.FC = () => {
                                   fontWeight: 600,
                                   textTransform: 'uppercase',
                                   letterSpacing: '0.05em',
-                                  color: 'rgba(148,163,184,0.4)',
+                                  color: 'rgba(168,162,158,0.4)',
                                   marginBottom: 1,
                                 }}
                               >
@@ -475,7 +473,7 @@ const Campaigns: React.FC = () => {
                                 style={{
                                   fontSize: 12,
                                   fontWeight: 600,
-                                  fontFamily: "'Space Grotesk', sans-serif",
+                                  fontFamily: "'Sora', sans-serif",
                                   color: '#94a3b8',
                                 }}
                               >

@@ -68,10 +68,8 @@ export default function Sidebar() {
           left: 0,
           bottom: 0,
           width,
-          background: 'rgba(12, 12, 20, 0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderRight: '1px solid rgba(255,255,255,0.06)',
+          background: '#0a0a0a',
+          borderRight: '1px solid rgba(255, 200, 120, 0.04)',
           display: 'flex',
           flexDirection: 'column',
           transition: isMobile ? `transform 0.3s ${easing}` : `width 0.3s ${easing}`,
@@ -88,7 +86,7 @@ export default function Sidebar() {
           alignItems: 'center',
           padding: collapsed ? '0 12px' : '0 20px',
           gap: 12,
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid rgba(255, 200, 120, 0.04)',
           flexShrink: 0,
           transition: `padding 0.3s ${easing}`,
         }}
@@ -98,12 +96,12 @@ export default function Sidebar() {
             width: 36,
             height: 36,
             borderRadius: 10,
-            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 0 20px rgba(99,102,241,0.3)',
+            boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)',
           }}
         >
           <Activity size={20} color="#fff" strokeWidth={2.5} />
@@ -112,8 +110,9 @@ export default function Sidebar() {
           <span
             style={{
               fontSize: 16,
+              fontFamily: "'Sora', sans-serif",
               fontWeight: 700,
-              background: 'linear-gradient(135deg, #e0e7ff, #a5b4fc)',
+              background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               whiteSpace: 'nowrap',
@@ -132,12 +131,12 @@ export default function Sidebar() {
               height: 44,
               borderRadius: 8,
               border: 'none',
-              background: 'rgba(255,255,255,0.06)',
+              background: 'rgba(255, 200, 120, 0.06)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'rgba(255,255,255,0.5)',
+              color: '#a8a29e',
               outline: 'none',
               flexShrink: 0,
             }}
@@ -185,39 +184,38 @@ export default function Sidebar() {
                 cursor: 'pointer',
                 position: 'relative',
                 background: isActive
-                  ? 'rgba(99,102,241,0.12)'
+                  ? 'rgba(245, 158, 11, 0.1)'
                   : isHovered
-                  ? 'rgba(255,255,255,0.04)'
+                  ? 'rgba(245, 158, 11, 0.06)'
                   : 'transparent',
-                borderLeft: isActive ? '2px solid #6366f1' : '2px solid transparent',
-                transition: `all 0.2s ${easing}`,
+                borderLeft: isActive ? '2px solid #f59e0b' : '2px solid transparent',
+                transition: `all 0.25s ease`,
                 width: '100%',
                 textAlign: 'left',
                 outline: 'none',
                 boxShadow: isActive
-                  ? '0 0 20px rgba(99,102,241,0.08)'
-                  : isHovered
-                  ? '0 0 15px rgba(99,102,241,0.04)'
+                  ? '0 0 20px rgba(245, 158, 11, 0.06)'
                   : 'none',
               }}
             >
               <Icon
                 size={20}
                 style={{
-                  color: isActive ? '#a5b4fc' : isHovered ? '#c7d2fe' : 'rgba(255,255,255,0.45)',
+                  color: isActive ? '#f59e0b' : isHovered ? '#d6d3d1' : '#a8a29e',
                   flexShrink: 0,
-                  transition: `color 0.2s ${easing}`,
-                  filter: isActive ? 'drop-shadow(0 0 6px rgba(99,102,241,0.5))' : 'none',
+                  transition: 'color 0.25s ease',
+                  filter: isActive ? 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.4))' : 'none',
                 }}
               />
               {!collapsed && (
                 <span
                   style={{
                     fontSize: 14,
+                    fontFamily: "'DM Sans', sans-serif",
                     fontWeight: isActive ? 600 : 500,
-                    color: isActive ? '#fff' : isHovered ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)',
+                    color: isActive ? '#fafaf9' : isHovered ? '#d6d3d1' : '#a8a29e',
                     whiteSpace: 'nowrap',
-                    transition: `color 0.2s ${easing}`,
+                    transition: 'color 0.25s ease',
                     letterSpacing: '-0.01em',
                   }}
                 >
@@ -259,9 +257,9 @@ export default function Sidebar() {
                     marginLeft: 8,
                     padding: '6px 12px',
                     borderRadius: 8,
-                    background: 'rgba(12,12,20,0.95)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#e2e8f0',
+                    background: '#1a1918',
+                    border: '1px solid rgba(255, 200, 120, 0.1)',
+                    color: '#fafaf9',
                     fontSize: 12,
                     fontWeight: 500,
                     whiteSpace: 'nowrap',
@@ -282,7 +280,7 @@ export default function Sidebar() {
       <div
         style={{
           padding: collapsed ? '16px 8px' : '16px 16px',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
+          borderTop: '1px solid rgba(255, 200, 120, 0.04)',
           display: 'flex',
           flexDirection: 'column',
           gap: 12,
@@ -299,8 +297,8 @@ export default function Sidebar() {
             gap: 8,
             padding: '8px 12px',
             borderRadius: 8,
-            background: mode === 'live' ? 'rgba(34,197,94,0.08)' : 'rgba(234,179,8,0.08)',
-            border: `1px solid ${mode === 'live' ? 'rgba(34,197,94,0.15)' : 'rgba(234,179,8,0.15)'}`,
+            background: mode === 'live' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(168, 162, 158, 0.06)',
+            border: `1px solid ${mode === 'live' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(168, 162, 158, 0.1)'}`,
           }}
         >
           <span
@@ -308,8 +306,8 @@ export default function Sidebar() {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: mode === 'live' ? '#22c55e' : '#eab308',
-              boxShadow: `0 0 8px ${mode === 'live' ? 'rgba(34,197,94,0.6)' : 'rgba(234,179,8,0.6)'}`,
+              background: mode === 'live' ? '#f59e0b' : '#78716c',
+              boxShadow: `0 0 8px ${mode === 'live' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(120, 113, 108, 0.4)'}`,
               animation: 'pulse-dot 2s ease-in-out infinite',
               flexShrink: 0,
             }}
@@ -319,7 +317,7 @@ export default function Sidebar() {
               style={{
                 fontSize: 12,
                 fontWeight: 600,
-                color: mode === 'live' ? '#4ade80' : '#facc15',
+                color: mode === 'live' ? '#f59e0b' : '#a8a29e',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
               }}
@@ -334,7 +332,7 @@ export default function Sidebar() {
           <span
             style={{
               fontSize: 11,
-              color: 'rgba(255,255,255,0.2)',
+              color: '#78716c',
               textAlign: 'center',
             }}
           >
@@ -354,21 +352,21 @@ export default function Sidebar() {
             width: collapsed ? 36 : '100%',
             height: 36,
             borderRadius: 8,
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255, 200, 120, 0.06)',
+            background: 'rgba(255, 200, 120, 0.03)',
             cursor: 'pointer',
-            color: 'rgba(255,255,255,0.4)',
-            transition: `all 0.2s ${easing}`,
+            color: '#a8a29e',
+            transition: 'all 0.25s ease',
             alignSelf: collapsed ? 'center' : 'stretch',
             outline: 'none',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
-            e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
+            e.currentTarget.style.background = 'rgba(245, 158, 11, 0.08)';
+            e.currentTarget.style.color = '#d6d3d1';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255,255,255,0.03)';
-            e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+            e.currentTarget.style.background = 'rgba(255, 200, 120, 0.03)';
+            e.currentTarget.style.color = '#a8a29e';
           }}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}

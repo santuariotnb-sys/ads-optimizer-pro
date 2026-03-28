@@ -7,7 +7,7 @@ const stages = [
     id: 'andromeda',
     title: 'Andromeda',
     subtitle: 'Retrieval Engine',
-    color: '#60a5fa',
+    color: '#f59e0b',
     icon: Cpu,
     stats: '1B+ ads → ~1.000 em <200ms',
     details: [
@@ -28,7 +28,7 @@ const stages = [
     id: 'gem',
     title: 'GEM',
     subtitle: 'Ranking Model',
-    color: '#a78bfa',
+    color: '#fbbf24',
     icon: Brain,
     stats: 'Maior foundation model de recomendação do mundo',
     details: [
@@ -49,7 +49,7 @@ const stages = [
     id: 'auction',
     title: 'Leilão',
     subtitle: 'Auction System',
-    color: '#4ade80',
+    color: '#84cc16',
     icon: Gavel,
     stats: 'Valor = Lance × Taxa de Ação × Qualidade',
     details: [
@@ -89,9 +89,9 @@ const animationKeyframes = `
 
 const containerStyle: React.CSSProperties = {
   padding: '32px 24px',
-  background: 'rgba(12,12,20,0.6)',
-  borderRadius: 16,
-  border: '1px solid rgba(99,102,241,0.15)',
+  background: 'rgba(10,10,10,0.6)',
+  borderRadius: 20,
+  border: '1px solid rgba(245,158,11,0.15)',
 };
 
 const titleSectionStyle: React.CSSProperties = {
@@ -110,11 +110,9 @@ function getCardStyle(color: string, isHovered: boolean, isExpanded: boolean): R
   return {
     flex: 1,
     padding: '28px 24px',
-    borderRadius: 16,
-    background: 'rgba(22,22,32,0.85)',
-    border: `1px solid ${isHovered || isExpanded ? color + '55' : 'rgba(255,255,255,0.06)'}`,
-    backdropFilter: 'blur(20px)',
-    WebkitBackdropFilter: 'blur(20px)',
+    borderRadius: 20,
+    background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+    border: `1px solid ${isHovered || isExpanded ? color + '55' : 'rgba(255,200,120,0.06)'}`,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     position: 'relative',
@@ -122,7 +120,7 @@ function getCardStyle(color: string, isHovered: boolean, isExpanded: boolean): R
     transform: isHovered ? 'translateY(-4px)' : 'none',
     boxShadow: isHovered || isExpanded
       ? `0 8px 32px ${color}22, 0 0 60px ${color}11, inset 0 1px 0 ${color}15`
-      : '0 2px 12px rgba(0,0,0,0.2)',
+      : '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
   };
 }
 
@@ -169,7 +167,7 @@ const connectorLineStyle: React.CSSProperties = {
   left: 0,
   right: 0,
   height: 2,
-  background: 'linear-gradient(90deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))',
+  background: 'linear-gradient(90deg, rgba(245,158,11,0.3), rgba(251,191,36,0.3))',
   transform: 'translateY(-50%)',
 };
 
@@ -191,8 +189,8 @@ function getFlowDotStyle(delay: number, color: string): React.CSSProperties {
 const metricBoxStyle: React.CSSProperties = {
   padding: '8px 12px',
   borderRadius: 8,
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.05)',
+  background: 'rgba(255,200,120,0.03)',
+  border: '1px solid rgba(255,200,120,0.05)',
   textAlign: 'center',
 };
 
@@ -226,13 +224,13 @@ export default function Pipeline() {
             margin: 0,
             fontSize: 22,
             fontWeight: 700,
-            color: '#e2e8f0',
+            color: '#fafaf9',
             letterSpacing: '-0.02em',
           }}
         >
           Pipeline de Entrega de Anúncios
         </h2>
-        <p style={{ margin: '8px 0 0', fontSize: 14, color: '#64748b' }}>
+        <p style={{ margin: '8px 0 0', fontSize: 14, color: '#a8a29e' }}>
           Como o Meta processa seus anúncios: do Andromeda ao Leilão
         </p>
       </div>
@@ -305,7 +303,7 @@ export default function Pipeline() {
                     margin: 0,
                     fontSize: 18,
                     fontWeight: 700,
-                    color: '#e2e8f0',
+                    color: '#fafaf9',
                     letterSpacing: '-0.01em',
                   }}
                 >
@@ -354,12 +352,12 @@ export default function Pipeline() {
                           fontWeight: 700,
                           color: stage.color,
                           marginBottom: 2,
-                          fontFamily: "'Space Grotesk', sans-serif",
+                          fontFamily: "'Sora', sans-serif",
                         }}
                       >
                         {m.value}
                       </div>
-                      <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <div style={{ fontSize: 10, color: '#a8a29e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         {m.label}
                       </div>
                     </div>
@@ -374,7 +372,7 @@ export default function Pipeline() {
                     justifyContent: 'center',
                     marginTop: 14,
                     gap: 6,
-                    color: '#64748b',
+                    color: '#a8a29e',
                     fontSize: 12,
                   }}
                 >
@@ -440,8 +438,8 @@ export default function Pipeline() {
               {index < stages.length - 1 && (
                 isMobile ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 40, position: 'relative', justifyContent: 'center' }}>
-                    <div style={{ width: 2, height: '100%', background: 'linear-gradient(180deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))' }} />
-                    <ChevronDown size={20} color="rgba(99,102,241,0.5)" style={{ position: 'absolute', zIndex: 1 }} />
+                    <div style={{ width: 2, height: '100%', background: 'linear-gradient(180deg, rgba(245,158,11,0.3), rgba(251,191,36,0.3))' }} />
+                    <ChevronDown size={20} color="rgba(245,158,11,0.5)" style={{ position: 'absolute', zIndex: 1 }} />
                   </div>
                 ) : (
                   <div style={connectorStyle}>
@@ -451,13 +449,13 @@ export default function Pipeline() {
                         key={di}
                         style={getFlowDotStyle(
                           delay,
-                          index === 0 ? '#60a5fa' : '#a78bfa'
+                          index === 0 ? '#f59e0b' : '#fbbf24'
                         )}
                       />
                     ))}
                     <ChevronRight
                       size={20}
-                      color="rgba(99,102,241,0.5)"
+                      color="rgba(245,158,11,0.5)"
                       style={{ position: 'relative', zIndex: 1 }}
                     />
                   </div>
@@ -486,7 +484,7 @@ export default function Pipeline() {
               alignItems: 'center',
               gap: 8,
               fontSize: 12,
-              color: '#64748b',
+              color: '#a8a29e',
             }}
           >
             <div

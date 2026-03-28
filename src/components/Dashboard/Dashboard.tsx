@@ -36,14 +36,14 @@ const Dashboard: React.FC = () => {
             style={{
               fontSize: isMobile ? 20 : 24,
               fontWeight: 700,
-              fontFamily: "'Space Grotesk', sans-serif",
-              color: '#f1f5f9',
+              fontFamily: "'Sora', sans-serif",
+              color: '#fafaf9',
               margin: 0,
             }}
           >
             Dashboard
           </h1>
-          <p style={{ fontSize: 13, color: 'rgba(148, 163, 184, 0.7)', margin: '4px 0 0' }}>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#a8a29e', margin: '4px 0 0' }}>
             Visão geral da performance das campanhas
           </p>
         </div>
@@ -51,10 +51,10 @@ const Dashboard: React.FC = () => {
           style={{
             display: 'flex',
             gap: 4,
-            background: 'rgba(255, 255, 255, 0.04)',
+            background: 'rgba(255, 200, 120, 0.04)',
             borderRadius: 10,
             padding: 3,
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            border: '1px solid rgba(255, 200, 120, 0.06)',
           }}
         >
           {(['today', '7d', '14d', '30d'] as const).map((p) => (
@@ -69,8 +69,8 @@ const Dashboard: React.FC = () => {
                 fontWeight: 600,
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                background: selectedPeriod === p ? 'rgba(139, 92, 246, 0.25)' : 'transparent',
-                color: selectedPeriod === p ? '#c4b5fd' : 'rgba(148, 163, 184, 0.6)',
+                background: selectedPeriod === p ? 'rgba(245, 158, 11, 0.2)' : 'transparent',
+                color: selectedPeriod === p ? '#fbbf24' : '#a8a29e',
               }}
             >
               {p === 'today' ? 'Hoje' : p}
@@ -106,11 +106,10 @@ const Dashboard: React.FC = () => {
       {/* Campaigns Table */}
       <div
         style={{
-          background: 'rgba(22, 22, 32, 0.85)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
-          borderRadius: 16,
+          background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+          border: '1px solid rgba(255, 200, 120, 0.06)',
+          borderRadius: 20,
+          boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
           overflow: 'hidden',
           animation: 'fadeInUp 0.7s ease-out both',
         }}
@@ -118,7 +117,7 @@ const Dashboard: React.FC = () => {
         <div
           style={{
             padding: '16px 20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            borderBottom: '1px solid rgba(255, 200, 120, 0.06)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -128,14 +127,14 @@ const Dashboard: React.FC = () => {
             style={{
               fontSize: 16,
               fontWeight: 700,
-              fontFamily: "'Space Grotesk', sans-serif",
-              color: '#f1f5f9',
+              fontFamily: "'Sora', sans-serif",
+              color: '#fafaf9',
               margin: 0,
             }}
           >
             Campanhas
           </h2>
-          <span style={{ fontSize: 12, color: 'rgba(148, 163, 184, 0.6)' }}>
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#a8a29e' }}>
             {mockCampaigns.length} campanhas
           </span>
         </div>
@@ -156,9 +155,10 @@ const Dashboard: React.FC = () => {
                       fontWeight: 600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
-                      color: 'rgba(148, 163, 184, 0.5)',
+                      color: '#78716c',
+                      background: '#111110',
                       textAlign: h === 'Nome' ? 'left' : 'right',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                      borderBottom: '1px solid rgba(255, 200, 120, 0.04)',
                     }}
                   >
                     {h}
@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
                       cursor: 'pointer',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                      e.currentTarget.style.background = 'rgba(245, 158, 11, 0.04)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent';
@@ -191,8 +191,8 @@ const Dashboard: React.FC = () => {
                         padding: isMobile ? '10px 10px' : '14px 16px',
                         fontSize: isMobile ? 12 : 13,
                         fontWeight: 500,
-                        color: '#e2e8f0',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
+                        color: '#fafaf9',
+                        borderBottom: '1px solid rgba(255, 200, 120, 0.03)',
                         maxWidth: isMobile ? 160 : 280,
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
@@ -206,7 +206,7 @@ const Dashboard: React.FC = () => {
                       style={{
                         padding: '14px 16px',
                         textAlign: 'right',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
+                        borderBottom: '1px solid rgba(255, 200, 120, 0.03)',
                       }}
                     >
                       <span
@@ -237,7 +237,7 @@ const Dashboard: React.FC = () => {
                       {formatCurrency(campaign.spend)}
                     </td>
                     <td style={isMobile ? mobileCellStyle : cellStyle}>
-                      <span style={{ color: campaign.roas >= 3 ? '#4ade80' : campaign.roas >= 2 ? '#facc15' : '#f87171' }}>
+                      <span style={{ color: campaign.roas >= 3 ? '#84cc16' : campaign.roas >= 2 ? '#f59e0b' : '#ef4444' }}>
                         {campaign.roas.toFixed(1)}x
                       </span>
                     </td>
@@ -251,7 +251,7 @@ const Dashboard: React.FC = () => {
                     )}
                     {!isMobile && (
                       <td style={cellStyle}>
-                        <span style={{ color: campaign.frequency > 2.5 ? '#f87171' : '#94a3b8' }}>
+                        <span style={{ color: campaign.frequency > 2.5 ? '#ef4444' : '#a8a29e' }}>
                           {campaign.frequency.toFixed(1)}
                         </span>
                       </td>
@@ -267,7 +267,7 @@ const Dashboard: React.FC = () => {
                           borderRadius: 6,
                           fontSize: 12,
                           fontWeight: 700,
-                          fontFamily: "'Space Grotesk', sans-serif",
+                          fontFamily: "'Sora', sans-serif",
                           background: `${scoreColor}18`,
                           color: scoreColor,
                         }}
@@ -282,7 +282,7 @@ const Dashboard: React.FC = () => {
           </table>
           {mockCampaigns.length === 0 && (
             <div style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma campanha encontrada</div>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#a8a29e' }}>Nenhuma campanha encontrada</div>
             </div>
           )}
         </div>
@@ -295,20 +295,20 @@ const cellStyle: React.CSSProperties = {
   padding: '14px 16px',
   fontSize: 13,
   fontWeight: 500,
-  color: '#94a3b8',
+  color: '#d6d3d1',
   textAlign: 'right',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
-  fontFamily: "'Space Grotesk', sans-serif",
+  borderBottom: '1px solid rgba(255, 200, 120, 0.03)',
+  fontFamily: "'IBM Plex Mono', monospace",
 };
 
 const mobileCellStyle: React.CSSProperties = {
   padding: '10px 10px',
   fontSize: 11,
   fontWeight: 500,
-  color: '#94a3b8',
+  color: '#d6d3d1',
   textAlign: 'right',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
-  fontFamily: "'Space Grotesk', sans-serif",
+  borderBottom: '1px solid rgba(255, 200, 120, 0.03)',
+  fontFamily: "'IBM Plex Mono', monospace",
 };
 
 export default Dashboard;

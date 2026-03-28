@@ -15,25 +15,27 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <div style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          minHeight: '100vh', background: '#0c0c14', color: '#e2e8f0', fontFamily: "'Outfit', sans-serif",
+          minHeight: '100vh', background: '#0a0a0a', color: '#fafaf9', fontFamily: "'DM Sans', sans-serif",
           padding: 32, textAlign: 'center',
         }}>
           <div style={{
-            background: 'rgba(22,22,32,0.85)', backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.06)', borderRadius: 16,
+            background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+            border: '1px solid rgba(255, 200, 120, 0.06)',
+            borderRadius: 20,
             padding: 40, maxWidth: 480,
+            boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
           }}>
             <div style={{ fontSize: 48, marginBottom: 16 }}>⚠</div>
-            <h1 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, fontFamily: "'Space Grotesk', sans-serif" }}>
+            <h1 style={{ fontSize: 20, fontWeight: 600, marginBottom: 8, fontFamily: "'Sora', sans-serif" }}>
               Algo deu errado
             </h1>
-            <p style={{ color: '#64748b', fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
+            <p style={{ color: '#a8a29e', fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
               {this.state.error?.message || 'Ocorreu um erro inesperado.'}
             </p>
             <button
               onClick={() => { this.setState({ hasError: false, error: null }); }}
               style={{
-                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: 'white',
+                background: 'linear-gradient(135deg, #f59e0b, #fbbf24)', color: 'white',
                 border: 'none', borderRadius: 12, padding: '12px 24px', fontSize: 14,
                 fontWeight: 600, cursor: 'pointer', transition: 'opacity 0.2s',
               }}

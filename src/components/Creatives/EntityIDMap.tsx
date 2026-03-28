@@ -5,17 +5,17 @@ import { Layers, AlertTriangle } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const COLORS = {
-  surface: 'rgba(22, 22, 32, 0.98)',
-  border: 'rgba(255, 255, 255, 0.06)',
-  text: '#e2e8f0',
-  textMuted: '#64748b',
-  accent: '#6366f1',
-  danger: '#f87171',
-  warning: '#facc15',
-  success: '#4ade80',
+  surface: '#1a1918',
+  border: 'rgba(255, 200, 120, 0.06)',
+  text: '#fafaf9',
+  textMuted: '#a8a29e',
+  accent: '#f59e0b',
+  danger: '#ef4444',
+  warning: '#f59e0b',
+  success: '#84cc16',
 };
 
-const groupColors = ['#6366f1', '#8b5cf6', '#a78bfa', '#f472b6', '#60a5fa'];
+const groupColors = ['#f59e0b', '#fbbf24', '#d97706', '#fb923c', '#06b6d4'];
 
 export default function EntityIDMap() {
   const isMobile = useIsMobile();
@@ -31,11 +31,12 @@ export default function EntityIDMap() {
 
   return (
     <div style={{
-      background: COLORS.surface,
+      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
       border: `1px solid ${COLORS.border}`,
-      borderRadius: 16,
+      borderRadius: 20,
       padding: 24,
       marginBottom: 24,
+      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
@@ -44,8 +45,8 @@ export default function EntityIDMap() {
           <span style={{ color: COLORS.text, fontSize: 16, fontWeight: 600 }}>Mapa de Entity IDs</span>
         </div>
         <div style={{
-          background: 'rgba(99, 102, 241, 0.12)',
-          border: '1px solid rgba(99, 102, 241, 0.25)',
+          background: 'rgba(245, 158, 11, 0.12)',
+          border: '1px solid rgba(245, 158, 11, 0.25)',
           borderRadius: 8,
           padding: '6px 14px',
           fontSize: 13,
@@ -59,8 +60,8 @@ export default function EntityIDMap() {
       {/* Warning banner */}
       {overcrowded.length > 0 && (
         <div style={{
-          background: 'rgba(248, 113, 113, 0.08)',
-          border: '1px solid rgba(248, 113, 113, 0.2)',
+          background: 'rgba(239, 68, 68, 0.08)',
+          border: '1px solid rgba(239, 68, 68, 0.2)',
           borderRadius: 10,
           padding: '10px 16px',
           marginBottom: 16,
@@ -77,12 +78,12 @@ export default function EntityIDMap() {
       )}
 
       {/* SVG Visualization */}
-      <div style={{ overflowX: 'auto', borderRadius: 12, background: 'rgba(12, 12, 20, 0.5)', padding: 16 }}>
+      <div style={{ overflowX: 'auto', borderRadius: 12, background: 'rgba(10, 10, 10, 0.5)', padding: 16 }}>
         <svg width={isMobile ? '100%' : svgWidth} height={svgHeight} viewBox={`0 0 ${svgWidth} ${svgHeight}`} style={{ minWidth: isMobile ? svgWidth : undefined }}>
           {/* Connecting line */}
           <line
             x1={60} y1={centerY} x2={svgWidth - 60} y2={centerY}
-            stroke="rgba(99, 102, 241, 0.15)" strokeWidth={2} strokeDasharray="6 4"
+            stroke="rgba(245, 158, 11, 0.15)" strokeWidth={2} strokeDasharray="6 4"
           />
 
           {groups.map((group, idx) => {
@@ -118,7 +119,7 @@ export default function EntityIDMap() {
 
                 {/* Main circle */}
                 <circle cx={cx} cy={centerY} r={radius}
-                  fill={isOvercrowded ? 'rgba(248, 113, 113, 0.15)' : `${color}22`}
+                  fill={isOvercrowded ? 'rgba(239, 68, 68, 0.15)' : `${color}22`}
                   stroke={isOvercrowded ? COLORS.danger : color}
                   strokeWidth={2}
                 />
@@ -140,7 +141,7 @@ export default function EntityIDMap() {
                   const dotX = cx + Math.cos(angle) * orbitR;
                   const dotY = centerY + Math.sin(angle) * orbitR;
                   const dotColor = cr.status === 'winner' ? COLORS.success
-                    : cr.status === 'testing' ? '#60a5fa' : COLORS.danger;
+                    : cr.status === 'testing' ? '#06b6d4' : COLORS.danger;
 
                   return (
                     <g key={cr.id}>
@@ -177,8 +178,8 @@ export default function EntityIDMap() {
             <div key={group.entity_id} style={{
               flex: 1,
               minWidth: isMobile ? 180 : undefined,
-              background: 'rgba(12, 12, 20, 0.5)',
-              border: `1px solid ${group.is_overcrowded ? 'rgba(248,113,113,0.3)' : COLORS.border}`,
+              background: 'rgba(10, 10, 10, 0.5)',
+              border: `1px solid ${group.is_overcrowded ? 'rgba(239,68,68,0.3)' : COLORS.border}`,
               borderRadius: 10,
               padding: '10px 14px',
               display: 'flex',

@@ -47,7 +47,8 @@ export default function Header() {
         flexDirection: isMobile ? 'column' : 'row',
         padding: isMobile ? '12px 16px' : '0 24px',
         gap: isMobile ? 12 : 0,
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        background: 'transparent',
+        borderBottom: '1px solid rgba(255, 200, 120, 0.04)',
         flexShrink: 0,
       }}
     >
@@ -55,8 +56,9 @@ export default function Header() {
       <h1
         style={{
           fontSize: isMobile ? 16 : 20,
+          fontFamily: "'Sora', sans-serif",
           fontWeight: 700,
-          color: '#fff',
+          color: '#fafaf9',
           letterSpacing: '-0.02em',
           margin: 0,
           paddingLeft: isMobile ? 40 : 0,
@@ -75,8 +77,8 @@ export default function Header() {
             gap: 2,
             padding: 3,
             borderRadius: 10,
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.06)',
+            background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+            border: '1px solid rgba(255, 200, 120, 0.06)',
             overflowX: isMobile ? 'auto' : 'visible',
             flexWrap: 'nowrap',
             flexShrink: isMobile ? 1 : 0,
@@ -101,11 +103,13 @@ export default function Header() {
                   cursor: 'pointer',
                   fontSize: 13,
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? '#fff' : isHovered ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.4)',
+                  color: isActive ? '#fafaf9' : isHovered ? '#d6d3d1' : '#a8a29e',
                   background: isActive
-                    ? 'linear-gradient(135deg, rgba(99,102,241,0.5), rgba(139,92,246,0.5))'
+                    ? 'linear-gradient(135deg, #f59e0b, #d97706)'
                     : 'transparent',
-                  boxShadow: isActive ? '0 0 16px rgba(99,102,241,0.2)' : 'none',
+                  boxShadow: isActive
+                    ? '0 1px 0 0 rgba(255, 200, 120, 0.05) inset, 0 -1px 0 0 rgba(0, 0, 0, 0.15) inset, 0 0 16px rgba(245, 158, 11, 0.15)'
+                    : '0 1px 0 0 rgba(255, 200, 120, 0.05) inset, 0 -1px 0 0 rgba(0, 0, 0, 0.15) inset',
                   transition: `all 0.2s ${easing}`,
                   outline: 'none',
                 }}
@@ -117,7 +121,7 @@ export default function Header() {
         </div>
 
         {/* Divider */}
-        <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.08)' }} />
+        <div style={{ width: 1, height: 24, background: 'rgba(255, 200, 120, 0.06)' }} />
 
         {/* Connect / Account */}
         {mode === 'demo' ? (
@@ -126,12 +130,12 @@ export default function Header() {
               openMetaLogin();
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(99,102,241,0.3)';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(99,102,241,0.4), rgba(139,92,246,0.4))';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(245, 158, 11, 0.25)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = 'none';
-              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.25))';
+              e.currentTarget.style.boxShadow = '0 0 12px rgba(245, 158, 11, 0.1)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
             }}
             style={{
               display: 'flex',
@@ -139,9 +143,9 @@ export default function Header() {
               gap: 8,
               padding: '8px 16px',
               borderRadius: 10,
-              border: '1px solid rgba(99,102,241,0.3)',
-              background: 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.25))',
-              color: '#c7d2fe',
+              border: '1px solid rgba(245, 158, 11, 0.3)',
+              background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+              color: '#fafaf9',
               fontSize: 13,
               fontWeight: 600,
               cursor: 'pointer',
@@ -160,18 +164,18 @@ export default function Header() {
               gap: 8,
               padding: '8px 14px',
               borderRadius: 10,
-              background: 'rgba(34,197,94,0.08)',
-              border: '1px solid rgba(34,197,94,0.15)',
+              background: 'rgba(132, 204, 22, 0.08)',
+              border: '1px solid rgba(132, 204, 22, 0.15)',
             }}
           >
-            <Wifi size={15} style={{ color: '#4ade80' }} />
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#4ade80' }}>Meta Conectado</span>
+            <Wifi size={15} style={{ color: '#84cc16' }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#84cc16' }}>Meta Conectado</span>
           </div>
         )}
 
         {/* Divider - hidden on mobile */}
         {!isMobile && (
-          <div style={{ width: 1, height: 24, background: 'rgba(255,255,255,0.08)' }} />
+          <div style={{ width: 1, height: 24, background: 'rgba(255, 200, 120, 0.06)' }} />
         )}
 
         {/* Search icon - hidden on mobile */}
@@ -183,13 +187,13 @@ export default function Header() {
               width: 36,
               height: 36,
               borderRadius: 8,
-              border: '1px solid rgba(255,255,255,0.06)',
-              background: hoveredIcon === 'search' ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255, 200, 120, 0.06)',
+              background: hoveredIcon === 'search' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255, 200, 120, 0.03)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: hoveredIcon === 'search' ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.35)',
+              color: hoveredIcon === 'search' ? '#d6d3d1' : '#a8a29e',
               transition: `all 0.2s ${easing}`,
               outline: 'none',
             }}
@@ -207,13 +211,13 @@ export default function Header() {
               width: 36,
               height: 36,
               borderRadius: 8,
-              border: '1px solid rgba(255,255,255,0.06)',
-              background: hoveredIcon === 'settings' ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255, 200, 120, 0.06)',
+              background: hoveredIcon === 'settings' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255, 200, 120, 0.03)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: hoveredIcon === 'settings' ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.35)',
+              color: hoveredIcon === 'settings' ? '#d6d3d1' : '#a8a29e',
               transition: `all 0.2s ${easing}`,
               outline: 'none',
             }}

@@ -44,7 +44,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
           <TrendingUp size={18} color={COLORS.purple} />
           <span style={{ color: COLORS.text, fontSize: isMobile ? 14 : 15, fontWeight: 600 }}>Value Rules</span>
           {!isMobile && <span style={{
-            background: 'rgba(167, 139, 250, 0.12)', borderRadius: 6, padding: '2px 8px',
+            background: 'rgba(217, 119, 6, 0.12)', borderRadius: 6, padding: '2px 8px',
             fontSize: 10, fontWeight: 600, color: COLORS.purple,
           }}>
             +46% ROAS case study
@@ -52,7 +52,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
         </div>
         <button style={{
           display: 'flex', alignItems: 'center', gap: 4,
-          background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
+          background: 'rgba(255,200,120,0.06)', border: `1px solid ${COLORS.border}`,
           borderRadius: 8, padding: isMobile ? '10px 14px' : '5px 10px', fontSize: isMobile ? 12 : 11, color: COLORS.textMuted,
           cursor: 'pointer', minHeight: isMobile ? 40 : undefined,
         }}>
@@ -71,8 +71,8 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
                 display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 10 : 12,
                 padding: isMobile ? '10px 12px' : '12px 16px',
                 flexWrap: isMobile ? 'wrap' : 'nowrap',
-                background: rule.enabled ? 'rgba(167, 139, 250, 0.04)' : 'rgba(12, 12, 20, 0.4)',
-                border: `1px solid ${rule.enabled ? 'rgba(167, 139, 250, 0.12)' : COLORS.border}`,
+                background: rule.enabled ? 'rgba(217, 119, 6, 0.04)' : 'rgba(12, 12, 20, 0.4)',
+                border: `1px solid ${rule.enabled ? 'rgba(217, 119, 6, 0.12)' : COLORS.border}`,
                 borderRadius: 10,
                 opacity: rule.enabled ? 1 : 0.6,
                 transition: 'all 0.2s ease',
@@ -85,7 +85,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
                   width: isMobile ? 44 : 36, height: isMobile ? 24 : 20, borderRadius: 12,
                   background: rule.enabled
                     ? `linear-gradient(90deg, ${COLORS.purple}, ${COLORS.pink})`
-                    : 'rgba(255,255,255,0.08)',
+                    : 'rgba(255,200,120,0.08)',
                   border: 'none', cursor: 'pointer', position: 'relative', padding: 0,
                   transition: 'background 0.2s ease', flexShrink: 0,
                 }}
@@ -113,7 +113,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
               }}>
                 <span style={{
                   fontSize: 14, fontWeight: 700, color: multiplierColor(rule.bid_multiplier),
-                  fontFamily: '"JetBrains Mono", monospace',
+                  fontFamily: '"IBM Plex Mono", monospace',
                 }}>
                   {multiplierLabel(rule.bid_multiplier)}
                 </span>
@@ -125,7 +125,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
 
       <div style={{
         marginTop: 12, padding: '10px 14px', borderRadius: 8,
-        background: 'rgba(167, 139, 250, 0.06)', border: '1px solid rgba(167, 139, 250, 0.1)',
+        background: 'rgba(217, 119, 6, 0.06)', border: '1px solid rgba(217, 119, 6, 0.1)',
         fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5,
       }}>
         Value Rules dizem ao Andromeda quanto valorizar cada segmento no leilão. Laura Geller obteve <span style={{ color: COLORS.purple, fontWeight: 600 }}>+46% ROAS</span> com Value Optimization + custom event "first-time purchaser".

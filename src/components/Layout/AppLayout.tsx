@@ -15,9 +15,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: '#0c0c14',
-        color: '#fff',
-        fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        background: '#0a0a0a',
+        color: '#fafaf9',
+        fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       <Sidebar />
@@ -34,15 +34,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             width: 44,
             height: 44,
             borderRadius: 8,
-            border: '1px solid rgba(255,255,255,0.1)',
-            background: 'rgba(12, 12, 20, 0.9)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 200, 120, 0.08)',
+            background: '#1a1918',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: 'rgba(255,255,255,0.7)',
+            color: '#a8a29e',
             outline: 'none',
           }}
         >
@@ -65,7 +63,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div
           style={{
             flex: 1,
-            padding: isMobile ? 16 : 24,
+            padding: isMobile ? 16 : 28,
             overflowY: 'auto',
           }}
         >
@@ -73,29 +71,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </main>
 
-      {/* Ambient background glow */}
+      {/* Subtle warm ambient glow */}
       <div
         style={{
           position: 'fixed',
-          top: '-20%',
-          left: '30%',
-          width: 600,
-          height: 600,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(99,102,241,0.06) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '-10%',
-          right: '10%',
-          width: 500,
-          height: 500,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(139,92,246,0.04) 0%, transparent 70%)',
+          inset: 0,
+          background: 'radial-gradient(ellipse 600px 400px at 10% 10%, rgba(245, 158, 11, 0.03), transparent)',
           pointerEvents: 'none',
           zIndex: 0,
         }}
