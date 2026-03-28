@@ -32,17 +32,17 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
   const isMobile = useIsMobile();
   const isPositiveChange = change > 0;
   const isGood = invertChange ? !isPositiveChange : isPositiveChange;
-  const changeColor = isGood ? '#84cc16' : '#ef4444';
-  const sparkColor = '#f59e0b';
+  const changeColor = isGood ? '#22c55e' : '#ef4444';
+  const sparkColor = '#10b981';
   const arrow = isPositiveChange ? '↑' : '↓';
 
   return (
     <div
       style={{
-        background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-        border: '1px solid rgba(255, 200, 120, 0.06)',
+        background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+        border: '1px solid rgba(255, 255, 255, 0.06)',
         borderRadius: 20,
-        boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+        boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
         padding: isMobile ? 12 : 20,
         display: 'flex',
         flexDirection: 'column',
@@ -55,14 +55,14 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget;
-        el.style.border = '1px solid rgba(255, 200, 120, 0.14)';
-        el.style.boxShadow = '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25), 0 0 30px rgba(245,158,11,0.06)';
+        el.style.border = '1px solid rgba(255, 255, 255, 0.14)';
+        el.style.boxShadow = '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25), 0 0 30px rgba(16,185,129,0.06)';
         el.style.transform = 'translateY(-1px)';
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget;
-        el.style.border = '1px solid rgba(255, 200, 120, 0.06)';
-        el.style.boxShadow = '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)';
+        el.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+        el.style.boxShadow = '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)';
         el.style.transform = 'translateY(0)';
       }}
     >
@@ -74,7 +74,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
             fontWeight: 600,
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
-            color: '#78716c',
+            color: '#525252',
           }}
         >
           {label}
@@ -102,8 +102,8 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
           style={{
             fontSize: isMobile ? 22 : 28,
             fontWeight: 700,
-            fontFamily: "'Sora', sans-serif",
-            color: '#fafaf9',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            color: '#f5f5f5',
             lineHeight: 1,
           }}
         >

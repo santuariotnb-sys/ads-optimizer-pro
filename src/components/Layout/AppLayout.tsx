@@ -15,8 +15,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       style={{
         display: 'flex',
         minHeight: '100vh',
-        background: '#0a0a0a',
-        color: '#fafaf9',
+        background: '#000000',
+        color: '#f5f5f5',
         fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
@@ -34,13 +34,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             width: 44,
             height: 44,
             borderRadius: 8,
-            border: '1px solid rgba(255, 200, 120, 0.08)',
-            background: '#1a1918',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            background: '#111111',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#a8a29e',
+            color: '#737373',
             outline: 'none',
           }}
         >
@@ -70,17 +70,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </main>
-
-      {/* Subtle warm ambient glow */}
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'radial-gradient(ellipse 600px 400px at 10% 10%, rgba(245, 158, 11, 0.03), transparent)',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
     </div>
   );
 }

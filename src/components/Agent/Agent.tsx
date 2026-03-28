@@ -140,7 +140,7 @@ Implemente DeepEngagement (scroll 75% + 2min na LP) e HighIntentVisitor (3 visit
 
 function parseMarkdown(text: string): string {
   return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#fafaf9;font-weight:600">$1</strong>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f5f5f5;font-weight:600">$1</strong>')
     .replace(/\n/g, '<br/>');
 }
 
@@ -151,14 +151,14 @@ const containerStyle: React.CSSProperties = {
   maxHeight: 'calc(100vh - 120px)',
   background: 'rgba(10,10,10,0.6)',
   borderRadius: 20,
-  border: '1px solid rgba(245,158,11,0.15)',
+  border: '1px solid rgba(16,185,129,0.15)',
   overflow: 'hidden',
 };
 
 const headerStyle: React.CSSProperties = {
   padding: '20px 24px 16px',
-  borderBottom: '1px solid rgba(255,200,120,0.06)',
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+  borderBottom: '1px solid rgba(255,255,255,0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
 };
@@ -175,8 +175,8 @@ const messagesContainerStyle: React.CSSProperties = {
 
 const inputContainerStyle: React.CSSProperties = {
   padding: '16px 24px 20px',
-  borderTop: '1px solid rgba(255,200,120,0.06)',
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+  borderTop: '1px solid rgba(255,255,255,0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
 };
@@ -185,8 +185,8 @@ const inputWrapperStyle: React.CSSProperties = {
   display: 'flex',
   gap: 12,
   alignItems: 'center',
-  background: 'rgba(255,200,120,0.04)',
-  border: '1px solid rgba(255,200,120,0.08)',
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.08)',
   borderRadius: 12,
   padding: '10px 12px 10px 16px',
   backdropFilter: 'blur(12px)',
@@ -199,7 +199,7 @@ const inputStyle: React.CSSProperties = {
   background: 'transparent',
   border: 'none',
   outline: 'none',
-  color: '#fafaf9',
+  color: '#f5f5f5',
   fontSize: 14,
   fontFamily: 'inherit',
   resize: 'none',
@@ -211,7 +211,7 @@ const sendButtonStyle: React.CSSProperties = {
   height: 44,
   borderRadius: 10,
   border: 'none',
-  background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+  background: 'linear-gradient(135deg, #10b981, #34d399)',
   color: '#fff',
   cursor: 'pointer',
   display: 'flex',
@@ -219,7 +219,7 @@ const sendButtonStyle: React.CSSProperties = {
   justifyContent: 'center',
   flexShrink: 0,
   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-  boxShadow: '0 2px 12px rgba(245,158,11,0.3)',
+  boxShadow: '0 2px 12px rgba(16,185,129,0.3)',
 };
 
 const topicPillStyle: React.CSSProperties = {
@@ -228,11 +228,11 @@ const topicPillStyle: React.CSSProperties = {
   gap: 6,
   padding: '8px 14px',
   borderRadius: 20,
-  border: '1px solid rgba(245,158,11,0.25)',
-  background: 'rgba(245,158,11,0.08)',
+  border: '1px solid rgba(16,185,129,0.25)',
+  background: 'rgba(16,185,129,0.08)',
   backdropFilter: 'blur(8px)',
   WebkitBackdropFilter: 'blur(8px)',
-  color: '#fbbf24',
+  color: '#34d399',
   fontSize: 13,
   fontWeight: 500,
   cursor: 'pointer',
@@ -245,11 +245,11 @@ const userMessageStyle: React.CSSProperties = {
   maxWidth: '75%',
   padding: '12px 16px',
   borderRadius: '16px 16px 4px 16px',
-  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+  background: 'linear-gradient(135deg, #10b981, #059669)',
   color: '#fff',
   fontSize: 14,
   lineHeight: 1.6,
-  boxShadow: '0 2px 16px rgba(245,158,11,0.25)',
+  boxShadow: '0 2px 16px rgba(16,185,129,0.25)',
 };
 
 const assistantMessageStyle: React.CSSProperties = {
@@ -263,8 +263,8 @@ const assistantMessageStyle: React.CSSProperties = {
 const assistantBubbleStyle: React.CSSProperties = {
   padding: '14px 18px',
   borderRadius: '16px 16px 16px 4px',
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-  border: '1px solid rgba(255,200,120,0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  border: '1px solid rgba(255,255,255,0.06)',
   color: '#cbd5e1',
   fontSize: 14,
   lineHeight: 1.7,
@@ -276,12 +276,12 @@ const botAvatarStyle: React.CSSProperties = {
   width: 34,
   height: 34,
   borderRadius: 10,
-  background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+  background: 'linear-gradient(135deg, #10b981, #34d399)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  boxShadow: '0 2px 12px rgba(245,158,11,0.3)',
+  boxShadow: '0 2px 12px rgba(16,185,129,0.3)',
 };
 
 const typingDotsContainerStyle: React.CSSProperties = {
@@ -289,8 +289,8 @@ const typingDotsContainerStyle: React.CSSProperties = {
   gap: 4,
   padding: '14px 18px',
   borderRadius: '16px 16px 16px 4px',
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-  border: '1px solid rgba(255,200,120,0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  border: '1px solid rgba(255,255,255,0.06)',
 };
 
 const typingKeyframes = `
@@ -403,13 +403,13 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                 margin: 0,
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#fafaf9',
+                color: '#f5f5f5',
                 letterSpacing: '-0.01em',
               }}
             >
               Consultor de Ads IA
             </h2>
-            <p style={{ margin: 0, fontSize: 12, color: '#a8a29e' }}>
+            <p style={{ margin: 0, fontSize: 12, color: '#a3a3a3' }}>
               Análise inteligente das suas campanhas Meta Ads
             </p>
           </div>
@@ -421,8 +421,8 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               gap: 6,
               padding: '4px 10px',
               borderRadius: 20,
-              background: 'rgba(132,204,22,0.1)',
-              border: '1px solid rgba(132,204,22,0.2)',
+              background: 'rgba(34,197,94,0.1)',
+              border: '1px solid rgba(34,197,94,0.2)',
             }}
           >
             <div
@@ -430,11 +430,11 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                background: '#84cc16',
-                boxShadow: '0 0 8px rgba(132,204,22,0.5)',
+                background: '#22c55e',
+                boxShadow: '0 0 8px rgba(34,197,94,0.5)',
               }}
             />
-            <span style={{ fontSize: 11, color: '#84cc16', fontWeight: 500 }}>Online</span>
+            <span style={{ fontSize: 11, color: '#22c55e', fontWeight: 500 }}>Online</span>
           </div>
         </div>
 
@@ -457,13 +457,13 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                 style={{
                   ...topicPillStyle,
                   background: isHovered
-                    ? 'rgba(245,158,11,0.18)'
-                    : 'rgba(245,158,11,0.08)',
+                    ? 'rgba(16,185,129,0.18)'
+                    : 'rgba(16,185,129,0.08)',
                   borderColor: isHovered
-                    ? 'rgba(245,158,11,0.45)'
-                    : 'rgba(245,158,11,0.25)',
+                    ? 'rgba(16,185,129,0.45)'
+                    : 'rgba(16,185,129,0.25)',
                   transform: isHovered ? 'translateY(-1px)' : 'none',
-                  boxShadow: isHovered ? '0 4px 12px rgba(245,158,11,0.15)' : 'none',
+                  boxShadow: isHovered ? '0 4px 12px rgba(16,185,129,0.15)' : 'none',
                 }}
                 onClick={() => handleTopicClick(topic.id, topic.question)}
                 onMouseEnter={() => setHoveredTopic(topic.id)}
@@ -511,7 +511,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: '#f59e0b',
+                    background: '#10b981',
                     animation: `typingBounce 1.2s ease-in-out ${i * 0.15}s infinite`,
                   }}
                 />
@@ -529,9 +529,9 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
           style={{
             ...inputWrapperStyle,
             borderColor: inputFocused
-              ? 'rgba(245,158,11,0.4)'
-              : 'rgba(255,200,120,0.08)',
-            boxShadow: inputFocused ? '0 0 0 3px rgba(245,158,11,0.1)' : 'none',
+              ? 'rgba(16,185,129,0.4)'
+              : 'rgba(255,255,255,0.08)',
+            boxShadow: inputFocused ? '0 0 0 3px rgba(16,185,129,0.1)' : 'none',
           }}
         >
           <textarea
@@ -553,8 +553,8 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               ...sendButtonStyle,
               transform: hoveredSend ? 'scale(1.05)' : 'scale(1)',
               boxShadow: hoveredSend
-                ? '0 4px 20px rgba(245,158,11,0.45)'
-                : '0 2px 12px rgba(245,158,11,0.3)',
+                ? '0 4px 20px rgba(16,185,129,0.45)'
+                : '0 2px 12px rgba(16,185,129,0.3)',
             }}
           >
             <Send size={16} />

@@ -8,11 +8,11 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 type TabKey = 'all' | 'critical' | 'warning' | 'info' | 'success';
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-  border: '1px solid rgba(255, 200, 120, 0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  border: '1px solid rgba(255, 255, 255, 0.06)',
   borderRadius: 20,
   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-  boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
 };
 
 const tabs: { key: TabKey; label: string }[] = [
@@ -62,17 +62,17 @@ export default function Alerts() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
           width: 40, height: 40, borderRadius: 12,
-          background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+          background: 'linear-gradient(135deg, #10b981, #34d399)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 20px rgba(245,158,11,0.3)',
+          boxShadow: '0 0 20px rgba(16,185,129,0.3)',
         }}>
           <Bell size={20} color="#fff" />
         </div>
         <div>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#fafaf9', fontFamily: "'DM Sans', sans-serif" }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'DM Sans', sans-serif" }}>
             Central de Alertas
           </h2>
-          <span style={{ fontSize: 13, color: '#a8a29e' }}>
+          <span style={{ fontSize: 13, color: '#a3a3a3' }}>
             {counts.all} alertas pendentes
           </span>
         </div>
@@ -83,7 +83,7 @@ export default function Alerts() {
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
           const count = counts[tab.key];
-          const severityColor = tab.key !== 'all' ? getSeverityColor(tab.key) : '#f59e0b';
+          const severityColor = tab.key !== 'all' ? getSeverityColor(tab.key) : '#10b981';
 
           return (
             <button
@@ -93,8 +93,8 @@ export default function Alerts() {
                 padding: '8px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', outline: 'none',
                 fontSize: 13, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
-                background: isActive ? `${severityColor}20` : 'rgba(255,200,120,0.04)',
-                color: isActive ? severityColor : '#a8a29e',
+                background: isActive ? `${severityColor}20` : 'rgba(255,255,255,0.04)',
+                color: isActive ? severityColor : '#a3a3a3',
                 transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
@@ -141,14 +141,14 @@ export default function Alerts() {
               {/* Content */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#fafaf9', fontFamily: "'DM Sans', sans-serif" }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', fontFamily: "'DM Sans', sans-serif" }}>
                     {alert.title}
                   </span>
                   {alert.campaign_id && (
                     <span style={{
                       fontSize: 10, padding: '2px 8px', borderRadius: 8,
-                      background: 'rgba(245,158,11,0.15)', color: '#fbbf24',
-                      fontFamily: "'IBM Plex Mono', monospace",
+                      background: 'rgba(16,185,129,0.15)', color: '#34d399',
+                      fontFamily: "'Fira Code', monospace",
                     }}>
                       {alert.campaign_id}
                     </span>
@@ -157,7 +157,7 @@ export default function Alerts() {
                 <p style={{ margin: '0 0 8px', fontSize: 13, color: '#94a3b8', lineHeight: 1.5 }}>
                   {alert.message}
                 </p>
-                <span style={{ fontSize: 11, color: '#a8a29e' }}>
+                <span style={{ fontSize: 11, color: '#a3a3a3' }}>
                   {formatDate(alert.timestamp)}
                 </span>
               </div>
@@ -168,14 +168,14 @@ export default function Alerts() {
                   onClick={() => handleDismiss(alert.id)}
                   aria-label="Dispensar alerta"
                   style={{
-                    background: 'rgba(255,200,120,0.04)', border: 'none', cursor: 'pointer',
+                    background: 'rgba(255,255,255,0.04)', border: 'none', cursor: 'pointer',
                     borderRadius: 8, padding: 6, flexShrink: 0,
-                    color: '#a8a29e', transition: 'all 0.2s ease',
+                    color: '#a3a3a3', transition: 'all 0.2s ease',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     minWidth: isMobile ? 44 : undefined, minHeight: isMobile ? 44 : undefined,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = '#fafaf9'; e.currentTarget.style.background = 'rgba(255,200,120,0.08)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = '#a8a29e'; e.currentTarget.style.background = 'rgba(255,200,120,0.04)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = '#f5f5f5'; e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = '#a3a3a3'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
                 >
                   <X size={16} />
                 </button>
@@ -186,8 +186,8 @@ export default function Alerts() {
 
         {filtered.length === 0 && (
           <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
-            <CheckCircle size={32} color="#84cc16" style={{ marginBottom: 12, opacity: 0.5 }} />
-            <div style={{ fontSize: 14, color: '#a8a29e' }}>Nenhum alerta nesta categoria</div>
+            <CheckCircle size={32} color="#22c55e" style={{ marginBottom: 12, opacity: 0.5 }} />
+            <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhum alerta nesta categoria</div>
           </div>
         )}
       </div>

@@ -13,7 +13,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
   const isMobile = useIsMobile();
 
   const score = analysis.overall_score;
-  const gaugeColor = score >= 9 ? COLORS.success : score >= 8 ? '#84cc16' : score >= 6 ? COLORS.warning : COLORS.danger;
+  const gaugeColor = score >= 9 ? COLORS.success : score >= 8 ? '#22c55e' : score >= 6 ? COLORS.warning : COLORS.danger;
 
   const radius = isMobile ? 50 : 62;
   const circumference = 2 * Math.PI * radius;
@@ -22,7 +22,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
 
   const levelConfig = {
     excellent: { label: 'EXCELENTE', color: COLORS.success, icon: CheckCircle },
-    good: { label: 'BOM', color: '#84cc16', icon: CheckCircle },
+    good: { label: 'BOM', color: '#22c55e', icon: CheckCircle },
     warning: { label: 'AVISO', color: COLORS.warning, icon: AlertTriangle },
     critical: { label: 'CRÍTICO', color: COLORS.danger, icon: AlertTriangle },
   };
@@ -65,7 +65,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
               <stop offset="100%" stopColor={gaugeColor} />
             </linearGradient>
           </defs>
-          <circle cx={isMobile ? 60 : 76} cy={isMobile ? 60 : 76} r={radius} fill="none" stroke="rgba(255,200,120,0.04)" strokeWidth={isMobile ? 8 : 10} />
+          <circle cx={isMobile ? 60 : 76} cy={isMobile ? 60 : 76} r={radius} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={isMobile ? 8 : 10} />
           <circle cx={isMobile ? 60 : 76} cy={isMobile ? 60 : 76} r={radius} fill="none"
             stroke="url(#emq-gradient)" strokeWidth={isMobile ? 8 : 10}
             strokeDasharray={circumference} strokeDashoffset={offset}
@@ -115,7 +115,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
         {analysis.parameters.map(param => {
           const percent = param.max_impact > 0 ? (param.estimated_impact / param.max_impact) * 100 : 0;
           const isHovered = hoveredParam === param.key;
-          const barColor = param.present ? COLORS.accent : 'rgba(255,200,120,0.06)';
+          const barColor = param.present ? COLORS.accent : 'rgba(255,255,255,0.06)';
 
           return (
             <div key={param.key}
@@ -138,12 +138,12 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
                   +{param.estimated_impact.toFixed(1)}
                 </span>
               </div>
-              <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,200,120,0.04)', overflow: 'hidden' }}>
+              <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.04)', overflow: 'hidden' }}>
                 <div style={{
                   height: '100%', width: `${Math.min(percent, 100)}%`, borderRadius: 2,
                   background: param.present
                     ? `linear-gradient(90deg, ${barColor}, ${COLORS.accent}88)`
-                    : 'rgba(255,200,120,0.06)',
+                    : 'rgba(255,255,255,0.06)',
                   transition: 'width 0.5s ease',
                 }} />
               </div>

@@ -30,11 +30,11 @@ function StatCards() {
     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12, marginBottom: isMobile ? 16 : 24 }}>
       {cards.map(c => (
         <div key={c.label} style={{
-          background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-          border: '1px solid rgba(255, 200, 120, 0.06)',
+          background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
           borderRadius: 20, padding: isMobile ? '12px 14px' : '18px 20px',
           position: 'relative', overflow: 'hidden',
-          boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+          boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
         }}>
           <div style={{
             position: 'absolute', top: -20, right: -20, width: 80, height: 80,
@@ -44,7 +44,7 @@ function StatCards() {
             {c.label}
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontSize: 28, fontWeight: 800, color: c.color, lineHeight: 1, fontFamily: "'Sora', sans-serif" }}>{c.value}</span>
+            <span style={{ fontSize: 28, fontWeight: 800, color: c.color, lineHeight: 1, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{c.value}</span>
             <span style={{ fontSize: 12, color: COLORS.textMuted }}>{c.sub}</span>
           </div>
         </div>
@@ -58,15 +58,15 @@ function SignalLadder() {
   const isMobile = useIsMobile();
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-      border: '1px solid rgba(255, 200, 120, 0.06)',
+      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+      border: '1px solid rgba(255, 255, 255, 0.06)',
       borderRadius: 20, padding: isMobile ? 16 : 24, position: 'relative', overflow: 'hidden',
-      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       <div style={{
         position: 'absolute', top: '50%', left: '50%', width: 200, height: 200,
         transform: 'translate(-50%, -50%)',
-        background: 'radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
         pointerEvents: 'none',
       }} />
 
@@ -74,10 +74,10 @@ function SignalLadder() {
         <Radio size={18} color={COLORS.accent} />
         <span style={{ color: COLORS.text, fontSize: 15, fontWeight: 700 }}>Nível de Sinal</span>
         <span style={{
-          background: 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(251,191,36,0.2))',
-          border: '1px solid rgba(245,158,11,0.4)',
+          background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(52,211,153,0.2))',
+          border: '1px solid rgba(16,185,129,0.4)',
           borderRadius: 6, padding: '3px 10px',
-          fontSize: 12, fontWeight: 700, color: '#fbbf24',
+          fontSize: 12, fontWeight: 700, color: '#34d399',
         }}>
           Level {currentSignalLevel}
         </span>
@@ -87,7 +87,7 @@ function SignalLadder() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 0, position: 'relative' }}>
         <div style={{
           position: 'absolute', left: 18, top: 18, width: 2,
-          height: 'calc(100% - 36px)', background: 'rgba(255,200,120,0.04)', borderRadius: 1,
+          height: 'calc(100% - 36px)', background: 'rgba(255,255,255,0.04)', borderRadius: 1,
         }} />
         <div style={{
           position: 'absolute', left: 17, top: 18, width: 4,
@@ -112,10 +112,10 @@ function SignalLadder() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: isActive
                   ? `linear-gradient(135deg, ${COLORS.accent}, ${COLORS.accentLight})`
-                  : isPast ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,200,120,0.04)',
+                  : isPast ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.04)',
                 border: isActive
                   ? `2px solid ${COLORS.accent}`
-                  : isPast ? '2px solid rgba(245, 158, 11, 0.4)' : '2px solid rgba(255,200,120,0.08)',
+                  : isPast ? '2px solid rgba(16, 185, 129, 0.4)' : '2px solid rgba(255,255,255,0.08)',
                 boxShadow: isActive ? `0 0 16px ${COLORS.accent}44` : 'none',
                 transition: 'all 0.3s ease', zIndex: 2,
               }}>
@@ -127,7 +127,7 @@ function SignalLadder() {
                   {level.name}
                 </span>
                 <span style={{
-                  background: isActive ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255,200,120,0.04)',
+                  background: isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.04)',
                   borderRadius: 4, padding: '1px 6px', fontSize: 9, fontWeight: 600,
                   color: isActive ? COLORS.accent : COLORS.textMuted,
                 }}>
@@ -196,10 +196,10 @@ function CAPIPayloadPreview() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-      border: '1px solid rgba(255, 200, 120, 0.06)',
+      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+      border: '1px solid rgba(255, 255, 255, 0.06)',
       borderRadius: 20, padding: isMobile ? 16 : 24, display: 'flex', flexDirection: 'column', height: '100%',
-      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -208,8 +208,8 @@ function CAPIPayloadPreview() {
         </div>
         <div style={{ display: 'flex', gap: 6 }}>
           <button onClick={handleSendEvent} disabled={sendStatus === 'sending'} style={{
-            background: sendStatus === 'sent' ? 'rgba(132, 204, 22, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-            border: `1px solid ${sendStatus === 'sent' ? 'rgba(132,204,22,0.3)' : 'rgba(245,158,11,0.3)'}`,
+            background: sendStatus === 'sent' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+            border: `1px solid ${sendStatus === 'sent' ? 'rgba(34,197,94,0.3)' : 'rgba(16,185,129,0.3)'}`,
             borderRadius: 6, padding: '4px 10px',
             color: sendStatus === 'sent' ? COLORS.success : COLORS.accent,
             fontSize: 11, fontWeight: 500, cursor: sendStatus === 'sending' ? 'wait' : 'pointer',
@@ -221,8 +221,8 @@ function CAPIPayloadPreview() {
             {sendStatus === 'idle' ? 'Enviar Evento' : sendStatus === 'sending' ? 'Enviando...' : 'Evento enviado com sucesso!'}
           </button>
           <button onClick={handleCopy} style={{
-            background: copied ? 'rgba(132, 204, 22, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-            border: `1px solid ${copied ? 'rgba(132,204,22,0.3)' : 'rgba(245,158,11,0.3)'}`,
+            background: copied ? 'rgba(34, 197, 94, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+            border: `1px solid ${copied ? 'rgba(34,197,94,0.3)' : 'rgba(16,185,129,0.3)'}`,
             borderRadius: 6, padding: '4px 10px', color: copied ? COLORS.success : COLORS.accent,
             fontSize: 11, fontWeight: 500, cursor: 'pointer',
             display: 'flex', alignItems: 'center', gap: 4,
@@ -238,8 +238,8 @@ function CAPIPayloadPreview() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
           {userFields.map(f => (
             <span key={f.label} style={{
-              background: f.present ? 'rgba(132, 204, 22, 0.08)' : 'rgba(239, 68, 68, 0.08)',
-              border: `1px solid ${f.present ? 'rgba(132,204,22,0.2)' : 'rgba(239,68,68,0.2)'}`,
+              background: f.present ? 'rgba(34, 197, 94, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+              border: `1px solid ${f.present ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}`,
               borderRadius: 4, padding: '1px 6px', fontSize: 9, fontWeight: 500,
               color: f.present ? COLORS.success : COLORS.danger,
             }}>
@@ -251,8 +251,8 @@ function CAPIPayloadPreview() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
           {customFields.map(f => (
             <span key={f.label} style={{
-              background: f.present ? 'rgba(132, 204, 22, 0.08)' : 'rgba(239, 68, 68, 0.08)',
-              border: `1px solid ${f.present ? 'rgba(132,204,22,0.2)' : 'rgba(239,68,68,0.2)'}`,
+              background: f.present ? 'rgba(34, 197, 94, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+              border: `1px solid ${f.present ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}`,
               borderRadius: 4, padding: '1px 6px', fontSize: 9, fontWeight: 500,
               color: f.present ? COLORS.success : COLORS.danger,
             }}>
@@ -268,7 +268,7 @@ function CAPIPayloadPreview() {
       }}>
         <pre style={{
           margin: 0, padding: isMobile ? 10 : 14, fontSize: isMobile ? 9 : 10, lineHeight: 1.5,
-          fontFamily: '"IBM Plex Mono", "Fira Code", monospace',
+          fontFamily: '"Fira Code", "Fira Code", monospace',
           color: COLORS.text, whiteSpace: 'pre-wrap', wordBreak: 'break-all',
           overflowX: 'auto',
         }}>{jsonString}</pre>
@@ -295,15 +295,15 @@ function FunnelFlow() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-      border: '1px solid rgba(255, 200, 120, 0.06)',
+      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+      border: '1px solid rgba(255, 255, 255, 0.06)',
       borderRadius: 20, padding: 20, marginBottom: 20,
-      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.text }}>Funil Ativo:</span>
         <span style={{
-          background: 'rgba(245, 158, 11, 0.12)', borderRadius: 6, padding: '2px 10px',
+          background: 'rgba(16, 185, 129, 0.12)', borderRadius: 6, padding: '2px 10px',
           fontSize: 12, fontWeight: 600, color: COLORS.accent,
         }}>
           {funnel.type.charAt(0).toUpperCase() + funnel.type.slice(1)}
@@ -339,16 +339,16 @@ function SyntheticEventsSummary() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-      border: '1px solid rgba(255, 200, 120, 0.06)',
+      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+      border: '1px solid rgba(255, 255, 255, 0.06)',
       borderRadius: 20, padding: isMobile ? 16 : 24,
-      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <Zap size={18} color={COLORS.warning} />
         <span style={{ color: COLORS.text, fontSize: 15, fontWeight: 600 }}>Eventos Sintéticos</span>
         <span style={{
-          background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.25)',
+          background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.25)',
           borderRadius: 6, padding: '2px 8px', fontSize: 10, fontWeight: 600, color: COLORS.warning,
         }}>
           {mockCAPIState.syntheticRules.filter(r => r.enabled).length} ativos
@@ -365,13 +365,13 @@ function SyntheticEventsSummary() {
               width: 6, height: 6, borderRadius: '50%', background: COLORS.success,
               boxShadow: `0 0 6px ${COLORS.success}`,
             }} />
-            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'IBM Plex Mono', 'Fira Code', monospace", flex: 1 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Fira Code', 'Fira Code', monospace", flex: 1 }}>
               {rule.event_name}
             </span>
             <span style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{rule.fires_24h}</span>
             <div style={{
               flex: 1, maxWidth: 100, height: 6, borderRadius: 3,
-              background: 'rgba(255,200,120,0.04)', overflow: 'hidden',
+              background: 'rgba(255,255,255,0.04)', overflow: 'hidden',
             }}>
               <div style={{
                 height: '100%', width: `${rule.fire_rate}%`, borderRadius: 3,
@@ -419,9 +419,9 @@ export default function SignalEngine() {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <h1 style={{ color: COLORS.text, fontSize: 24, fontWeight: 700, margin: 0 }}>Signal Engine</h1>
             <span style={{
-              background: 'linear-gradient(135deg, rgba(245,158,11,0.2), rgba(251,191,36,0.2))',
-              border: '1px solid rgba(245,158,11,0.3)',
-              borderRadius: 6, padding: '2px 10px', fontSize: 12, fontWeight: 700, color: '#fbbf24',
+              background: 'linear-gradient(135deg, rgba(16,185,129,0.2), rgba(52,211,153,0.2))',
+              border: '1px solid rgba(16,185,129,0.3)',
+              borderRadius: 6, padding: '2px 10px', fontSize: 12, fontWeight: 700, color: '#34d399',
             }}>v5</span>
           </div>
           <p style={{ color: COLORS.textMuted, fontSize: 13, margin: '4px 0 0' }}>
@@ -430,11 +430,11 @@ export default function SignalEngine() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => setCurrentView('funnel-builder')}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,200,120,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,200,120,0.15)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,200,120,0.06)'; e.currentTarget.style.borderColor = COLORS.border; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = COLORS.border; }}
             style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            background: 'rgba(255,200,120,0.06)', border: `1px solid ${COLORS.border}`,
+            background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
             borderRadius: 10, padding: '8px 16px', color: COLORS.text, fontSize: 12,
             fontWeight: 500, cursor: 'pointer', transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
             outline: 'none',

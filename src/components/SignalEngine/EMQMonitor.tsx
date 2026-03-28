@@ -6,14 +6,14 @@ import type { EMQBreakdown } from '../../types/meta';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const COLORS = {
-  surface: '#1a1918',
-  border: 'rgba(255, 200, 120, 0.06)',
-  text: '#fafaf9',
-  textMuted: '#a8a29e',
-  accent: '#f59e0b',
-  success: '#84cc16',
+  surface: '#0a0a0a',
+  border: 'rgba(255, 255, 255, 0.06)',
+  text: '#f5f5f5',
+  textMuted: '#a3a3a3',
+  accent: '#10b981',
+  success: '#22c55e',
   danger: '#ef4444',
-  warning: '#f59e0b',
+  warning: '#10b981',
 };
 
 const paramLabels: Record<string, string> = {
@@ -44,12 +44,12 @@ export default function EMQMonitor() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
       border: `1px solid ${COLORS.border}`,
       borderRadius: 20,
       padding: isMobile ? 16 : 24,
       height: '100%',
-      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: isMobile ? 14 : 20 }}>
         <Activity size={18} color={COLORS.accent} />
@@ -75,7 +75,7 @@ export default function EMQMonitor() {
         <svg width={isMobile ? 110 : 148} height={isMobile ? 110 : 148} style={{ transform: 'rotate(-90deg)' }}>
           {/* Background track */}
           <circle cx={isMobile ? 55 : 74} cy={isMobile ? 55 : 74} r={radius} fill="none"
-            stroke="rgba(255,200,120,0.04)" strokeWidth={isMobile ? 8 : 10} />
+            stroke="rgba(255,255,255,0.04)" strokeWidth={isMobile ? 8 : 10} />
           {/* Score arc */}
           <circle cx={isMobile ? 55 : 74} cy={isMobile ? 55 : 74} r={radius} fill="none"
             stroke={gaugeColor} strokeWidth={isMobile ? 8 : 10}
@@ -102,7 +102,7 @@ export default function EMQMonitor() {
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         }}>
-          <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: gaugeColor, lineHeight: 1, fontFamily: "'Sora', sans-serif" }}>
+          <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: gaugeColor, lineHeight: 1, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
             {emq.total.toFixed(1)}
           </span>
           <span style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
@@ -118,7 +118,7 @@ export default function EMQMonitor() {
           const percent = (currentValue / maxWeight) * 100;
           const isContributing = currentValue > 0;
           const isHovered = hoveredParam === key;
-          const barColor = isContributing ? COLORS.accent : 'rgba(255,200,120,0.08)';
+          const barColor = isContributing ? COLORS.accent : 'rgba(255,255,255,0.08)';
 
           return (
             <div
@@ -143,7 +143,7 @@ export default function EMQMonitor() {
               </div>
               <div style={{
                 height: 6, borderRadius: 3,
-                background: 'rgba(255,200,120,0.04)',
+                background: 'rgba(255,255,255,0.04)',
                 overflow: 'hidden',
               }}>
                 <div style={{
@@ -152,7 +152,7 @@ export default function EMQMonitor() {
                   borderRadius: 3,
                   background: isContributing
                     ? `linear-gradient(90deg, ${barColor}, ${COLORS.accent}88)`
-                    : 'rgba(255,200,120,0.08)',
+                    : 'rgba(255,255,255,0.08)',
                   transition: 'width 0.5s ease',
                 }} />
               </div>

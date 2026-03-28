@@ -60,7 +60,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
         }}>
           <code style={{
             fontSize: isMobile ? 10 : 11, color: COLORS.info,
-            fontFamily: '"IBM Plex Mono", "Fira Code", monospace',
+            fontFamily: '"Fira Code", "Fira Code", monospace',
             wordBreak: 'break-all',
           }}>{snippet}</code>
         </div>
@@ -69,7 +69,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
       {/* Full script toggle */}
       <button onClick={() => setShowFull(!showFull)} style={{
         display: 'flex', alignItems: 'center', gap: 6, width: '100%',
-        background: 'rgba(255,200,120,0.04)', border: `1px solid ${COLORS.border}`,
+        background: 'rgba(255,255,255,0.04)', border: `1px solid ${COLORS.border}`,
         borderRadius: 8, padding: isMobile ? '12px 14px' : '8px 14px', fontSize: 12, color: COLORS.textMuted,
         minHeight: isMobile ? 44 : undefined,
         cursor: 'pointer',
@@ -83,7 +83,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
             <button onClick={() => handleCopy(fullScript, 'full')} style={{
               display: 'flex', alignItems: 'center', gap: 4,
-              background: copied === 'full' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+              background: copied === 'full' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(16, 185, 129, 0.15)',
               border: `1px solid ${copied === 'full' ? 'rgba(74,222,128,0.3)' : 'rgba(99,102,241,0.3)'}`,
               borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
               color: copied === 'full' ? COLORS.success : COLORS.accent, cursor: 'pointer',
@@ -99,7 +99,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
           }}>
             <pre style={{
               margin: 0, padding: 16, fontSize: 10, lineHeight: 1.5,
-              fontFamily: '"IBM Plex Mono", "Fira Code", monospace',
+              fontFamily: '"Fira Code", "Fira Code", monospace',
               color: COLORS.text, whiteSpace: 'pre-wrap',
             }}>{fullScript}</pre>
           </div>

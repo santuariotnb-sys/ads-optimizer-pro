@@ -28,31 +28,31 @@ const safetyRules = [
 ];
 
 const actionColors: Record<string, string> = {
-  'Budget +20%': '#84cc16',
+  'Budget +20%': '#22c55e',
   'Pausar Ad': '#ef4444',
   'Pausar Ad Set': '#ef4444',
-  'Notificar': '#f59e0b',
+  'Notificar': '#10b981',
 };
 
 const logColors: Record<string, string> = {
-  warning: '#f59e0b',
-  success: '#84cc16',
+  warning: '#10b981',
+  success: '#22c55e',
   danger: '#ef4444',
   critical: '#ef4444',
 };
 
 const logBgColors: Record<string, string> = {
-  warning: 'rgba(245,158,11,0.08)',
-  success: 'rgba(132,204,22,0.08)',
+  warning: 'rgba(16,185,129,0.08)',
+  success: 'rgba(34,197,94,0.08)',
   danger: 'rgba(239,68,68,0.08)',
   critical: 'rgba(239,68,68,0.08)',
 };
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-  border: '1px solid rgba(255, 200, 120, 0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  border: '1px solid rgba(255, 255, 255, 0.06)',
   borderRadius: 20,
-  boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
 };
 
 export default function AutoScale() {
@@ -67,19 +67,19 @@ export default function AutoScale() {
   };
 
   const stats = [
-    { label: 'Ações esta semana', value: '12', icon: <Activity size={20} color="#f59e0b" /> },
-    { label: 'Budget otimizado', value: 'R$ 8.400', icon: <TrendingUp size={20} color="#84cc16" /> },
-    { label: 'Campanhas afetadas', value: '4', icon: <Zap size={20} color="#f59e0b" /> },
+    { label: 'Ações esta semana', value: '12', icon: <Activity size={20} color="#10b981" /> },
+    { label: 'Budget otimizado', value: 'R$ 8.400', icon: <TrendingUp size={20} color="#22c55e" /> },
+    { label: 'Campanhas afetadas', value: '4', icon: <Zap size={20} color="#10b981" /> },
   ];
 
   return (
     <div style={{
-      color: '#fafaf9',
+      color: '#f5f5f5',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <h1 style={{
           fontSize: 28, fontWeight: 700, marginBottom: 8, marginTop: 0,
-          background: 'linear-gradient(135deg, #fafaf9, #f59e0b)',
+          background: 'linear-gradient(135deg, #f5f5f5, #10b981)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>Auto-Scale</h1>
         <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>
@@ -92,12 +92,12 @@ export default function AutoScale() {
             <div key={i} style={{ ...glassCard, padding: isMobile ? '14px 16px' : '20px 24px', display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 16 }}>
               <div style={{
                 width: 44, height: 44, borderRadius: 12,
-                background: 'rgba(245,158,11,0.1)',
+                background: 'rgba(16,185,129,0.1)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>{stat.icon}</div>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Sora', sans-serif" }}>{stat.value}</div>
-                <div style={{ fontSize: 13, color: '#a8a29e' }}>{stat.label}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{stat.value}</div>
+                <div style={{ fontSize: 13, color: '#a3a3a3' }}>{stat.label}</div>
               </div>
             </div>
           ))}
@@ -105,7 +105,7 @@ export default function AutoScale() {
 
         {/* Rules */}
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Zap size={20} color="#f59e0b" />
+          <Zap size={20} color="#10b981" />
           Regras de Automação
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 14, marginBottom: isMobile ? 24 : 32 }}>
@@ -117,11 +117,11 @@ export default function AutoScale() {
                 onMouseLeave={() => setHoveredRule(null)}
                 style={{
                 ...glassCard,
-                border: `1px solid ${hoveredRule === rule.id ? 'rgba(255,200,120,0.14)' : isOn ? 'rgba(245,158,11,0.15)' : 'rgba(255,200,120,0.06)'}`,
+                border: `1px solid ${hoveredRule === rule.id ? 'rgba(255,255,255,0.14)' : isOn ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.06)'}`,
                 padding: isMobile ? 14 : 20, opacity: isOn ? 1 : 0.6,
                 transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: hoveredRule === rule.id ? 'translateY(-1px)' : 'translateY(0)',
-                boxShadow: hoveredRule === rule.id ? '0 0 30px rgba(245,158,11,0.06)' : '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+                boxShadow: hoveredRule === rule.id ? '0 0 30px rgba(16,185,129,0.06)' : '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <span style={{ fontSize: 15, fontWeight: 700 }}>{rule.name}</span>
@@ -130,9 +130,9 @@ export default function AutoScale() {
                   }}>
                     <div style={{
                       width: 44, height: 24, borderRadius: 12,
-                      background: isOn ? '#f59e0b' : 'rgba(255,200,120,0.1)',
+                      background: isOn ? '#10b981' : 'rgba(255,255,255,0.1)',
                       position: 'relative', transition: 'background 0.2s',
-                      boxShadow: isOn ? '0 0 12px rgba(245,158,11,0.4)' : 'none',
+                      boxShadow: isOn ? '0 0 12px rgba(16,185,129,0.4)' : 'none',
                     }}>
                       <div style={{
                         width: 18, height: 18, borderRadius: '50%', background: '#fff',
@@ -143,15 +143,15 @@ export default function AutoScale() {
                   </button>
                 </div>
                 <div style={{
-                  fontFamily: "'IBM Plex Mono', 'Fira Code', monospace",
-                  fontSize: 12, color: '#a8a29e', marginBottom: 12,
-                  padding: '6px 10px', background: 'rgba(255,200,120,0.03)', borderRadius: 6,
+                  fontFamily: "'Fira Code', 'Fira Code', monospace",
+                  fontSize: 12, color: '#a3a3a3', marginBottom: 12,
+                  padding: '6px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: 6,
                 }}>{rule.condition}</div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{
                     fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 6,
-                    background: `${actionColors[rule.action] || '#f59e0b'}15`,
-                    color: actionColors[rule.action] || '#f59e0b',
+                    background: `${actionColors[rule.action] || '#10b981'}15`,
+                    color: actionColors[rule.action] || '#10b981',
                   }}>{rule.action}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span style={{ fontSize: 11, color: '#475569', display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -159,7 +159,7 @@ export default function AutoScale() {
                     </span>
                     <span style={{
                       fontSize: 11, color: '#475569', padding: '2px 8px',
-                      background: 'rgba(255,200,120,0.04)', borderRadius: 4,
+                      background: 'rgba(255,255,255,0.04)', borderRadius: 4,
                     }}>Cooldown: {rule.cooldown}</span>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function AutoScale() {
 
         {/* Safety Rules */}
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Shield size={20} color="#f59e0b" />
+          <Shield size={20} color="#10b981" />
           Regras de Segurança
         </h2>
         <div style={{ ...glassCard, padding: isMobile ? 16 : 24, marginBottom: isMobile ? 24 : 32 }}>
@@ -178,17 +178,17 @@ export default function AutoScale() {
             {safetyRules.map((rule, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 12,
-                padding: isMobile ? '10px 12px' : '12px 16px', background: 'rgba(245,158,11,0.05)',
-                border: '1px solid rgba(245,158,11,0.1)', borderRadius: 10,
+                padding: isMobile ? '10px 12px' : '12px 16px', background: 'rgba(16,185,129,0.05)',
+                border: '1px solid rgba(16,185,129,0.1)', borderRadius: 10,
               }}>
                 <div style={{
                   width: 28, height: 28, borderRadius: 8,
-                  background: 'rgba(245,158,11,0.1)',
+                  background: 'rgba(16,185,129,0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}>
                   <span style={{ fontSize: 14 }}>🔒</span>
                 </div>
-                <span style={{ fontSize: 14, color: '#fafaf9' }}>{rule}</span>
+                <span style={{ fontSize: 14, color: '#f5f5f5' }}>{rule}</span>
               </div>
             ))}
           </div>
@@ -196,7 +196,7 @@ export default function AutoScale() {
 
         {/* Activity Log */}
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Activity size={20} color="#f59e0b" />
+          <Activity size={20} color="#10b981" />
           Log de Atividades
         </h2>
         <div style={{ ...glassCard, padding: 8 }}>
@@ -212,8 +212,8 @@ export default function AutoScale() {
                 boxShadow: `0 0 8px ${logColors[entry.type]}60`,
               }} />
               <span style={{
-                fontSize: 12, fontFamily: "'IBM Plex Mono', 'Fira Code', monospace",
-                color: '#a8a29e', minWidth: 120, flexShrink: 0,
+                fontSize: 12, fontFamily: "'Fira Code', 'Fira Code', monospace",
+                color: '#a3a3a3', minWidth: 120, flexShrink: 0,
               }}>{entry.time}</span>
               <span style={{ fontSize: 14, color: logColors[entry.type] }}>{entry.action}</span>
             </div>

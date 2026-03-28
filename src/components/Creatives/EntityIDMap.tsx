@@ -5,17 +5,17 @@ import { Layers, AlertTriangle } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const COLORS = {
-  surface: '#1a1918',
-  border: 'rgba(255, 200, 120, 0.06)',
-  text: '#fafaf9',
-  textMuted: '#a8a29e',
-  accent: '#f59e0b',
+  surface: '#0a0a0a',
+  border: 'rgba(255, 255, 255, 0.06)',
+  text: '#f5f5f5',
+  textMuted: '#a3a3a3',
+  accent: '#10b981',
   danger: '#ef4444',
-  warning: '#f59e0b',
-  success: '#84cc16',
+  warning: '#10b981',
+  success: '#22c55e',
 };
 
-const groupColors = ['#f59e0b', '#fbbf24', '#d97706', '#fb923c', '#06b6d4'];
+const groupColors = ['#10b981', '#34d399', '#059669', '#f97316', '#06b6d4'];
 
 export default function EntityIDMap() {
   const isMobile = useIsMobile();
@@ -31,12 +31,12 @@ export default function EntityIDMap() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
+      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
       border: `1px solid ${COLORS.border}`,
       borderRadius: 20,
       padding: 24,
       marginBottom: 24,
-      boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
     }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
@@ -45,8 +45,8 @@ export default function EntityIDMap() {
           <span style={{ color: COLORS.text, fontSize: 16, fontWeight: 600 }}>Mapa de Entity IDs</span>
         </div>
         <div style={{
-          background: 'rgba(245, 158, 11, 0.12)',
-          border: '1px solid rgba(245, 158, 11, 0.25)',
+          background: 'rgba(16, 185, 129, 0.12)',
+          border: '1px solid rgba(16, 185, 129, 0.25)',
           borderRadius: 8,
           padding: '6px 14px',
           fontSize: 13,
@@ -83,7 +83,7 @@ export default function EntityIDMap() {
           {/* Connecting line */}
           <line
             x1={60} y1={centerY} x2={svgWidth - 60} y2={centerY}
-            stroke="rgba(245, 158, 11, 0.15)" strokeWidth={2} strokeDasharray="6 4"
+            stroke="rgba(16, 185, 129, 0.15)" strokeWidth={2} strokeDasharray="6 4"
           />
 
           {groups.map((group, idx) => {

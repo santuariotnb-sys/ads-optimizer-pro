@@ -27,9 +27,9 @@ const entries: Entry[] = [
 ];
 
 const categoryColors: Record<string, string> = {
-  Criativos: '#fb923c',
-  CAPI: '#f59e0b',
-  Campanhas: '#84cc16',
+  Criativos: '#f97316',
+  CAPI: '#10b981',
+  Campanhas: '#22c55e',
   Algoritmo: '#06b6d4',
 };
 
@@ -44,10 +44,10 @@ const categoryIcons: Record<string, React.ReactNode> = {
 const categories: Category[] = ['Todos', 'Criativos', 'CAPI', 'Campanhas', 'Algoritmo'];
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #1a1918 0%, #151413 100%)',
-  border: '1px solid rgba(255, 200, 120, 0.06)',
+  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  border: '1px solid rgba(255, 255, 255, 0.06)',
   borderRadius: 20,
-  boxShadow: '0 1px 0 0 rgba(255,200,120,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
 };
 
 export default function Playbook() {
@@ -76,14 +76,14 @@ export default function Playbook() {
 
   return (
     <div style={{
-      color: '#fafaf9',
+      color: '#f5f5f5',
     }}>
       <div style={{ maxWidth: isMobile ? '100%' : 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <BookOpen size={28} color="#f59e0b" />
+          <BookOpen size={28} color="#10b981" />
           <h1 style={{
             fontSize: 28, fontWeight: 700, margin: 0,
-            background: 'linear-gradient(135deg, #fafaf9, #f59e0b)',
+            background: 'linear-gradient(135deg, #f5f5f5, #10b981)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           }}>Playbook</h1>
         </div>
@@ -95,14 +95,14 @@ export default function Playbook() {
         <div style={{ display: 'flex', gap: 8, marginBottom: isMobile ? 20 : 28, flexWrap: isMobile ? 'nowrap' : 'wrap', overflowX: isMobile ? 'auto' : 'visible', WebkitOverflowScrolling: 'touch', paddingBottom: isMobile ? 4 : 0 }}>
           {categories.map(cat => {
             const isActive = activeCategory === cat;
-            const color = cat === 'Todos' ? '#f59e0b' : categoryColors[cat];
+            const color = cat === 'Todos' ? '#10b981' : categoryColors[cat];
             return (
               <button key={cat} onClick={() => setActiveCategory(cat)} style={{
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
                 padding: isMobile ? '8px 14px' : '10px 18px',
-                background: isActive ? `${color}20` : 'rgba(255,200,120,0.04)',
-                border: `1px solid ${isActive ? `${color}40` : 'rgba(255,200,120,0.08)'}`,
-                borderRadius: 10, color: isActive ? color : '#a8a29e',
+                background: isActive ? `${color}20` : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${isActive ? `${color}40` : 'rgba(255,255,255,0.08)'}`,
+                borderRadius: 10, color: isActive ? color : '#a3a3a3',
                 cursor: 'pointer', fontSize: 14, fontWeight: isActive ? 600 : 400,
                 transition: 'all 0.2s',
               }}>
@@ -110,7 +110,7 @@ export default function Playbook() {
                 {cat}
                 <span style={{
                   fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10,
-                  background: isActive ? `${color}30` : 'rgba(255,200,120,0.06)',
+                  background: isActive ? `${color}30` : 'rgba(255,255,255,0.06)',
                   color: isActive ? color : '#475569',
                 }}>{getCategoryCount(cat)}</span>
               </button>
@@ -136,11 +136,11 @@ export default function Playbook() {
                 style={{
                   ...glassCard,
                   borderLeft: `3px solid ${color}`,
-                  borderColor: hoveredEntry === entry.id ? 'rgba(255,200,120,0.14)' : 'rgba(255,200,120,0.06)',
+                  borderColor: hoveredEntry === entry.id ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.06)',
                   padding: isMobile ? '14px 16px' : '20px 24px',
                   cursor: 'pointer',
                   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: hoveredEntry === entry.id ? '0 0 30px rgba(245,158,11,0.06)' : 'none',
+                  boxShadow: hoveredEntry === entry.id ? '0 0 30px rgba(16,185,129,0.06)' : 'none',
                   transform: hoveredEntry === entry.id ? 'translateY(-1px)' : 'translateY(0)',
                 }}
               >
@@ -154,8 +154,8 @@ export default function Playbook() {
                     }}>{entry.category}</span>
                   </div>
                   {isExpanded
-                    ? <ChevronUp size={18} color="#a8a29e" />
-                    : <ChevronDown size={18} color="#a8a29e" />
+                    ? <ChevronUp size={18} color="#a3a3a3" />
+                    : <ChevronDown size={18} color="#a3a3a3" />
                   }
                 </div>
 
@@ -170,19 +170,19 @@ export default function Playbook() {
                 {/* Expanded Details */}
                 {isExpanded && (
                   <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#a8a29e' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#a3a3a3' }}>
                       <ExternalLink size={14} />
-                      <span style={{ fontFamily: "'IBM Plex Mono', 'Fira Code', monospace" }}>
+                      <span style={{ fontFamily: "'Fira Code', 'Fira Code', monospace" }}>
                         {entry.source}
                       </span>
                     </div>
                     <div style={{
                       display: 'flex', alignItems: 'center', gap: 10,
-                      padding: '10px 16px', background: 'rgba(132,204,22,0.08)',
-                      border: '1px solid rgba(132,204,22,0.15)', borderRadius: 10,
+                      padding: '10px 16px', background: 'rgba(34,197,94,0.08)',
+                      border: '1px solid rgba(34,197,94,0.15)', borderRadius: 10,
                     }}>
-                      <TrendingUp size={16} color="#84cc16" />
-                      <span style={{ fontSize: 14, fontWeight: 600, color: '#84cc16' }}>{entry.impact}</span>
+                      <TrendingUp size={16} color="#22c55e" />
+                      <span style={{ fontSize: 14, fontWeight: 600, color: '#22c55e' }}>{entry.impact}</span>
                     </div>
                   </div>
                 )}
@@ -193,7 +193,7 @@ export default function Playbook() {
             <div style={{
               ...glassCard, padding: 40, textAlign: 'center',
             }}>
-              <div style={{ fontSize: 14, color: '#a8a29e' }}>Nenhum item nesta categoria</div>
+              <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhum item nesta categoria</div>
             </div>
           )}
         </div>

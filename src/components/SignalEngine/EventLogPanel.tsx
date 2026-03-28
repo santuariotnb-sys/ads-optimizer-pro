@@ -41,8 +41,8 @@ export default function EventLogPanel({ logs }: Props) {
   };
 
   const filterBtnStyle = (active: boolean): React.CSSProperties => ({
-    background: active ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
-    border: `1px solid ${active ? 'rgba(245, 158, 11, 0.3)' : COLORS.border}`,
+    background: active ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
+    border: `1px solid ${active ? 'rgba(16, 185, 129, 0.3)' : COLORS.border}`,
     borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
     color: active ? COLORS.accent : COLORS.textMuted, cursor: 'pointer',
     minHeight: isMobile ? 36 : undefined,
@@ -58,7 +58,7 @@ export default function EventLogPanel({ logs }: Props) {
           <FileText size={18} color={COLORS.accent} />
           <span style={{ color: COLORS.text, fontSize: 15, fontWeight: 600 }}>Event Log</span>
           <span style={{
-            background: 'rgba(245, 158, 11, 0.12)', borderRadius: 6, padding: '2px 8px',
+            background: 'rgba(16, 185, 129, 0.12)', borderRadius: 6, padding: '2px 8px',
             fontSize: 11, fontWeight: 600, color: COLORS.accent,
           }}>{filtered.length}</span>
         </div>
@@ -84,7 +84,7 @@ export default function EventLogPanel({ logs }: Props) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{
                   fontSize: 12, fontWeight: 600, color: COLORS.text,
-                  fontFamily: '"IBM Plex Mono", monospace',
+                  fontFamily: '"Fira Code", monospace',
                 }}>{log.event_name}</span>
                 {log.is_synthetic && <Zap size={10} color={COLORS.warning} />}
               </div>

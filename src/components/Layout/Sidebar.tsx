@@ -38,7 +38,7 @@ export default function Sidebar() {
   const handleNavClick = (id: string) => {
     setCurrentModule(id);
     if (isMobile) {
-      toggleSidebar(); // close sidebar on mobile after nav click
+      toggleSidebar();
     }
   };
 
@@ -54,7 +54,7 @@ export default function Sidebar() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'rgba(0,0,0,0.6)',
+            background: 'rgba(0,0,0,0.7)',
             zIndex: 99,
           }}
         />
@@ -68,8 +68,8 @@ export default function Sidebar() {
           left: 0,
           bottom: 0,
           width,
-          background: '#0a0a0a',
-          borderRight: '1px solid rgba(255, 200, 120, 0.04)',
+          background: '#000000',
+          borderRight: '1px solid rgba(255, 255, 255, 0.03)',
           display: 'flex',
           flexDirection: 'column',
           transition: isMobile ? `transform 0.3s ${easing}` : `width 0.3s ${easing}`,
@@ -86,7 +86,7 @@ export default function Sidebar() {
           alignItems: 'center',
           padding: collapsed ? '0 12px' : '0 20px',
           gap: 12,
-          borderBottom: '1px solid rgba(255, 200, 120, 0.04)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
           flexShrink: 0,
           transition: `padding 0.3s ${easing}`,
         }}
@@ -96,12 +96,12 @@ export default function Sidebar() {
             width: 36,
             height: 36,
             borderRadius: 10,
-            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            background: 'linear-gradient(135deg, #10b981, #059669)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)',
+            boxShadow: '0 0 20px rgba(16, 185, 129, 0.25)',
           }}
         >
           <Activity size={20} color="#fff" strokeWidth={2.5} />
@@ -110,11 +110,9 @@ export default function Sidebar() {
           <span
             style={{
               fontSize: 16,
-              fontFamily: "'Sora', sans-serif",
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontWeight: 700,
-              background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: '#f5f5f5',
               whiteSpace: 'nowrap',
               letterSpacing: '-0.02em',
             }}
@@ -131,12 +129,12 @@ export default function Sidebar() {
               height: 44,
               borderRadius: 8,
               border: 'none',
-              background: 'rgba(255, 200, 120, 0.06)',
+              background: 'rgba(255, 255, 255, 0.05)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#a8a29e',
+              color: '#737373',
               outline: 'none',
               flexShrink: 0,
             }}
@@ -184,27 +182,27 @@ export default function Sidebar() {
                 cursor: 'pointer',
                 position: 'relative',
                 background: isActive
-                  ? 'rgba(245, 158, 11, 0.1)'
+                  ? 'rgba(16, 185, 129, 0.08)'
                   : isHovered
-                  ? 'rgba(245, 158, 11, 0.06)'
+                  ? 'rgba(255, 255, 255, 0.03)'
                   : 'transparent',
-                borderLeft: isActive ? '2px solid #f59e0b' : '2px solid transparent',
+                borderLeft: isActive ? '2px solid #10b981' : '2px solid transparent',
                 transition: `all 0.25s ease`,
                 width: '100%',
                 textAlign: 'left',
                 outline: 'none',
                 boxShadow: isActive
-                  ? '0 0 20px rgba(245, 158, 11, 0.06)'
+                  ? '0 0 20px rgba(16, 185, 129, 0.05)'
                   : 'none',
               }}
             >
               <Icon
                 size={20}
                 style={{
-                  color: isActive ? '#f59e0b' : isHovered ? '#d6d3d1' : '#a8a29e',
+                  color: isActive ? '#10b981' : isHovered ? '#a3a3a3' : '#737373',
                   flexShrink: 0,
                   transition: 'color 0.25s ease',
-                  filter: isActive ? 'drop-shadow(0 0 6px rgba(245, 158, 11, 0.4))' : 'none',
+                  filter: isActive ? 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.4))' : 'none',
                 }}
               />
               {!collapsed && (
@@ -213,7 +211,7 @@ export default function Sidebar() {
                     fontSize: 14,
                     fontFamily: "'DM Sans', sans-serif",
                     fontWeight: isActive ? 600 : 500,
-                    color: isActive ? '#fafaf9' : isHovered ? '#d6d3d1' : '#a8a29e',
+                    color: isActive ? '#f5f5f5' : isHovered ? '#a3a3a3' : '#737373',
                     whiteSpace: 'nowrap',
                     transition: 'color 0.25s ease',
                     letterSpacing: '-0.01em',
@@ -232,7 +230,7 @@ export default function Sidebar() {
                     minWidth: 18,
                     height: 18,
                     borderRadius: 9,
-                    background: 'linear-gradient(135deg, #ef4444, #f97316)',
+                    background: '#ef4444',
                     color: '#fff',
                     fontSize: 11,
                     fontWeight: 700,
@@ -257,14 +255,14 @@ export default function Sidebar() {
                     marginLeft: 8,
                     padding: '6px 12px',
                     borderRadius: 8,
-                    background: '#1a1918',
-                    border: '1px solid rgba(255, 200, 120, 0.1)',
-                    color: '#fafaf9',
+                    background: '#1a1a1a',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    color: '#f5f5f5',
                     fontSize: 12,
                     fontWeight: 500,
                     whiteSpace: 'nowrap',
                     zIndex: 200,
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
                     pointerEvents: 'none',
                   }}
                 >
@@ -280,7 +278,7 @@ export default function Sidebar() {
       <div
         style={{
           padding: collapsed ? '16px 8px' : '16px 16px',
-          borderTop: '1px solid rgba(255, 200, 120, 0.04)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.03)',
           display: 'flex',
           flexDirection: 'column',
           gap: 12,
@@ -297,8 +295,8 @@ export default function Sidebar() {
             gap: 8,
             padding: '8px 12px',
             borderRadius: 8,
-            background: mode === 'live' ? 'rgba(245, 158, 11, 0.08)' : 'rgba(168, 162, 158, 0.06)',
-            border: `1px solid ${mode === 'live' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(168, 162, 158, 0.1)'}`,
+            background: mode === 'live' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(255, 255, 255, 0.03)',
+            border: `1px solid ${mode === 'live' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(255, 255, 255, 0.05)'}`,
           }}
         >
           <span
@@ -306,8 +304,8 @@ export default function Sidebar() {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: mode === 'live' ? '#f59e0b' : '#78716c',
-              boxShadow: `0 0 8px ${mode === 'live' ? 'rgba(245, 158, 11, 0.6)' : 'rgba(120, 113, 108, 0.4)'}`,
+              background: mode === 'live' ? '#10b981' : '#525252',
+              boxShadow: `0 0 8px ${mode === 'live' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(82, 82, 82, 0.4)'}`,
               animation: 'pulse-dot 2s ease-in-out infinite',
               flexShrink: 0,
             }}
@@ -317,7 +315,7 @@ export default function Sidebar() {
               style={{
                 fontSize: 12,
                 fontWeight: 600,
-                color: mode === 'live' ? '#f59e0b' : '#a8a29e',
+                color: mode === 'live' ? '#10b981' : '#737373',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
               }}
@@ -332,7 +330,7 @@ export default function Sidebar() {
           <span
             style={{
               fontSize: 11,
-              color: '#78716c',
+              color: '#525252',
               textAlign: 'center',
             }}
           >
@@ -352,21 +350,21 @@ export default function Sidebar() {
             width: collapsed ? 36 : '100%',
             height: 36,
             borderRadius: 8,
-            border: '1px solid rgba(255, 200, 120, 0.06)',
-            background: 'rgba(255, 200, 120, 0.03)',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            background: 'rgba(255, 255, 255, 0.02)',
             cursor: 'pointer',
-            color: '#a8a29e',
+            color: '#737373',
             transition: 'all 0.25s ease',
             alignSelf: collapsed ? 'center' : 'stretch',
             outline: 'none',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(245, 158, 11, 0.08)';
-            e.currentTarget.style.color = '#d6d3d1';
+            e.currentTarget.style.background = 'rgba(16, 185, 129, 0.06)';
+            e.currentTarget.style.color = '#a3a3a3';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'rgba(255, 200, 120, 0.03)';
-            e.currentTarget.style.color = '#a8a29e';
+            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+            e.currentTarget.style.color = '#737373';
           }}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
