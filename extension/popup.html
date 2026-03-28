@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ads Optimizer Pro</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 320px;
+      min-height: 400px;
+      background: #0c0c14;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', -apple-system, sans-serif;
+      padding: 20px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    h1 { font-size: 16px; font-weight: 600; }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: rgba(22, 22, 32, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #facc15;
+    }
+    .dot.live { background: #4ade80; }
+    .info {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-bottom: 8px;
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">A</div>
+    <h1>Ads Optimizer Pro</h1>
+  </div>
+
+  <div class="status" id="status">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">Verificando conexão...</span>
+  </div>
+
+  <div class="info">
+    Navegue para o Facebook Ads Manager para ativar o painel lateral com métricas, alertas e ações rápidas.
+  </div>
+
+  <button class="btn" id="openPanel">Abrir Painel no Ads Manager</button>
+  <button class="btn btn-secondary" id="openApp">Abrir App Completo</button>
+
+  <div class="footer">
+    Ads Optimizer Pro v1.0.0
+  </div>
+
+  <script>
+    // Check connection status
+    chrome.runtime.sendMessage({ type: 'GET_STATE' }, (response) => {
+      const dot = document.getElementById('statusDot');
+      const text = document.getElementById('statusText');
+      if (response?.accessToken) {
+        dot.classList.add('live');
+        text.textContent = `Conectado — ${response.adAccountId || 'Conta detectada'}`;
+      } else {
+        text.textContent = 'Modo Demo — Abra o Ads Manager para conectar';
+      }
+    });
+
+    document.getElementById('openPanel')?.addEventListener('click', () => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]?.id) {
+          chrome.tabs.sendMessage(tabs[0].id, { type: 'TOGGLE_PANEL' });
+        }
+      });
+      window.close();
+    });
+
+    document.getElementById('openApp')?.addEventListener('click', () => {
+      chrome.tabs.create({ url: 'http://localhost:5173' });
+      window.close();
+    });
+  </script>
+</body>
+</html>
