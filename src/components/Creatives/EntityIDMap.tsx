@@ -170,7 +170,7 @@ export default function EntityIDMap() {
       </div>
 
       {/* Stats row */}
-      <div style={{ display: 'flex', gap: isMobile ? 10 : 16, marginTop: 16, overflowX: isMobile ? 'auto' : undefined, WebkitOverflowScrolling: 'touch' as any }}>
+      <div style={{ display: 'flex', gap: isMobile ? 10 : 16, marginTop: 16, overflowX: isMobile ? 'auto' : undefined, WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'] }}>
         {groups.map((group, idx) => {
           const color = groupColors[idx % groupColors.length];
           return (

@@ -101,7 +101,7 @@ export default function EMQMonitor() {
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         }}>
-          <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: gaugeColor, lineHeight: 1 }}>
+          <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: gaugeColor, lineHeight: 1, fontFamily: "'Space Grotesk', sans-serif" }}>
             {emq.total.toFixed(1)}
           </span>
           <span style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>

@@ -354,6 +354,7 @@ export default function Pipeline() {
                           fontWeight: 700,
                           color: stage.color,
                           marginBottom: 2,
+                          fontFamily: "'Space Grotesk', sans-serif",
                         }}
                       >
                         {m.value}

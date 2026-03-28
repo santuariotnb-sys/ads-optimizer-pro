@@ -17,8 +17,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         minHeight: '100vh',
         background: '#0c0c14',
         color: '#fff',
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+        fontFamily: "'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       <Sidebar />
@@ -32,8 +31,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             top: 14,
             left: 12,
             zIndex: 90,
-            width: 36,
-            height: 36,
+            width: 44,
+            height: 44,
             borderRadius: 8,
             border: '1px solid rgba(255,255,255,0.1)',
             background: 'rgba(12, 12, 20, 0.9)',

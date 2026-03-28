@@ -42,7 +42,7 @@ function StatCards() {
             {c.label}
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-            <span style={{ fontSize: 28, fontWeight: 800, color: c.color, lineHeight: 1 }}>{c.value}</span>
+            <span style={{ fontSize: 28, fontWeight: 800, color: c.color, lineHeight: 1, fontFamily: "'Space Grotesk', sans-serif" }}>{c.value}</span>
             <span style={{ fontSize: 12, color: COLORS.textMuted }}>{c.sub}</span>
           </div>
         </div>
@@ -328,7 +328,7 @@ function SyntheticEventsSummary() {
               width: 6, height: 6, borderRadius: '50%', background: COLORS.success,
               boxShadow: `0 0 6px ${COLORS.success}`,
             }} />
-            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: 'monospace', flex: 1 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'JetBrains Mono', 'Fira Code', monospace", flex: 1 }}>
               {rule.event_name}
             </span>
             <span style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{rule.fires_24h}</span>
@@ -392,11 +392,15 @@ export default function SignalEngine() {
           </p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button onClick={() => setCurrentView('funnel-builder')} style={{
+          <button onClick={() => setCurrentView('funnel-builder')}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = COLORS.border; }}
+            style={{
             display: 'flex', alignItems: 'center', gap: 6,
             background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
             borderRadius: 10, padding: '8px 16px', color: COLORS.text, fontSize: 12,
-            fontWeight: 500, cursor: 'pointer',
+            fontWeight: 500, cursor: 'pointer', transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            outline: 'none',
           }}>
             <Settings size={14} /> Configurar Funil
           </button>

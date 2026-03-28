@@ -126,8 +126,8 @@ export default function Sidebar() {
             onClick={toggleSidebar}
             style={{
               marginLeft: 'auto',
-              width: 32,
-              height: 32,
+              width: 44,
+              height: 44,
               borderRadius: 8,
               border: 'none',
               background: 'rgba(255,255,255,0.06)',
@@ -243,6 +243,31 @@ export default function Sidebar() {
                 >
                   {undismissedAlerts}
                 </span>
+              )}
+              {/* Tooltip on collapsed mode */}
+              {collapsed && !isMobile && isHovered && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    left: '100%',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    marginLeft: 8,
+                    padding: '6px 12px',
+                    borderRadius: 8,
+                    background: 'rgba(12,12,20,0.95)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    color: '#e2e8f0',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    zIndex: 200,
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  {item.label}
+                </div>
               )}
             </button>
           );

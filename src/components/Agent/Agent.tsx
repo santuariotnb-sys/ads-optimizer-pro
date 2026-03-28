@@ -321,6 +321,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
   const [inputFocused, setInputFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const msgIdRef = useRef(0);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -333,7 +334,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
       setMessages((prev) => [
         ...prev,
         {
-          id: `assistant-${Date.now()}`,
+          id: `assistant-${++msgIdRef.current}`,
           role: 'assistant',
           content,
           timestamp: new Date(),
@@ -344,7 +345,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
 
   const handleTopicClick = (topicId: string, question: string) => {
     const userMsg: Message = {
-      id: `user-${Date.now()}`,
+      id: `user-${++msgIdRef.current}`,
       role: 'user',
       content: question,
       timestamp: new Date(),
@@ -357,7 +358,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
     if (!input.trim()) return;
     const trimmed = input.trim();
     const userMsg: Message = {
-      id: `user-${Date.now()}`,
+      id: `user-${++msgIdRef.current}`,
       role: 'user',
       content: trimmed,
       timestamp: new Date(),

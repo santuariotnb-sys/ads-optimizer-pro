@@ -22,6 +22,7 @@ const statusBorderColor: Record<string, string> = {
 const Campaigns: React.FC = () => {
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const isMobile = useIsMobile();
 
   const toggle = (id: string) => {
@@ -76,10 +77,12 @@ const Campaigns: React.FC = () => {
             alignItems: 'center',
             gap: 8,
             background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            border: `1px solid ${searchFocused ? 'rgba(99,102,241,0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
             borderRadius: 10,
             padding: '8px 14px',
             width: isMobile ? '100%' : 280,
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+            boxShadow: searchFocused ? '0 0 0 3px rgba(99,102,241,0.1)' : 'none',
           }}
         >
           <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="rgba(148,163,184,0.5)" strokeWidth={2}>
@@ -91,6 +94,8 @@ const Campaigns: React.FC = () => {
             placeholder="Buscar campanhas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
             style={{
               background: 'transparent',
               border: 'none',
@@ -105,6 +110,21 @@ const Campaigns: React.FC = () => {
       </div>
 
       {/* Campaign Cards */}
+      {filtered.length === 0 && (
+        <div
+          style={{
+            background: 'rgba(22,22,32,0.85)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 16,
+            padding: 40,
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma campanha encontrada</div>
+        </div>
+      )}
       {filtered.map((campaign, idx) => {
         const expanded = expandedIds.has(campaign.id);
         const adSets = mockAdSetsData.filter((as) => as.campaign_id === campaign.id);
@@ -119,9 +139,9 @@ const Campaigns: React.FC = () => {
           <div
             key={campaign.id}
             style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              backdropFilter: 'blur(24px)',
-              WebkitBackdropFilter: 'blur(24px)',
+              background: 'rgba(22, 22, 32, 0.85)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
               border: '1px solid rgba(255, 255, 255, 0.06)',
               borderLeft: `3px solid ${borderColor}`,
               borderRadius: 16,

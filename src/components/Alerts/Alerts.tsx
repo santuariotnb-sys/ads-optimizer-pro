@@ -91,7 +91,7 @@ export default function Alerts() {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               style={{
-                padding: '8px 16px', borderRadius: 12, border: 'none', cursor: 'pointer',
+                padding: '8px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', outline: 'none',
                 fontSize: 13, fontWeight: 600, fontFamily: "'Outfit', sans-serif",
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
                 background: isActive ? `${severityColor}20` : 'rgba(255,255,255,0.04)',

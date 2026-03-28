@@ -106,9 +106,9 @@ const Dashboard: React.FC = () => {
       {/* Campaigns Table */}
       <div
         style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
+          background: 'rgba(22, 22, 32, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           border: '1px solid rgba(255, 255, 255, 0.06)',
           borderRadius: 16,
           overflow: 'hidden',
@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
           </span>
         </div>
 
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{ overflowX: 'auto', scrollBehavior: 'smooth' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
@@ -274,6 +274,11 @@ const Dashboard: React.FC = () => {
               })}
             </tbody>
           </table>
+          {mockCampaigns.length === 0 && (
+            <div style={{ padding: 40, textAlign: 'center' }}>
+              <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma campanha encontrada</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -55,6 +55,7 @@ export default function Playbook() {
   const isMobile = useIsMobile();
   const [activeCategory, setActiveCategory] = useState<Category>('Todos');
   const [expandedIds, setExpandedIds] = useState<Set<number>>(new Set());
+  const [hoveredEntry, setHoveredEntry] = useState<number | null>(null);
 
   const toggleExpand = (id: number) => {
     setExpandedIds(prev => {
@@ -76,8 +77,6 @@ export default function Playbook() {
 
   return (
     <div style={{
-      background: '#0c0c14', minHeight: '100vh', padding: isMobile ? 16 : 32,
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       color: '#e2e8f0',
     }}>
       <div style={{ maxWidth: isMobile ? '100%' : 900, margin: '0 auto' }}>
@@ -133,12 +132,17 @@ export default function Playbook() {
               <div
                 key={entry.id}
                 onClick={() => toggleExpand(entry.id)}
+                onMouseEnter={() => setHoveredEntry(entry.id)}
+                onMouseLeave={() => setHoveredEntry(null)}
                 style={{
                   ...glassCard,
                   borderLeft: `3px solid ${color}`,
+                  borderColor: hoveredEntry === entry.id ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.06)',
                   padding: isMobile ? '14px 16px' : '20px 24px',
                   cursor: 'pointer',
-                  transition: 'all 0.3s',
+                  transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: hoveredEntry === entry.id ? '0 0 30px rgba(99,102,241,0.06)' : 'none',
+                  transform: hoveredEntry === entry.id ? 'translateY(-1px)' : 'translateY(0)',
                 }}
               >
                 {/* Header */}
@@ -169,7 +173,7 @@ export default function Playbook() {
                   <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#64748b' }}>
                       <ExternalLink size={14} />
-                      <span style={{ fontFamily: '"SF Mono", "Fira Code", monospace' }}>
+                      <span style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
                         {entry.source}
                       </span>
                     </div>
@@ -186,6 +190,13 @@ export default function Playbook() {
               </div>
             );
           })}
+          {filteredEntries.length === 0 && (
+            <div style={{
+              ...glassCard, padding: 40, textAlign: 'center',
+            }}>
+              <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum item nesta categoria</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

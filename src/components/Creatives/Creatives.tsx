@@ -93,7 +93,7 @@ function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 11, fontWeight: 700, color,
+        fontSize: 11, fontWeight: 700, color, fontFamily: "'Space Grotesk', sans-serif",
       }}>
         {score}
       </div>
@@ -218,7 +218,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
               textAlign: 'center',
             }}>
               <div style={{ fontSize: 9, color: COLORS.textMuted, marginBottom: 2 }}>{m.label}</div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.text }}>{m.value}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Space Grotesk', sans-serif" }}>{m.value}</div>
             </div>
           ))}
         </div>
@@ -302,7 +302,7 @@ export default function Creatives() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         marginBottom: 20, flexWrap: 'wrap', gap: 12,
       }}>
-        <div style={{ display: 'flex', gap: 8, overflowX: isMobile ? 'auto' : undefined, WebkitOverflowScrolling: 'touch' as any, flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: 8, overflowX: isMobile ? 'auto' : undefined, WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'], flexShrink: 0 }}>
           {filters.map(f => (
             <button
               key={f.key}
@@ -368,6 +368,20 @@ export default function Creatives() {
           <CreativeCard key={creative.id} creative={creative} isMobile={isMobile} />
         ))}
       </div>
+      {filtered.length === 0 && (
+        <div
+          style={{
+            background: 'rgba(22,22,32,0.85)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: 16,
+            padding: 40,
+            textAlign: 'center',
+          }}
+        >
+          <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum criativo encontrado</div>
+        </div>
+      )}
     </div>
   );
 }

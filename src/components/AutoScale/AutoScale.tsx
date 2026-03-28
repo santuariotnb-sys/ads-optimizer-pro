@@ -61,6 +61,7 @@ export default function AutoScale() {
   const [ruleStates, setRuleStates] = useState<Record<number, boolean>>(
     Object.fromEntries(rules.map(r => [r.id, r.enabled]))
   );
+  const [hoveredRule, setHoveredRule] = useState<number | null>(null);
 
   const toggleRule = (id: number) => {
     setRuleStates(prev => ({ ...prev, [id]: !prev[id] }));
@@ -74,8 +75,6 @@ export default function AutoScale() {
 
   return (
     <div style={{
-      background: '#0c0c14', minHeight: '100vh', padding: isMobile ? 16 : 32,
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       color: '#e2e8f0',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
@@ -98,7 +97,7 @@ export default function AutoScale() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>{stat.icon}</div>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 700 }}>{stat.value}</div>
+                <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Space Grotesk', sans-serif" }}>{stat.value}</div>
                 <div style={{ fontSize: 13, color: '#64748b' }}>{stat.label}</div>
               </div>
             </div>
@@ -114,10 +113,16 @@ export default function AutoScale() {
           {rules.map(rule => {
             const isOn = ruleStates[rule.id];
             return (
-              <div key={rule.id} style={{
+              <div key={rule.id}
+                onMouseEnter={() => setHoveredRule(rule.id)}
+                onMouseLeave={() => setHoveredRule(null)}
+                style={{
                 ...glassCard,
-                border: `1px solid ${isOn ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.06)'}`,
-                padding: isMobile ? 14 : 20, opacity: isOn ? 1 : 0.6, transition: 'all 0.3s',
+                border: `1px solid ${hoveredRule === rule.id ? 'rgba(255,255,255,0.12)' : isOn ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.06)'}`,
+                padding: isMobile ? 14 : 20, opacity: isOn ? 1 : 0.6,
+                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                transform: hoveredRule === rule.id ? 'translateY(-1px)' : 'translateY(0)',
+                boxShadow: hoveredRule === rule.id ? '0 0 30px rgba(99,102,241,0.06)' : 'none',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <span style={{ fontSize: 15, fontWeight: 700 }}>{rule.name}</span>
@@ -139,7 +144,7 @@ export default function AutoScale() {
                   </button>
                 </div>
                 <div style={{
-                  fontFamily: '"SF Mono", "Fira Code", monospace',
+                  fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                   fontSize: 12, color: '#64748b', marginBottom: 12,
                   padding: '6px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: 6,
                 }}>{rule.condition}</div>
@@ -208,7 +213,7 @@ export default function AutoScale() {
                 boxShadow: `0 0 8px ${logColors[entry.type]}60`,
               }} />
               <span style={{
-                fontSize: 12, fontFamily: '"SF Mono", "Fira Code", monospace',
+                fontSize: 12, fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                 color: '#64748b', minWidth: 120, flexShrink: 0,
               }}>{entry.time}</span>
               <span style={{ fontSize: 14, color: logColors[entry.type] }}>{entry.action}</span>

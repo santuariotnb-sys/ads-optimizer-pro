@@ -39,9 +39,9 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
   return (
     <div
       style={{
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
+        background: 'rgba(22, 22, 32, 0.85)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         border: '1px solid rgba(255, 255, 255, 0.06)',
         borderRadius: 16,
         padding: isMobile ? 14 : 20,

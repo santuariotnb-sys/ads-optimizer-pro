@@ -18,7 +18,7 @@ const inputBase: React.CSSProperties = {
   boxSizing: 'border-box' as const,
   background: 'rgba(255,255,255,0.04)',
   border: '1px solid rgba(255,255,255,0.08)',
-  borderRadius: 10,
+  borderRadius: 12,
   padding: '12px 16px',
   color: '#e2e8f0',
   fontSize: 14,
@@ -540,8 +540,7 @@ export default function CampaignCreator() {
 
   return (
     <div style={{
-      background: '#0c0c14', minHeight: '100vh', padding: isMobile ? 12 : 32,
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      padding: isMobile ? 0 : 8,
       color: '#e2e8f0',
     }}>
       <div style={{ ...glassCard, maxWidth: isMobile ? '100%' : 800, padding: isMobile ? 16 : 32 }}>
@@ -572,22 +571,29 @@ export default function CampaignCreator() {
           <button
             onClick={() => setStep(s => Math.max(0, s - 1))}
             disabled={step === 0}
+            onMouseEnter={(e) => { if (step > 0) { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
             style={{
               display: 'flex', alignItems: 'center', gap: 8,
               padding: '10px 20px', background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10,
+              border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
               color: '#94a3b8', cursor: step > 0 ? 'pointer' : 'default',
-              fontSize: 14, opacity: step > 0 ? 1 : 0.4, transition: 'all 0.2s',
+              fontSize: 14, opacity: step > 0 ? 1 : 0.4, transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+              minHeight: 44,
             }}
           >
             <ChevronLeft size={16} /> Voltar
           </button>
 
-          <button onClick={fillDefaults} style={{
+          <button onClick={fillDefaults}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(245,158,11,0.12)'; e.currentTarget.style.borderColor = 'rgba(245,158,11,0.3)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+            style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '10px 20px', background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10,
-            color: '#f59e0b', cursor: 'pointer', fontSize: 13, fontWeight: 600, transition: 'all 0.2s',
+            border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
+            color: '#f59e0b', cursor: 'pointer', fontSize: 13, fontWeight: 600,
+            transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', minHeight: 44,
           }}>
             <Sparkles size={16} /> Preencher Defaults Recomendados
           </button>
@@ -597,12 +603,14 @@ export default function CampaignCreator() {
               if (step < 2) setStep(s => s + 1);
               else alert('Campanha criada com sucesso!');
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(99,102,241,0.45)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(99,102,241,0.3)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             style={{
               display: 'flex', alignItems: 'center', gap: 8,
               padding: '10px 24px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              border: 'none', borderRadius: 10, color: '#fff', cursor: 'pointer',
+              border: 'none', borderRadius: 12, color: '#fff', cursor: 'pointer',
               fontSize: 14, fontWeight: 600, boxShadow: '0 4px 16px rgba(99,102,241,0.3)',
-              transition: 'all 0.2s',
+              transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', minHeight: 44,
             }}
           >
             {step < 2 ? (<>Próximo <ChevronRight size={16} /></>) : (<><Check size={16} /> Criar Campanha</>)}
