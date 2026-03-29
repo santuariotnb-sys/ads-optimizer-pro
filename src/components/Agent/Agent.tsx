@@ -1,6 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Bot, Send, Sparkles, Target, Image as ImageIcon, Play, Cpu, Radio } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
+import { AIAgent } from '../../services/aiAgent';
 
 interface Message {
   id: string;
@@ -138,10 +140,38 @@ Adicione estes campos no custom_data do CAPI:
 Implemente DeepEngagement (scroll 75% + 2min na LP) e HighIntentVisitor (3 visitas em 48h) via CAPI. Apenas 0.01% dos anunciantes fazem isso. Isso ensina o Andromeda comportamentos pré-compra que ele não consegue ver sozinho.`,
 };
 
-function parseMarkdown(text: string): string {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#0f172a;font-weight:600">$1</strong>')
-    .replace(/\n/g, '<br/>');
+/** Safe markdown renderer — returns React elements instead of raw HTML */
+function renderMarkdown(text: string): React.ReactNode {
+  const lines = text.split('\n');
+  return lines.map((line, i) => {
+    const isBullet = /^- (.+)/.exec(line);
+    const content = isBullet ? isBullet[1] : line;
+
+    // Split by **bold** markers and build React elements
+    const parts = content.split(/(\*\*.*?\*\*)/g).map((part, j) => {
+      const boldMatch = /^\*\*(.*)\*\*$/.exec(part);
+      if (boldMatch) {
+        return <strong key={j} style={{ color: '#0f172a', fontWeight: 600 }}>{boldMatch[1]}</strong>;
+      }
+      return <span key={j}>{part}</span>;
+    });
+
+    if (isBullet) {
+      return (
+        <div key={i} style={{ display: 'flex', gap: 6, paddingLeft: 4 }}>
+          <span style={{ flexShrink: 0 }}>{'\u2022'}</span>
+          <span>{parts}</span>
+        </div>
+      );
+    }
+
+    // Empty line = spacing
+    if (line.trim() === '') {
+      return <div key={i} style={{ height: 8 }} />;
+    }
+
+    return <div key={i}>{parts}</div>;
+  });
 }
 
 const containerStyle: React.CSSProperties = {
@@ -303,8 +333,17 @@ const typingKeyframes = `
 }
 `;
 
+const SESSION_KEY = 'ao_anthropic_key';
+
+function getAnthropicKey(): string | null {
+  return sessionStorage.getItem(SESSION_KEY) || import.meta.env.VITE_ANTHROPIC_API_KEY || null;
+}
+
 export default function Agent() {
   const isMobile = useIsMobile();
+  const metrics = useStore((s) => s.metrics);
+  const campaigns = useStore((s) => s.campaigns);
+  const emqScore = useStore((s) => s.emqScore);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -346,6 +385,18 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
     }, 800);
   };
 
+  const sendToAI = useCallback(async (userMessage: string): Promise<string | null> => {
+    const apiKey = getAnthropicKey();
+    if (!apiKey) return null;
+    try {
+      const agent = new AIAgent(apiKey);
+      const response = await agent.sendMessage(userMessage, { metrics, campaigns, emqScore });
+      return response;
+    } catch {
+      return null;
+    }
+  }, [metrics, campaigns, emqScore]);
+
   const handleTopicClick = (topicId: string, question: string) => {
     const userMsg: Message = {
       id: `user-${++msgIdRef.current}`,
@@ -354,7 +405,25 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMsg]);
-    addAssistantMessage(demoResponses[topicId] || 'Desculpe, não tenho uma resposta para isso ainda.');
+
+    const apiKey = getAnthropicKey();
+    if (apiKey) {
+      setIsTyping(true);
+      sendToAI(question).then((aiResponse) => {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `assistant-${++msgIdRef.current}`,
+            role: 'assistant',
+            content: aiResponse || demoResponses[topicId] || 'Desculpe, não tenho uma resposta para isso ainda.',
+            timestamp: new Date(),
+          },
+        ]);
+      });
+    } else {
+      addAssistantMessage(demoResponses[topicId] || 'Desculpe, não tenho uma resposta para isso ainda.');
+    }
   };
 
   const handleSend = () => {
@@ -369,17 +438,55 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
 
-    const matchedTopic = quickTopics.find(
-      (t) =>
-        trimmed.toLowerCase().includes(t.label.toLowerCase()) ||
-        trimmed.toLowerCase().includes(t.id.toLowerCase())
-    );
-    if (matchedTopic) {
-      addAssistantMessage(demoResponses[matchedTopic.id]);
+    const apiKey = getAnthropicKey();
+    if (apiKey) {
+      setIsTyping(true);
+      sendToAI(trimmed).then((aiResponse) => {
+        setIsTyping(false);
+        if (aiResponse) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `assistant-${++msgIdRef.current}`,
+              role: 'assistant',
+              content: aiResponse,
+              timestamp: new Date(),
+            },
+          ]);
+        } else {
+          // AI call failed, fall back to demo
+          const matchedTopic = quickTopics.find(
+            (t) =>
+              trimmed.toLowerCase().includes(t.label.toLowerCase()) ||
+              trimmed.toLowerCase().includes(t.id.toLowerCase())
+          );
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `assistant-${++msgIdRef.current}`,
+              role: 'assistant',
+              content: matchedTopic
+                ? demoResponses[matchedTopic.id]
+                : `**Análise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA médio de R$ 52,40 pode ser otimizado em até 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting — campanhas sem segmentação manual estão performando 3.2x melhor\n\nPara uma análise mais detalhada, selecione um dos tópicos disponíveis acima.`,
+              timestamp: new Date(),
+            },
+          ]);
+        }
+      });
     } else {
-      addAssistantMessage(
-        `**Análise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA médio de R$ 52,40 pode ser otimizado em até 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting — campanhas sem segmentação manual estão performando 3.2x melhor\n\nPara uma análise mais detalhada, selecione um dos tópicos disponíveis acima.`
+      // No API key — use demo responses
+      const matchedTopic = quickTopics.find(
+        (t) =>
+          trimmed.toLowerCase().includes(t.label.toLowerCase()) ||
+          trimmed.toLowerCase().includes(t.id.toLowerCase())
       );
+      if (matchedTopic) {
+        addAssistantMessage(demoResponses[matchedTopic.id]);
+      } else {
+        addAssistantMessage(
+          `**Análise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA médio de R$ 52,40 pode ser otimizado em até 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting — campanhas sem segmentação manual estão performando 3.2x melhor\n\nPara uma análise mais detalhada, selecione um dos tópicos disponíveis acima.`
+        );
+      }
     }
   };
 
@@ -492,10 +599,9 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               <div style={botAvatarStyle}>
                 <Bot size={16} color="#fff" />
               </div>
-              <div
-                style={assistantBubbleStyle}
-                dangerouslySetInnerHTML={{ __html: parseMarkdown(msg.content) }}
-              />
+              <div style={assistantBubbleStyle}>
+                {renderMarkdown(msg.content)}
+              </div>
             </div>
           )
         )}

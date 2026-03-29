@@ -4,6 +4,7 @@ import { formatCurrency, getStatusColor, getScoreColor } from '../../utils/forma
 import type { AdSet } from '../../types/meta';
 import { ChevronDown, ChevronUp, Pause, TrendingUp, Copy, AlertTriangle } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
 import { showToast } from '../ui/toastStore';
 
 const statusLabel: Record<string, string> = {
@@ -25,6 +26,8 @@ const Campaigns: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
   const isMobile = useIsMobile();
+  const storeCampaigns = useStore((s) => s.campaigns);
+  const campaigns = storeCampaigns.length > 0 ? storeCampaigns : mockCampaigns;
 
   const toggle = (id: string) => {
     setExpandedIds((prev) => {
@@ -35,7 +38,7 @@ const Campaigns: React.FC = () => {
     });
   };
 
-  const filtered = mockCampaigns.filter((c) =>
+  const filtered = campaigns.filter((c) =>
     c.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

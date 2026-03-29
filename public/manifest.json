@@ -4,8 +4,8 @@
   "description": "Escale suas campanhas Meta Ads ao topo",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0c0c14",
-  "theme_color": "#0c0c14",
+  "background_color": "#f8f8f6",
+  "theme_color": "#f8f8f6",
   "orientation": "portrait-primary",
   "icons": [
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },

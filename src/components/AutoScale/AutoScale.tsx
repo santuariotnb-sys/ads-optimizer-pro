@@ -1,8 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Zap, Shield, Clock, TrendingUp, Activity } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { supabase } from '../../lib/supabase';
 
-const rules = [
+interface AutoScaleRule {
+  id: number | string;
+  name: string;
+  condition: string;
+  action: string;
+  enabled: boolean;
+  lastTriggered: string;
+  cooldown: string;
+}
+
+const MOCK_RULES: AutoScaleRule[] = [
   { id: 1, name: 'Escalar Winners', condition: 'CPA < alvo por 48h', action: 'Budget +10%', enabled: true, lastTriggered: '27 Mar, 10:00', cooldown: '48h' },
   { id: 2, name: 'Pausar Losers', condition: 'CTR < 1% + 7d + 0 conversões', action: 'Pausar Ad', enabled: true, lastTriggered: '26 Mar, 14:00', cooldown: '24h' },
   { id: 3, name: 'Pausar CPA Alto', condition: 'CPA > 2x alvo por 48h', action: 'Pausar Ad Set', enabled: true, lastTriggered: 'Nunca', cooldown: '48h' },
@@ -11,6 +22,39 @@ const rules = [
   { id: 6, name: 'Refresh Criativos', condition: 'Criativo > 10 dias ativo', action: 'Notificar', enabled: false, lastTriggered: 'Nunca', cooldown: '168h' },
 ];
 
+function formatOperator(op: string, metric: string, threshold: number): string {
+  const opMap: Record<string, string> = { '>': '>', '<': '<', '>=': '>=', '<=': '<=', '==': '=' };
+  return `${metric} ${opMap[op] || op} ${threshold}`;
+}
+
+function formatCooldown(hours: number): string {
+  return `${hours}h`;
+}
+
+async function fetchAlertRules(): Promise<AutoScaleRule[]> {
+  try {
+    const { data, error } = await supabase
+      .from('alert_rules')
+      .select('*')
+      .order('created_at', { ascending: true });
+    if (error || !data || data.length === 0) return MOCK_RULES;
+    return data.map((r) => ({
+      id: r.id,
+      name: `${r.metric} ${r.operator} ${r.threshold}`,
+      condition: formatOperator(r.operator, r.metric, r.threshold),
+      action: r.channels?.includes('pause') ? 'Pausar Ad' : r.channels?.includes('scale') ? 'Budget +10%' : 'Notificar',
+      enabled: r.is_active,
+      lastTriggered: r.last_triggered_at
+        ? new Date(r.last_triggered_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+        : 'Nunca',
+      cooldown: formatCooldown(r.period_hours),
+    }));
+  } catch {
+    return MOCK_RULES;
+  }
+}
+
+// Demo data — replace with real activity log from Supabase when available
 const activityLog = [
   { time: '28 Mar, 06:15', action: 'Alerta: Fadiga criativa — Static Antes/Depois', type: 'warning' },
   { time: '27 Mar, 22:00', action: 'Alerta: Frequência 3.2 — Retarget Carrinho', type: 'warning' },
@@ -59,19 +103,38 @@ const glassCard: React.CSSProperties = {
 
 export default function AutoScale() {
   const isMobile = useIsMobile();
-  const [ruleStates, setRuleStates] = useState<Record<number, boolean>>(
-    Object.fromEntries(rules.map(r => [r.id, r.enabled]))
+  const [rules, setRules] = useState<AutoScaleRule[]>(MOCK_RULES);
+  const [ruleStates, setRuleStates] = useState<Record<number | string, boolean>>(
+    Object.fromEntries(MOCK_RULES.map(r => [r.id, r.enabled]))
   );
-  const [hoveredRule, setHoveredRule] = useState<number | null>(null);
+  const [hoveredRule, setHoveredRule] = useState<number | string | null>(null);
 
-  const toggleRule = (id: number) => {
-    setRuleStates(prev => ({ ...prev, [id]: !prev[id] }));
+  useEffect(() => {
+    let cancelled = false;
+    fetchAlertRules().then((fetched) => {
+      if (cancelled) return;
+      setRules(fetched);
+      setRuleStates(Object.fromEntries(fetched.map(r => [r.id, r.enabled])));
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  const toggleRule = async (id: number | string) => {
+    setRuleStates(prev => {
+      const newState = { ...prev, [id]: !prev[id] };
+      // Persist to Supabase only for real DB rows (UUID strings with hyphens)
+      if (typeof id === 'string' && id.includes('-')) {
+        supabase.from('alert_rules').update({ is_active: newState[id] }).eq('id', id).then(() => {});
+      }
+      return newState;
+    });
   };
 
+  const enabledRulesCount = rules.filter(r => ruleStates[r.id]).length;
   const stats = [
-    { label: 'Ações esta semana', value: '12', icon: <Activity size={20} color="#6366f1" /> },
-    { label: 'Budget otimizado', value: 'R$ 8.400', icon: <TrendingUp size={20} color="#4ade80" /> },
-    { label: 'Campanhas afetadas', value: '4', icon: <Zap size={20} color="#6366f1" /> },
+    { label: 'Ações esta semana', value: '12', icon: <Activity size={20} color="#6366f1" /> }, // hardcoded — needs historical data
+    { label: 'Budget otimizado', value: 'R$ 8.400', icon: <TrendingUp size={20} color="#4ade80" /> }, // hardcoded — needs historical data
+    { label: 'Campanhas afetadas', value: String(enabledRulesCount), icon: <Zap size={20} color="#6366f1" /> },
   ];
 
   return (

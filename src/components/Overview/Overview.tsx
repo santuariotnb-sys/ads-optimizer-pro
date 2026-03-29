@@ -16,7 +16,7 @@ import Tooltip from '../ui/Tooltip';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { formatCurrency, formatNumber, getStatusColor } from '../../utils/formatters';
-import { mockCampaigns } from '../../data/mockData';
+import { mockCampaigns, mockDashboardMetrics } from '../../data/mockData';
 
 /* ────────────────────────── helpers ────────────────────────── */
 
@@ -333,11 +333,11 @@ export default function Overview() {
     .sort((a, b) => b.roas - a.roas)
     .slice(0, 4);
 
-  const cpa = metrics.cpa || 42.8;
-  const roas = metrics.roas || 4.2;
-  const spend = metrics.spend || 12480;
-  const conversions = metrics.conversions || 287;
-  const accountScore = metrics.accountScore || 76;
+  const cpa = metrics.cpa || mockDashboardMetrics.cpa;
+  const roas = metrics.roas || mockDashboardMetrics.roas;
+  const spend = metrics.spend || mockDashboardMetrics.spend;
+  const conversions = metrics.conversions || mockDashboardMetrics.conversions;
+  const accountScore = metrics.accountScore || mockDashboardMetrics.accountScore;
   const emq = emqScore || 8.7;
 
   const animatedCPA = useCountUp(cpa, 1600, 2);

@@ -16,6 +16,10 @@ import {
 type Provider = 'claude' | 'openai';
 type CreativeType = 'video' | 'image' | 'carousel';
 
+// SECURITY NOTE: These session keys store the USER's own API key (provided by them
+// in the UI input field) so it persists across page refreshes within the same tab.
+// This is intentional — we do NOT own or supply this key. The key is never logged,
+// never sent to our servers, and is cleared when the browser tab closes.
 const SESSION_KEY_KEY = 'ads_everest_vision_key';
 const SESSION_PROVIDER_KEY = 'ads_everest_vision_provider';
 
@@ -49,7 +53,6 @@ export default function CreativeVision() {
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
-  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     sessionStorage.setItem(SESSION_KEY_KEY, apiKey);
@@ -65,7 +68,6 @@ export default function CreativeVision() {
     setResult(null);
     setFrames([]);
     setError(null);
-    setVideoError(false);
     setPreview(URL.createObjectURL(f));
     if (f.type.startsWith('video/')) setCreativeType('video');
     else setCreativeType('image');
@@ -114,7 +116,9 @@ export default function CreativeVision() {
       setResult(analysisResult);
       setProgress(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro desconhecido na análise');
+      const msg = err instanceof Error ? err.message : 'Erro desconhecido na análise';
+      const debug = `[DEBUG] crossOriginIsolated=${crossOriginIsolated} | type=${file?.type} | size=${file ? (file.size/1024/1024).toFixed(1)+'MB' : '?'}`;
+      setError(`${msg}\n\n${debug}`);
       setProgress(null);
     } finally {
       setAnalyzing(false);
@@ -209,26 +213,13 @@ export default function CreativeVision() {
         >
           {preview ? (
             creativeType === 'video' ? (
-              videoError ? (
-                <div style={{ padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-                  <Film size={32} style={{ color: '#94a3b8' }} />
-                  <p style={{ fontSize: 14, fontWeight: 500, color: '#64748b', margin: 0 }}>
-                    Preview indisponível para este formato
-                  </p>
-                  <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>
-                    A análise será feita via extração de frames
-                  </p>
-                </div>
-              ) : (
-                <video
-                  ref={videoRef}
-                  src={preview}
-                  controls
-                  preload="auto"
-                  onError={() => setVideoError(true)}
-                  style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }}
-                />
-              )
+              <video
+                ref={videoRef}
+                src={preview}
+                controls
+                preload="auto"
+                style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }}
+              />
             ) : (
               <img src={preview} alt="Preview" style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }} />
             )

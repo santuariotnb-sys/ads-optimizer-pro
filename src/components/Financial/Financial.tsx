@@ -11,6 +11,29 @@ import { formatCurrency } from '../../utils/formatters';
 import { COLORS, COLORS_LIGHT } from '../../utils/constants';
 import { getSalesSummary, type SalesSummary } from '../../services/salesService';
 import { fetchExpenses, createExpense, deleteExpense, EXPENSE_CATEGORIES, type Expense } from '../../services/expenseService';
+import { supabase } from '../../lib/supabase';
+
+interface MonthlyDRE {
+  month: string;
+  receita_bruta: number;
+  taxas_plataforma: number;
+  reembolsos: number;
+  receita_liquida: number;
+}
+
+async function fetchMonthlyDRE(): Promise<MonthlyDRE[]> {
+  try {
+    const { data, error } = await supabase
+      .from('monthly_dre')
+      .select('*')
+      .order('month', { ascending: false })
+      .limit(6);
+    if (error || !data || data.length === 0) return [];
+    return data as MonthlyDRE[];
+  } catch {
+    return [];
+  }
+}
 
 // Mock data for demo mode
 const MOCK_SUMMARY: SalesSummary = {
@@ -43,6 +66,7 @@ export default function Financial() {
 
   const [summary, setSummary] = useState<SalesSummary>(MOCK_SUMMARY);
   const [expenses, setExpenses] = useState<Expense[]>(MOCK_EXPENSES);
+  const [monthlyDRE, setMonthlyDRE] = useState<MonthlyDRE[]>([]);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [newExpense, setNewExpense] = useState({ category: 'outros', description: '', amount: '', is_recurring: false, reference_date: new Date().toISOString().split('T')[0] });
   const [refreshKey, setRefreshKey] = useState(0);
@@ -52,13 +76,15 @@ export default function Financial() {
     let cancelled = false;
     (async () => {
       try {
-        const [salesData, expensesData] = await Promise.all([
+        const [salesData, expensesData, dreData] = await Promise.all([
           getSalesSummary(selectedPeriod),
           fetchExpenses(new Date().toISOString().slice(0, 7)),
+          fetchMonthlyDRE(),
         ]);
         if (!cancelled) {
           setSummary(salesData);
           setExpenses(expensesData);
+          setMonthlyDRE(dreData);
         }
       } catch {
         // fallback to mock
@@ -66,6 +92,16 @@ export default function Financial() {
     })();
     return () => { cancelled = true; };
   }, [mode, selectedPeriod, refreshKey]);
+
+  // Also try to fetch monthly DRE in demo mode (will use mock fallback if Supabase not configured)
+  useEffect(() => {
+    if (mode === 'live') return;
+    let cancelled = false;
+    fetchMonthlyDRE().then((data) => {
+      if (!cancelled && data.length > 0) setMonthlyDRE(data);
+    });
+    return () => { cancelled = true; };
+  }, [mode]);
 
   async function handleAddExpense() {
     if (!newExpense.amount || !newExpense.category) return;
@@ -308,6 +344,55 @@ export default function Financial() {
           </div>
         </div>
       </motion.div>
+
+      {/* Monthly DRE History (from Supabase view) */}
+      {monthlyDRE.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="glass-card tilt-card"
+          style={{ padding: 24, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` }}
+        >
+          <h3 style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Calendar size={16} color={c.accent} /> DRE Mensal (Historico)
+          </h3>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'JetBrains Mono', fontSize: 13 }}>
+              <thead>
+                <tr>
+                  {['Mes', 'Receita Bruta', 'Taxas', 'Reembolsos', 'Receita Liquida'].map((h) => (
+                    <th key={h} style={{ textAlign: h === 'Mes' ? 'left' : 'right', padding: '8px 12px', borderBottom: `1px solid ${c.border}`, color: c.textMuted, fontWeight: 600, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {monthlyDRE.map((row) => (
+                  <tr key={row.month}>
+                    <td style={{ padding: '10px 12px', borderBottom: `1px solid ${c.border}`, color: c.text, fontWeight: 600 }}>
+                      {row.month}
+                    </td>
+                    <td style={{ padding: '10px 12px', borderBottom: `1px solid ${c.border}`, color: c.text, textAlign: 'right' }}>
+                      {formatCurrency(row.receita_bruta)}
+                    </td>
+                    <td style={{ padding: '10px 12px', borderBottom: `1px solid ${c.border}`, color: c.danger, textAlign: 'right' }}>
+                      {formatCurrency(row.taxas_plataforma)}
+                    </td>
+                    <td style={{ padding: '10px 12px', borderBottom: `1px solid ${c.border}`, color: c.danger, textAlign: 'right' }}>
+                      {formatCurrency(row.reembolsos)}
+                    </td>
+                    <td style={{ padding: '10px 12px', borderBottom: `1px solid ${c.border}`, color: row.receita_liquida >= 0 ? c.success : c.danger, textAlign: 'right', fontWeight: 700 }}>
+                      {formatCurrency(row.receita_liquida)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

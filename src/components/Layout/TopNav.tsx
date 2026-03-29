@@ -15,12 +15,12 @@ interface TabDef {
 
 const tabs: TabDef[] = [
   { id: 'opt', label: 'PAINEL', icon: LayoutDashboard, defaultModule: 'opt-overview' },
-  { id: 'utm', label: 'UTM STUDIO', icon: Link, defaultModule: 'utm-dashboard' },
+  { id: 'utm', label: 'UTM STUDIO', icon: Link, defaultModule: 'utm-campanhas' },
   { id: 'cre', label: 'CRIATIVOS', icon: Sparkles, defaultModule: 'cre-dashboard' },
 ];
 
 function getActiveTab(currentModule: string): TabId {
-  if (currentModule.startsWith('utm-')) return 'utm';
+  if (currentModule.startsWith('utm-') || currentModule.startsWith('meta-') || currentModule.startsWith('google-') || currentModule.startsWith('tiktok-') || currentModule.startsWith('kwai-') || currentModule.startsWith('integ-')) return 'utm';
   if (currentModule.startsWith('cre-')) return 'cre';
   return 'opt';
 }

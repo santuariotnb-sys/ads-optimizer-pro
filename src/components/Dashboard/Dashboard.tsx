@@ -18,7 +18,19 @@ const statusLabel: Record<string, string> = {
 
 const Dashboard: React.FC = () => {
   const selectedPeriod = useStore((s) => s.selectedPeriod);
+  const storeCampaigns = useStore((s) => s.campaigns);
+  const storeMetrics = useStore((s) => s.metrics);
   const isMobile = useIsMobile();
+
+  const campaigns = storeCampaigns.length > 0 ? storeCampaigns : mockCampaigns;
+  const metricCards = storeMetrics.cpa > 0 ? [
+    { label: 'CPA', value: `R$ ${storeMetrics.cpa.toFixed(2).replace('.', ',')}`, change: mockMetricCards[0].change, sparkline: mockMetricCards[0].sparkline },
+    { label: 'ROAS', value: `${storeMetrics.roas.toFixed(2)}x`, change: mockMetricCards[1].change, sparkline: mockMetricCards[1].sparkline },
+    { label: 'CTR', value: `${storeMetrics.ctr.toFixed(2)}%`, change: mockMetricCards[2].change, sparkline: mockMetricCards[2].sparkline },
+    { label: 'CPM', value: `R$ ${storeMetrics.cpm.toFixed(2).replace('.', ',')}`, change: mockMetricCards[3].change, sparkline: mockMetricCards[3].sparkline },
+    { label: 'MER', value: `${storeMetrics.mer.toFixed(2)}x`, change: mockMetricCards[4].change, sparkline: mockMetricCards[4].sparkline },
+  ] : mockMetricCards;
+  const dashboardMetrics = storeMetrics.accountScore > 0 ? storeMetrics : mockDashboardMetrics;
 
   return (
     <motion.div
@@ -97,7 +109,7 @@ const Dashboard: React.FC = () => {
             gap: isMobile ? 10 : 16,
           }}
         >
-          {mockMetricCards.map((card) => (
+          {metricCards.map((card) => (
             <MetricCard
               key={card.label}
               label={card.label}
@@ -108,7 +120,7 @@ const Dashboard: React.FC = () => {
             />
           ))}
         </motion.div>
-        <AccountScore score={mockDashboardMetrics.accountScore} />
+        <AccountScore score={dashboardMetrics.accountScore} />
       </div>
 
       {/* Campaigns Table */}
@@ -159,7 +171,7 @@ const Dashboard: React.FC = () => {
             Campanhas
           </h2>
           <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#a3a3a3' }}>
-            {mockCampaigns.length} campanhas
+            {campaigns.length} campanhas
           </span>
         </div>
 
@@ -192,7 +204,7 @@ const Dashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {mockCampaigns.map((campaign) => {
+              {campaigns.map((campaign) => {
                 const statusColor = getStatusColor(campaign.status);
                 const scoreColor = getScoreColor(campaign.opportunity_score);
                 return (
@@ -311,7 +323,7 @@ const Dashboard: React.FC = () => {
               })}
             </tbody>
           </table>
-          {mockCampaigns.length === 0 && (
+          {campaigns.length === 0 && (
             <div style={{ padding: 40, textAlign: 'center' }}>
               <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#a3a3a3' }}>Nenhuma campanha encontrada</div>
             </div>

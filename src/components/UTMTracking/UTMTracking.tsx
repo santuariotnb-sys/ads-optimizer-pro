@@ -443,9 +443,39 @@ function getViewTitle(view: string): { title: string; subtitle: string } {
 
 // ── Component ──────────────────────────────────────────────────────────────
 
+function campaignsToRows(campaigns: import('../../types/meta').Campaign[]): CampanhaRow[] {
+  return campaigns.map((c) => {
+    const statusMap: Record<string, CampaignStatus> = { ACTIVE: 'ACTIVE', PAUSED: 'PAUSED', LEARNING: 'LEARNING', LEARNING_LIMITED: 'LEARNING' };
+    const faturamento = c.spend * c.roas;
+    const lucro = faturamento - c.spend;
+    const margem = faturamento > 0 ? (lucro / faturamento) * 100 : 0;
+    const roi = c.spend > 0 ? (lucro / c.spend) * 100 : 0;
+    return {
+      status: statusMap[c.status] || 'PAUSED',
+      campanha: c.name,
+      orcamento: c.daily_budget,
+      vendas: c.conversions,
+      cpa: c.cpa,
+      gastos: c.spend,
+      faturamento,
+      lucro,
+      roas: c.roas,
+      margem: parseFloat(margem.toFixed(1)),
+      roi: Math.round(roi),
+      ctr: c.ctr,
+      cpm: c.cpm,
+      impressoes: c.impressions,
+      cliques: c.clicks,
+    };
+  });
+}
+
 export default function UTMTracking() {
   const currentModule = useStore((s) => s.currentModule);
+  const storeCampaigns = useStore((s) => s.campaigns);
   const isMobile = useIsMobile();
+
+  const campanhasData = storeCampaigns.length > 0 ? campaignsToRows(storeCampaigns) : CAMPANHAS_DATA;
 
   const [periodo, setPeriodo] = useState('7');
   const [produto, setProduto] = useState('all');
@@ -506,12 +536,12 @@ export default function UTMTracking() {
 
         <button style={S.btnOutline} type="button" onClick={() => {
           const dataMap: Record<string, unknown[]> = {
-            'utm-campanhas': CAMPANHAS_DATA,
+            'utm-campanhas': campanhasData,
             'utm-utms': UTM_DATA,
             'utm-vendas': VENDAS_DATA,
             'utm-relatorios': RELATORIO_DATA,
           };
-          const rows = dataMap[activeView] || CAMPANHAS_DATA;
+          const rows = dataMap[activeView] || campanhasData;
           if (rows.length === 0) { showToast('info', 'Nenhum dado para exportar'); return; }
           const headers = Object.keys(rows[0] as Record<string, unknown>);
           const csv = [headers.join(';'), ...rows.map(r => headers.map(h => String((r as Record<string, unknown>)[h] ?? '')).join(';'))].join('\n');
@@ -578,7 +608,7 @@ export default function UTMTracking() {
                 </tr>
               </thead>
               <tbody>
-                {CAMPANHAS_DATA.map((r, idx) => (
+                {campanhasData.map((r, idx) => (
                   <tr
                     key={idx}
                     style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : idx % 2 === 1 ? rowStripeBg : 'transparent' }}
@@ -611,7 +641,7 @@ export default function UTMTracking() {
           {/* Mobile: Tag bolha + carrossel de métricas */}
           {activeView === 'utm-campanhas' && isMobile && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: 4 }}>
-              {CAMPANHAS_DATA.map((r, idx) => (
+              {campanhasData.map((r, idx) => (
                 <div key={idx} style={{
                   borderRadius: 16, overflow: 'hidden',
                   border: '1px solid rgba(15,23,42,0.06)',

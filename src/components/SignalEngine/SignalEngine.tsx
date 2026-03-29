@@ -11,8 +11,35 @@ import ValueRulesPanel from './ValueRulesPanel';
 import TrackingScriptPanel from './TrackingScriptPanel';
 import FunnelBuilder from './FunnelBuilder';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import type { CAPIState } from '../../types/capi';
 
-const currentSignalLevel = 5;
+/** Derive signal level (1-5) from CAPI state data */
+function computeSignalLevel(state: CAPIState): number {
+  const hasPixel = state.funnel !== null;
+  if (!hasPixel) return 1;
+
+  const hasStandardEvents = state.funnel!.events.some(
+    e => !e.is_synthetic && e.enabled && e.event_name !== 'PageView'
+  );
+  if (!hasStandardEvents) return 1;
+
+  const isConnected = state.connectionStatus === 'connected';
+  if (!isConnected) return 2;
+
+  const event = mockCAPIEvent;
+  const ud = event.user_data;
+  const hasAdvancedMatching = !!(ud.em?.length && ud.ph?.length && ud.external_id?.length);
+  if (!hasAdvancedMatching) return 3;
+
+  const hasSyntheticEvents = state.syntheticRules.some(r => r.enabled && r.fires_24h > 0);
+  const cd = event.custom_data;
+  const hasValueOptimization = cd.predicted_ltv !== undefined && cd.engagement_score !== undefined;
+  if (hasSyntheticEvents && hasValueOptimization) return 5;
+
+  return 4;
+}
+
+const currentSignalLevel = computeSignalLevel(mockCAPIState);
 const levelIcons = [Radio, Shield, Zap, Brain, Activity];
 
 // ── Stat Cards ──
@@ -282,13 +309,17 @@ function FunnelFlow() {
   const funnel = mockCAPIState.funnel;
   if (!funnel) return null;
 
+  // Derive stage counts from stats + funnel predicted_ltv + event ratios
+  const total = mockCAPIState.stats.events_24h;
+  const synth = mockCAPIState.stats.synthetic_24h;
+  const matchRate = mockCAPIState.stats.match_rate / 100;
   const stages = [
-    { name: 'PageView', count: 1847, color: COLORS.textMuted },
-    { name: 'Eng. Prof.', count: 342, color: COLORS.warning },
-    { name: 'ViewContent', count: 289, color: COLORS.info },
-    { name: 'Lead', count: 156, color: COLORS.accent },
-    { name: 'Checkout', count: 89, color: COLORS.accentLight },
-    { name: 'Compra', count: 26, color: COLORS.success },
+    { name: 'PageView', count: total, color: COLORS.textMuted },
+    { name: 'Eng. Prof.', count: synth, color: COLORS.warning },
+    { name: 'ViewContent', count: Math.round(synth * matchRate), color: COLORS.info },
+    { name: 'Lead', count: Math.round(total * 0.125), color: COLORS.accent },
+    { name: 'Checkout', count: Math.round(total * 0.071), color: COLORS.accentLight },
+    { name: 'Compra', count: Math.round(total * 0.021), color: COLORS.success },
   ];
 
   const maxCount = stages[0].count;
