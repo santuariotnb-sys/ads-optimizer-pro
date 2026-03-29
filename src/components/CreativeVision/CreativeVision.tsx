@@ -286,7 +286,7 @@ export default function CreativeVision() {
       </div>
 
       {/* Modal de confirmação */}
-      {showConfirmModal && (
+      {showConfirmModal && createPortal(
         <div
           onClick={() => setShowConfirmModal(false)}
           style={{
@@ -369,7 +369,8 @@ export default function CreativeVision() {
               </button>
             </div>
           </motion.div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {error && (
