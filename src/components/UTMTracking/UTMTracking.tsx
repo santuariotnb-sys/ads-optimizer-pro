@@ -285,6 +285,29 @@ const S = {
   },
 };
 
+// Profundidade alternada — coluna "levantada" vs "afundada"
+function colDepthTh(i: number): React.CSSProperties {
+  if (i % 2 === 0) return {
+    background: 'rgba(255,255,255,0.45)',
+    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.03)',
+  };
+  return {
+    background: 'rgba(15,23,42,0.04)',
+    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)',
+  };
+}
+
+function colDepthTd(i: number): React.CSSProperties {
+  if (i % 2 === 0) return {
+    background: 'rgba(255,255,255,0.22)',
+    boxShadow: 'inset 1px 0 0 rgba(255,255,255,0.35), inset -1px 0 0 rgba(255,255,255,0.35)',
+  };
+  return {
+    background: 'rgba(15,23,42,0.02)',
+    boxShadow: 'inset 1px 0 0 rgba(0,0,0,0.02), inset -1px 0 0 rgba(0,0,0,0.02)',
+  };
+}
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function roasColor(v: number): string {
@@ -426,6 +449,19 @@ export default function UTMTracking() {
       </div>
 
       {/* Table Card */}
+      <div style={{ position: 'relative' }}>
+        {/* Fumaça / glow denso atrás do card */}
+        <div style={{
+          position: 'absolute',
+          top: '-30px',
+          left: '-30px',
+          right: '-30px',
+          bottom: '-30px',
+          background: 'radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(139,92,246,0.06) 0%, transparent 55%)',
+          filter: 'blur(40px)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }} />
       <div style={S.card}>
         <div style={S.cardReflection} />
         <div style={S.tableWrap}>
@@ -434,7 +470,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['STATUS', 'CAMPANHA', 'ORCAMENTO', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI', 'CTR', 'CPM', 'IMPRESSOES', 'CLIQUES'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i >= 2 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...colDepthTh(i), ...(i >= 2 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -446,23 +482,23 @@ export default function UTMTracking() {
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td style={S.td}>
+                    <td style={{ ...S.td, ...colDepthTd(0) }}>
                       <span style={statusBadge(r.status)}>{STATUS_LABEL[r.status]}</span>
                     </td>
-                    <td style={{ ...S.td, ...highlightTd, fontWeight: 600, maxWidth: 280 }}>{r.campanha}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.orcamento)}/dia</td>
-                    <td style={{ ...S.td, ...S.tdMono, fontWeight: 700 }}>{r.vendas}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpa)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.gastos)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.faturamento)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.margem.toFixed(1)}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.roi}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.ctr.toFixed(1)}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpm)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatNumber(r.impressoes)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatNumber(r.cliques)}</td>
+                    <td style={{ ...S.td, ...colDepthTd(1), ...highlightTd, fontWeight: 600, maxWidth: 280 }}>{r.campanha}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(2) }}>{formatCurrency(r.orcamento)}/dia</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(3), fontWeight: 700 }}>{r.vendas}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(4) }}>{formatCurrency(r.cpa)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(5) }}>{formatCurrency(r.gastos)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(6) }}>{formatCurrency(r.faturamento)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(7), color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(8), color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(9) }}>{r.margem.toFixed(1)}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(10) }}>{r.roi}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(11) }}>{r.ctr.toFixed(1)}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(12) }}>{formatCurrency(r.cpm)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(13) }}>{formatNumber(r.impressoes)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(14) }}>{formatNumber(r.cliques)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -474,7 +510,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['UTM_CAMPAIGN', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI', 'CPI', 'CPC', 'CTR', 'CPM', 'IMPRESSOES', 'CLIQUES'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i >= 1 ? S.thRight : {}), ...(i === 0 ? highlightTh : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...colDepthTh(i), ...(i >= 1 ? S.thRight : {}), ...(i === 0 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -486,21 +522,21 @@ export default function UTMTracking() {
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td style={{ ...S.td, ...highlightTd, fontWeight: 600, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_campaign}</td>
-                    <td style={{ ...S.td, ...S.tdMono, fontWeight: 700 }}>{r.vendas}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpa)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.gastos)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.faturamento)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.margem.toFixed(1)}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.roi}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpi)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpc)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.ctr.toFixed(1)}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpm)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatNumber(r.impressoes)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatNumber(r.cliques)}</td>
+                    <td style={{ ...S.td, ...colDepthTd(0), ...highlightTd, fontWeight: 600, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_campaign}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(1), fontWeight: 700 }}>{r.vendas}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(2) }}>{formatCurrency(r.cpa)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(3) }}>{formatCurrency(r.gastos)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(4) }}>{formatCurrency(r.faturamento)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(5), color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(6), color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(7) }}>{r.margem.toFixed(1)}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(8) }}>{r.roi}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(9) }}>{formatCurrency(r.cpi)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(10) }}>{formatCurrency(r.cpc)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(11) }}>{r.ctr.toFixed(1)}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(12) }}>{formatCurrency(r.cpm)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(13) }}>{formatNumber(r.impressoes)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(14) }}>{formatNumber(r.cliques)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -512,7 +548,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['DATA', 'PRODUTO', 'CLIENTE', 'VALOR', 'STATUS', 'PLATAFORMA', 'UTM_SOURCE', 'UTM_CAMPAIGN'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i === 3 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...colDepthTh(i), ...(i === 3 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -574,6 +610,7 @@ export default function UTMTracking() {
           )}
         </div>
       </div>
+      </div>{/* fecha wrapper fumaça */}
     </div>
   );
 }

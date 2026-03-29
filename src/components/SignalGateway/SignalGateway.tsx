@@ -70,19 +70,21 @@ export default function SignalGateway() {
   const [saveMsg, setSaveMsg] = useState('');
 
   useEffect(() => {
-    loadData();
+    let cancelled = false;
+    async function load() {
+      const [s, p, f] = await Promise.all([
+        fetchGatewayStats('7d'),
+        fetchGatewayPipeline('7d'),
+        fetchFunnelConfig(),
+      ]);
+      if (cancelled) return;
+      setStats(s);
+      setPipeline(p);
+      if (f) setFunnel(f);
+    }
+    load();
+    return () => { cancelled = true; };
   }, []);
-
-  async function loadData() {
-    const [s, p, f] = await Promise.all([
-      fetchGatewayStats('7d'),
-      fetchGatewayPipeline('7d'),
-      fetchFunnelConfig(),
-    ]);
-    setStats(s);
-    setPipeline(p);
-    if (f) setFunnel(f);
-  }
 
   async function handleSaveFunnel() {
     setSaving(true);

@@ -7,7 +7,6 @@ export function buildCAPIPayload(
   clientIp: string,
   userAgent: string,
   accessToken: string,
-  pixelId: string
 ): CAPIPayload {
   const userData: Record<string, unknown> = {};
 

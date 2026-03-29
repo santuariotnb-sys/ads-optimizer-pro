@@ -103,7 +103,7 @@ Deno.serve(async (req: Request) => {
 
     // 5. BUILD CAPI PAYLOAD
     const capiPayload = buildCAPIPayload(
-      event, enrichedIdentity, predictedLtv, clientIp, userAgent, capiToken, pixelId
+      event, enrichedIdentity, predictedLtv, clientIp, userAgent, capiToken
     );
 
     // 6. SEND TO META

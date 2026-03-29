@@ -187,5 +187,5 @@ custom:function(en,cd,id){send(en,cd||null,id||null)}
 };
 window.AdsEdge.pageView();
 })();
-<\/script>`;
+<${'/'}script>`;
 }
