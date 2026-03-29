@@ -15,6 +15,10 @@ import Pipeline from './components/Pipeline/Pipeline';
 import CampaignCreator from './components/CampaignCreator/CampaignCreator';
 import AutoScale from './components/AutoScale/AutoScale';
 import Playbook from './components/Playbook/Playbook';
+import SignalAudit from './components/SignalAudit/SignalAudit';
+import Financial from './components/Financial/Financial';
+import UTMTracking from './components/UTMTracking/UTMTracking';
+import Settings from './components/Settings/Settings';
 import {
   mockCampaigns,
   mockAdSetsData,
@@ -24,6 +28,7 @@ import {
   mockAlerts,
   mockDashboardMetrics,
   mockEMQ,
+  mockSignalAudit,
 } from './data/mockData';
 
 function ModuleRouter() {
@@ -53,8 +58,16 @@ function ModuleRouter() {
       return <CampaignCreator />;
     case 'autoscale':
       return <AutoScale />;
+    case 'signalaudit':
+      return <SignalAudit />;
     case 'playbook':
       return <Playbook />;
+    case 'financial':
+      return <Financial />;
+    case 'utm':
+      return <UTMTracking />;
+    case 'settings':
+      return <Settings />;
     default:
       return <Dashboard />;
   }
@@ -70,6 +83,7 @@ export default function App() {
     setAlerts,
     setMetrics,
     setEMQScore,
+    setSignalAudit,
     setIsLoading,
     setAccessToken,
     mode,
@@ -87,8 +101,9 @@ export default function App() {
       setAlerts(mockAlerts);
       setMetrics(mockDashboardMetrics);
       setEMQScore(mockEMQ.total);
+      setSignalAudit(mockSignalAudit);
     }
-  }, [mode, setCampaigns, setAdSets, setAds, setCreatives, setAudiences, setAlerts, setMetrics, setEMQScore]);
+  }, [mode, setCampaigns, setAdSets, setAds, setCreatives, setAudiences, setAlerts, setMetrics, setEMQScore, setSignalAudit]);
 
   useEffect(() => {
     const token = parseCallbackToken();

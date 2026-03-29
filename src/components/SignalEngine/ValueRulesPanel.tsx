@@ -44,7 +44,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
           <TrendingUp size={18} color={COLORS.purple} />
           <span style={{ color: COLORS.text, fontSize: isMobile ? 14 : 15, fontWeight: 600 }}>Value Rules</span>
           {!isMobile && <span style={{
-            background: 'rgba(5, 150, 105, 0.12)', borderRadius: 6, padding: '2px 8px',
+            background: 'rgba(79, 70, 229, 0.12)', borderRadius: 6, padding: '2px 8px',
             fontSize: 10, fontWeight: 600, color: COLORS.purple,
           }}>
             +46% ROAS case study
@@ -71,8 +71,8 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
                 display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 10 : 12,
                 padding: isMobile ? '10px 12px' : '12px 16px',
                 flexWrap: isMobile ? 'wrap' : 'nowrap',
-                background: rule.enabled ? 'rgba(5, 150, 105, 0.04)' : 'rgba(12, 12, 20, 0.4)',
-                border: `1px solid ${rule.enabled ? 'rgba(5, 150, 105, 0.12)' : COLORS.border}`,
+                background: rule.enabled ? 'rgba(79, 70, 229, 0.04)' : 'rgba(12, 12, 20, 0.4)',
+                border: `1px solid ${rule.enabled ? 'rgba(79, 70, 229, 0.12)' : COLORS.border}`,
                 borderRadius: 10,
                 opacity: rule.enabled ? 1 : 0.6,
                 transition: 'all 0.2s ease',
@@ -125,7 +125,7 @@ export default function ValueRulesPanel({ rules, onToggle }: Props) {
 
       <div style={{
         marginTop: 12, padding: '10px 14px', borderRadius: 8,
-        background: 'rgba(5, 150, 105, 0.06)', border: '1px solid rgba(5, 150, 105, 0.1)',
+        background: 'rgba(79, 70, 229, 0.06)', border: '1px solid rgba(79, 70, 229, 0.1)',
         fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5,
       }}>
         Value Rules dizem ao Andromeda quanto valorizar cada segmento no leilão. Laura Geller obteve <span style={{ color: COLORS.purple, fontWeight: 600 }}>+46% ROAS</span> com Value Optimization + custom event "first-time purchaser".

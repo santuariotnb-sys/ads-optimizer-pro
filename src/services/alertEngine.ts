@@ -45,7 +45,7 @@ export function evaluateAlerts(campaigns: Campaign[], emqScore: number): Alert[]
       alerts.push(createAlert({
         type: 'winner', severity: 'success',
         title: `Winner — ${campaign.name}`,
-        message: `Score ${campaign.opportunity_score}, CPA R$ ${campaign.cpa.toFixed(2)}. Considere escalar +20%.`,
+        message: `Score ${campaign.opportunity_score}, CPA R$ ${campaign.cpa.toFixed(2)}. Considere escalar +10%.`,
         timestamp: now, campaign_id: campaign.id,
       }));
     }

@@ -53,7 +53,7 @@
           <span>CPA disparou +32% — Colágeno Premium</span>
         </div>
         <div class="aop-alert aop-alert-success">
-          <span>Winner: VSL Detox 60s — Escalar +20%</span>
+          <span>Winner: VSL Detox 60s — Escalar +10%</span>
         </div>
         <div class="aop-alert aop-alert-warning">
           <span>Fadiga criativa — Static Antes/Depois</span>

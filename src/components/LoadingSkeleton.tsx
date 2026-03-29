@@ -2,7 +2,7 @@ export function SkeletonCard({ width = '100%', height = 120 }: { width?: string 
   return (
     <div style={{
       width, height, borderRadius: 20,
-      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+      background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
       border: '1px solid rgba(255, 255, 255, 0.06)',
       overflow: 'hidden', position: 'relative',
       boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',

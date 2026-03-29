@@ -1,4 +1,4 @@
-import type { Campaign, AdSet, Ad, Creative, Audience, Alert, MetricCard, EMQBreakdown, AutoScaleRule, PlaybookEntry, EntityIDGroup, CAPIEvent } from '../types/meta';
+import type { Campaign, AdSet, Ad, Creative, Audience, Alert, MetricCard, EMQBreakdown, AutoScaleRule, PlaybookEntry, EntityIDGroup, CAPIEvent, SignalAuditResult } from '../types/meta';
 
 // 6 campaigns with realistic Brazilian names
 export const mockCampaigns: Campaign[] = [
@@ -8,7 +8,7 @@ export const mockCampaigns: Campaign[] = [
     roas: 3.82, cpa: 42.50, ctr: 2.1, cpm: 38.90, spend: 12450,
     conversions: 293, impressions: 320000, clicks: 6720, frequency: 1.8,
     opportunity_score: 87, created_time: '2026-03-01T10:00:00Z',
-    budget_suggestion: 600, learning_days: 0, learning_conversions: 50
+    budget_suggestion: 550, learning_days: 0, learning_conversions: 50
   },
   {
     id: 'camp_002', name: '[CBO] Kit Skincare — Lookalike 1%', status: 'ACTIVE',
@@ -67,14 +67,14 @@ export const mockAudiences: Audience[] = [
 // 15 alerts
 export const mockAlerts: Alert[] = [
   { id: 'alert_001', type: 'cpa_increase', severity: 'critical', title: 'CPA disparou +32%', message: 'Campanha [CBO] Colágeno Premium — CPA subiu de R$110 para R$145 em 24h. Considere pausar.', timestamp: '2026-03-28T08:30:00Z', metric_name: 'CPA', threshold: 25, current_value: 32, campaign_id: 'camp_005', dismissed: false },
-  { id: 'alert_002', type: 'winner', severity: 'success', title: 'Winner identificado!', message: 'Criativo "VSL Detox 60s — Hook Curiosidade" mantém CPA R$38 por 72h. Escalar +20%.', timestamp: '2026-03-28T07:00:00Z', campaign_id: 'camp_001', dismissed: false },
+  { id: 'alert_002', type: 'winner', severity: 'success', title: 'Winner identificado!', message: 'Criativo "VSL Detox 60s — Hook Curiosidade" mantém CPA R$38 por 72h. Escalar +10%.', timestamp: '2026-03-28T07:00:00Z', campaign_id: 'camp_001', dismissed: false },
   { id: 'alert_003', type: 'fatigue', severity: 'warning', title: 'Fadiga criativa detectada', message: 'Criativo "Static — Antes/Depois" — CPM subiu 38% em 72h. Novo Entity ID necessário.', timestamp: '2026-03-28T06:15:00Z', campaign_id: 'camp_002', dismissed: false },
   { id: 'alert_004', type: 'frequency', severity: 'warning', title: 'Frequência alta', message: 'Campanha [RETARGET] Carrinho Abandonado — Frequência 3.2. Expandir público ou pausar.', timestamp: '2026-03-27T22:00:00Z', campaign_id: 'camp_004', dismissed: false },
   { id: 'alert_005', type: 'emq', severity: 'critical', title: 'EMQ abaixo do mínimo', message: 'EMQ caiu para 6.8. Verificar integração CAPI — email e phone não estão sendo enviados.', timestamp: '2026-03-27T18:00:00Z', dismissed: false },
   { id: 'alert_006', type: 'roas_low', severity: 'critical', title: 'ROAS negativo', message: 'Campanha [CBO] Colágeno Premium — ROAS 0.82. Campanha operando no prejuízo.', timestamp: '2026-03-27T16:00:00Z', campaign_id: 'camp_005', dismissed: true },
   { id: 'alert_007', type: 'learning', severity: 'info', title: 'Learning phase prolongada', message: 'Campanha [ASC] Black Friday está há 18 dias em learning. Apenas 35/50 conversões. Consolidar ad sets.', timestamp: '2026-03-27T14:00:00Z', campaign_id: 'camp_006', dismissed: false },
   { id: 'alert_008', type: 'ctr_low', severity: 'warning', title: 'CTR abaixo de 1%', message: 'Criativo "Carrossel Produtos" — CTR 0.8% após 9 dias. Pausar criativo.', timestamp: '2026-03-27T12:00:00Z', dismissed: false },
-  { id: 'alert_009', type: 'scale', severity: 'success', title: 'Escalar campanha', message: 'Campanha [ASC] Protocolo Detox mantém CPA R$42.50 abaixo do alvo (R$55) por 72h. Escalar +20%.', timestamp: '2026-03-27T10:00:00Z', campaign_id: 'camp_001', dismissed: false },
+  { id: 'alert_009', type: 'scale', severity: 'success', title: 'Escalar campanha', message: 'Campanha [ASC] Protocolo Detox mantém CPA R$42.50 abaixo do alvo (R$55) por 72h. Escalar +10%.', timestamp: '2026-03-27T10:00:00Z', campaign_id: 'camp_001', dismissed: false },
   { id: 'alert_010', type: 'overlap', severity: 'info', title: 'Overlap alto detectado', message: 'Públicos "Lookalike 3%" e "Add to Cart 14d" têm 62% de overlap. Consolidar para evitar competição.', timestamp: '2026-03-27T08:00:00Z', dismissed: false },
   { id: 'alert_011', type: 'budget', severity: 'info', title: 'Sugestão de budget', message: 'Kit Skincare atingiu CPA alvo consistente. Sugestão: aumentar budget diário de R$350 para R$420.', timestamp: '2026-03-26T20:00:00Z', campaign_id: 'camp_002', dismissed: false },
   { id: 'alert_012', type: 'novelty', severity: 'warning', title: 'Novelty bias expirando', message: '4 criativos com mais de 10 dias ativos. Prepare novos criativos para manter performance.', timestamp: '2026-03-26T16:00:00Z', dismissed: false },
@@ -118,7 +118,7 @@ export const mockEMQ: EMQBreakdown = {
 
 // Auto scale rules
 export const mockAutoScaleRules: AutoScaleRule[] = [
-  { id: 'rule_001', name: 'Escalar Winners', condition: 'CPA < alvo por 48h', action: 'Budget +20%', enabled: true, last_triggered: '2026-03-27T10:00:00Z', cooldown_hours: 48 },
+  { id: 'rule_001', name: 'Escalar Winners', condition: 'CPA < alvo por 48h', action: 'Budget +10%', enabled: true, last_triggered: '2026-03-27T10:00:00Z', cooldown_hours: 48 },
   { id: 'rule_002', name: 'Pausar Losers', condition: 'CTR < 1% + 7d + 0 conv', action: 'Pausar Ad', enabled: true, last_triggered: '2026-03-26T14:00:00Z', cooldown_hours: 24 },
   { id: 'rule_003', name: 'Pausar CPA Alto', condition: 'CPA > 2x alvo por 48h', action: 'Pausar Ad Set', enabled: true, cooldown_hours: 48 },
   { id: 'rule_004', name: 'Alerta Frequência', condition: 'Frequência > 3.0', action: 'Notificar', enabled: true, last_triggered: '2026-03-27T22:00:00Z', cooldown_hours: 24 },
@@ -247,6 +247,63 @@ export const mockCAPIEvent: CAPIEvent = {
     scroll_depth: 92,
     video_watched: 78,
   },
+};
+
+// Signal Audit mock data — 8 pilares META SIGNAL AUDIT
+export const mockSignalAudit: SignalAuditResult = {
+  overallMaturity: 72,
+  overallRisk: 18,
+  zone: 'yellow',
+  pillars: [
+    {
+      id: 'p1', name: 'Semântica dos Eventos',
+      maturity: 4, risk: 1, zone: 'green',
+      details: ['Purchase representa compra aprovada real', 'ViewContent mapeado corretamente', 'Lead = formulário enviado'],
+    },
+    {
+      id: 'p2', name: 'Pixel + CAPI + Deduplicação',
+      maturity: 4, risk: 1, zone: 'green',
+      details: ['event_id consistente Pixel↔CAPI', 'Deduplicação ativa', 'Taxa de match 89%'],
+    },
+    {
+      id: 'p3', name: 'Qualidade de Matching (EMQ)',
+      maturity: 3, risk: 2, zone: 'yellow',
+      details: ['EMQ 6.8 (alvo: 8.0+)', 'Faltam: ZIP, gender, DOB', 'email + phone presentes'],
+    },
+    {
+      id: 'p4', name: 'Valor Econômico',
+      maturity: 4, risk: 1, zone: 'green',
+      details: ['Value bate com financeiro', 'predicted_ltv enviado', 'margin_tier configurado'],
+    },
+    {
+      id: 'p5', name: 'Fechamento Fora do Site',
+      maturity: 2, risk: 3, zone: 'yellow',
+      details: ['WhatsApp sem tracking', 'CRM não integrado', 'Vendas offline perdidas'],
+    },
+    {
+      id: 'p6', name: 'Estrutura e Densidade de Sinal',
+      maturity: 3, risk: 2, zone: 'yellow',
+      details: ['36 conv/semana (alvo: 50)', '3 ad sets abaixo do mínimo', 'Consolidar para melhorar'],
+    },
+    {
+      id: 'p7', name: 'Criativo e Diversidade Real',
+      maturity: 4, risk: 1, zone: 'green',
+      details: ['5 Entity IDs diferentes', '24 criativos ativos', '1 Entity ID superlotado'],
+    },
+    {
+      id: 'p8', name: 'Observabilidade e Governança',
+      maturity: 3, risk: 2, zone: 'yellow',
+      details: ['Logs de CAPI ativos', 'Sem auditoria agendada', 'Sem alertas de anomalia'],
+    },
+  ],
+  redLineChecks: [
+    { label: 'Compra disparada sem compra aprovada?', value: false },
+    { label: 'Valor que não bate com financeiro?', value: false },
+    { label: 'Duplicidade deliberada de eventos?', value: false },
+    { label: 'Microevento como conversão final?', value: true },
+    { label: 'Evento "embelezado" (dados inflados)?', value: false },
+  ],
+  lastAuditTime: new Date().toISOString(),
 };
 
 // Re-export with simpler names for convenience

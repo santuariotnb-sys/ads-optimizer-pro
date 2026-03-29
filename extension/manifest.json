@@ -3,7 +3,7 @@
   "name": "Ads Optimizer Pro",
   "version": "1.0.0",
   "description": "Otimização inteligente de campanhas Meta Ads direto no Ads Manager",
-  "permissions": ["storage", "tabs", "sidePanel", "alarms", "scripting"],
+  "permissions": ["storage", "tabs", "sidePanel", "alarms"],
   "host_permissions": [
     "https://graph.facebook.com/*",
     "https://www.facebook.com/*",
@@ -13,19 +13,8 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://www.facebook.com/adsmanager/*",
-        "https://facebook.com/adsmanager/*"
-      ],
-      "js": ["content.js"],
-      "css": ["panel.css"],
-      "run_at": "document_idle"
-    }
-  ],
   "action": {
-    "default_popup": "popup.html",
+    "default_title": "Ads Optimizer Pro",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -34,7 +23,7 @@
     }
   },
   "side_panel": {
-    "default_path": "popup.html"
+    "default_path": "sidepanel.html"
   },
   "icons": {
     "16": "icons/icon16.png",

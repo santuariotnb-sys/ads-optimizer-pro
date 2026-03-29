@@ -4,13 +4,15 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import {
   LayoutDashboard, Megaphone, Image, Radio, Users, Bell, Bot,
   GitBranch, PlusCircle, Zap, BookOpen, ChevronLeft, ChevronRight,
-  Activity, X,
+  Activity, X, ShieldCheck, DollarSign, Link, Settings,
 } from 'lucide-react';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'campaigns', label: 'Campanhas', icon: Megaphone },
   { id: 'creatives', label: 'Criativos', icon: Image },
+  { id: 'financial', label: 'Financeiro', icon: DollarSign },
+  { id: 'utm', label: 'UTM Tracking', icon: Link },
   { id: 'signal', label: 'Signal Engine', icon: Radio },
   { id: 'audiences', label: 'Públicos', icon: Users },
   { id: 'alerts', label: 'Alertas', icon: Bell, badge: true },
@@ -18,7 +20,9 @@ const navItems = [
   { id: 'pipeline', label: 'Pipeline', icon: GitBranch },
   { id: 'create', label: 'Criar Campanha', icon: PlusCircle },
   { id: 'autoscale', label: 'Auto-Scale', icon: Zap },
+  { id: 'signalaudit', label: 'Signal Audit', icon: ShieldCheck },
   { id: 'playbook', label: 'Playbook', icon: BookOpen },
+  { id: 'settings', label: 'Configurações', icon: Settings },
 ] as const;
 
 const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -68,7 +72,7 @@ export default function Sidebar() {
           left: 0,
           bottom: 0,
           width,
-          background: '#000000',
+          background: '#0c0c14',
           borderRight: '1px solid rgba(255, 255, 255, 0.03)',
           display: 'flex',
           flexDirection: 'column',
@@ -96,12 +100,12 @@ export default function Sidebar() {
             width: 36,
             height: 36,
             borderRadius: 10,
-            background: 'linear-gradient(135deg, #10b981, #059669)',
+            background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
-            boxShadow: '0 0 20px rgba(16, 185, 129, 0.25)',
+            boxShadow: '0 0 20px rgba(99, 102, 241, 0.25)',
           }}
         >
           <Activity size={20} color="#fff" strokeWidth={2.5} />
@@ -110,7 +114,7 @@ export default function Sidebar() {
           <span
             style={{
               fontSize: 16,
-              fontFamily: "'Satoshi', sans-serif",
+              fontFamily: "'Outfit', sans-serif",
               fontWeight: 700,
               color: '#f5f5f5',
               whiteSpace: 'nowrap',
@@ -182,34 +186,34 @@ export default function Sidebar() {
                 cursor: 'pointer',
                 position: 'relative',
                 background: isActive
-                  ? 'rgba(16, 185, 129, 0.08)'
+                  ? 'rgba(99, 102, 241, 0.08)'
                   : isHovered
                   ? 'rgba(255, 255, 255, 0.03)'
                   : 'transparent',
-                borderLeft: isActive ? '2px solid #10b981' : '2px solid transparent',
+                borderLeft: isActive ? '2px solid #6366f1' : '2px solid transparent',
                 transition: `all 0.25s ease`,
                 width: '100%',
                 textAlign: 'left',
                 outline: 'none',
                 boxShadow: isActive
-                  ? '0 0 20px rgba(16, 185, 129, 0.05)'
+                  ? '0 0 20px rgba(99, 102, 241, 0.05)'
                   : 'none',
               }}
             >
               <Icon
                 size={20}
                 style={{
-                  color: isActive ? '#10b981' : isHovered ? '#a3a3a3' : '#737373',
+                  color: isActive ? '#6366f1' : isHovered ? '#a3a3a3' : '#737373',
                   flexShrink: 0,
                   transition: 'color 0.25s ease',
-                  filter: isActive ? 'drop-shadow(0 0 6px rgba(16, 185, 129, 0.4))' : 'none',
+                  filter: isActive ? 'drop-shadow(0 0 6px rgba(99, 102, 241, 0.4))' : 'none',
                 }}
               />
               {!collapsed && (
                 <span
                   style={{
                     fontSize: 14,
-                    fontFamily: "'General Sans', sans-serif",
+                    fontFamily: "'Outfit', sans-serif",
                     fontWeight: isActive ? 600 : 500,
                     color: isActive ? '#f5f5f5' : isHovered ? '#a3a3a3' : '#737373',
                     whiteSpace: 'nowrap',
@@ -230,7 +234,7 @@ export default function Sidebar() {
                     minWidth: 18,
                     height: 18,
                     borderRadius: 9,
-                    background: '#ef4444',
+                    background: '#f87171',
                     color: '#fff',
                     fontSize: 11,
                     fontWeight: 700,
@@ -295,8 +299,8 @@ export default function Sidebar() {
             gap: 8,
             padding: '8px 12px',
             borderRadius: 8,
-            background: mode === 'live' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(255, 255, 255, 0.03)',
-            border: `1px solid ${mode === 'live' ? 'rgba(16, 185, 129, 0.12)' : 'rgba(255, 255, 255, 0.05)'}`,
+            background: mode === 'live' ? 'rgba(99, 102, 241, 0.06)' : 'rgba(255, 255, 255, 0.03)',
+            border: `1px solid ${mode === 'live' ? 'rgba(99, 102, 241, 0.12)' : 'rgba(255, 255, 255, 0.05)'}`,
           }}
         >
           <span
@@ -304,8 +308,8 @@ export default function Sidebar() {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: mode === 'live' ? '#10b981' : '#525252',
-              boxShadow: `0 0 8px ${mode === 'live' ? 'rgba(16, 185, 129, 0.6)' : 'rgba(82, 82, 82, 0.4)'}`,
+              background: mode === 'live' ? '#6366f1' : '#525252',
+              boxShadow: `0 0 8px ${mode === 'live' ? 'rgba(99, 102, 241, 0.6)' : 'rgba(82, 82, 82, 0.4)'}`,
               animation: 'pulse-dot 2s ease-in-out infinite',
               flexShrink: 0,
             }}
@@ -315,7 +319,7 @@ export default function Sidebar() {
               style={{
                 fontSize: 12,
                 fontWeight: 600,
-                color: mode === 'live' ? '#10b981' : '#737373',
+                color: mode === 'live' ? '#6366f1' : '#737373',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
               }}
@@ -359,7 +363,7 @@ export default function Sidebar() {
             outline: 'none',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(16, 185, 129, 0.06)';
+            e.currentTarget.style.background = 'rgba(99, 102, 241, 0.06)';
             e.currentTarget.style.color = '#a3a3a3';
           }}
           onMouseLeave={(e) => {

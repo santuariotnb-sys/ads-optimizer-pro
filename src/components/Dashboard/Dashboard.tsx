@@ -39,14 +39,14 @@ const Dashboard: React.FC = () => {
             style={{
               fontSize: isMobile ? 22 : 28,
               fontWeight: 700,
-              fontFamily: "'Satoshi', 'General Sans', sans-serif",
+              fontFamily: "'Outfit', sans-serif",
               color: '#f5f5f5',
               margin: 0,
             }}
           >
             Dashboard
           </h1>
-          <p style={{ fontFamily: "'General Sans', 'DM Sans', sans-serif", fontSize: 13, color: '#a3a3a3', margin: '4px 0 0' }}>
+          <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#a3a3a3', margin: '4px 0 0' }}>
             Visao geral da performance das campanhas
           </p>
         </div>
@@ -72,8 +72,8 @@ const Dashboard: React.FC = () => {
                 fontWeight: 600,
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                background: selectedPeriod === p ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
-                color: selectedPeriod === p ? '#34d399' : '#a3a3a3',
+                background: selectedPeriod === p ? 'rgba(99, 102, 241, 0.2)' : 'transparent',
+                color: selectedPeriod === p ? '#8b5cf6' : '#a3a3a3',
               }}
             >
               {p === 'today' ? 'Hoje' : p}
@@ -151,14 +151,14 @@ const Dashboard: React.FC = () => {
             style={{
               fontSize: 16,
               fontWeight: 700,
-              fontFamily: "'Satoshi', 'General Sans', sans-serif",
+              fontFamily: "'Outfit', sans-serif",
               color: '#f5f5f5',
               margin: 0,
             }}
           >
             Campanhas
           </h2>
-          <span style={{ fontFamily: "'General Sans', 'DM Sans', sans-serif", fontSize: 12, color: '#a3a3a3' }}>
+          <span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: '#a3a3a3' }}>
             {mockCampaigns.length} campanhas
           </span>
         </div>
@@ -183,7 +183,7 @@ const Dashboard: React.FC = () => {
                       background: 'rgba(8, 8, 8, 0.8)',
                       textAlign: h === 'Nome' ? 'left' : 'right',
                       borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
-                      fontFamily: "'Satoshi', 'General Sans', sans-serif",
+                      fontFamily: "'Outfit', sans-serif",
                     }}
                   >
                     {h}
@@ -205,8 +205,8 @@ const Dashboard: React.FC = () => {
                       borderLeft: '3px solid transparent',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'rgba(16, 185, 129, 0.04)';
-                      e.currentTarget.style.borderLeft = '3px solid #10b981';
+                      e.currentTarget.style.background = 'rgba(99, 102, 241, 0.04)';
+                      e.currentTarget.style.borderLeft = '3px solid #6366f1';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent';
@@ -225,7 +225,7 @@ const Dashboard: React.FC = () => {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        fontFamily: "'General Sans', 'DM Sans', sans-serif",
+                        fontFamily: "'Outfit', sans-serif",
                       }}
                     >
                       {campaign.name}
@@ -266,7 +266,7 @@ const Dashboard: React.FC = () => {
                       {formatCurrency(campaign.spend)}
                     </td>
                     <td style={isMobile ? mobileCellStyle : cellStyle}>
-                      <span style={{ color: campaign.roas >= 3 ? '#22c55e' : campaign.roas >= 2 ? '#10b981' : '#ef4444' }}>
+                      <span style={{ color: campaign.roas >= 3 ? '#4ade80' : campaign.roas >= 2 ? '#6366f1' : '#f87171' }}>
                         {campaign.roas.toFixed(1)}x
                       </span>
                     </td>
@@ -280,7 +280,7 @@ const Dashboard: React.FC = () => {
                     )}
                     {!isMobile && (
                       <td style={cellStyle}>
-                        <span style={{ color: campaign.frequency > 2.5 ? '#ef4444' : '#a3a3a3' }}>
+                        <span style={{ color: campaign.frequency > 2.5 ? '#f87171' : '#a3a3a3' }}>
                           {campaign.frequency.toFixed(1)}
                         </span>
                       </td>
@@ -296,7 +296,7 @@ const Dashboard: React.FC = () => {
                           borderRadius: 20,
                           fontSize: 12,
                           fontWeight: 700,
-                          fontFamily: "'Satoshi', 'General Sans', sans-serif",
+                          fontFamily: "'Outfit', sans-serif",
                           background: `${scoreColor}18`,
                           color: scoreColor,
                           boxShadow: `0 0 8px ${scoreColor}20 inset`,
@@ -313,7 +313,7 @@ const Dashboard: React.FC = () => {
           </table>
           {mockCampaigns.length === 0 && (
             <div style={{ padding: 40, textAlign: 'center' }}>
-              <div style={{ fontFamily: "'General Sans', 'DM Sans', sans-serif", fontSize: 14, color: '#a3a3a3' }}>Nenhuma campanha encontrada</div>
+              <div style={{ fontFamily: "'Outfit', sans-serif", fontSize: 14, color: '#a3a3a3' }}>Nenhuma campanha encontrada</div>
             </div>
           )}
         </div>

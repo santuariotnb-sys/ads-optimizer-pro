@@ -34,26 +34,26 @@ export function formatCompactCurrency(value: number): string {
 }
 
 export function getChangeColor(change: number): string {
-  if (change > 0) return '#22c55e';
-  if (change < 0) return '#ef4444';
-  return '#737373';
+  if (change > 0) return '#4ade80';
+  if (change < 0) return '#f87171';
+  return '#64748b';
 }
 
 export function getStatusColor(status: string): string {
   switch (status) {
-    case 'ACTIVE': return '#22c55e';
-    case 'PAUSED': return '#525252';
-    case 'LEARNING': return '#eab308';
-    case 'LEARNING_LIMITED': return '#ef4444';
-    default: return '#525252';
+    case 'ACTIVE': return '#4ade80';
+    case 'PAUSED': return '#64748b';
+    case 'LEARNING': return '#facc15';
+    case 'LEARNING_LIMITED': return '#f87171';
+    default: return '#64748b';
   }
 }
 
 export function getScoreColor(score: number): string {
-  if (score >= 80) return '#22c55e';
-  if (score >= 60) return '#eab308';
+  if (score >= 80) return '#4ade80';
+  if (score >= 60) return '#facc15';
   if (score >= 40) return '#f97316';
-  return '#ef4444';
+  return '#f87171';
 }
 
 export function getScoreLabel(score: number): string {
@@ -65,10 +65,10 @@ export function getScoreLabel(score: number): string {
 
 export function getSeverityColor(severity: string): string {
   switch (severity) {
-    case 'critical': return '#ef4444';
-    case 'warning': return '#eab308';
-    case 'info': return '#06b6d4';
-    case 'success': return '#22c55e';
+    case 'critical': return '#f87171';
+    case 'warning': return '#facc15';
+    case 'info': return '#60a5fa';
+    case 'success': return '#4ade80';
     default: return '#737373';
   }
 }

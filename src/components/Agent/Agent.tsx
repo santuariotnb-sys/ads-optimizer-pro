@@ -35,7 +35,7 @@ Sua conta está com Score 74/100, o que é considerado "Bom" mas com espaço sig
 - EMQ está em 6.8, abaixo do ideal (8.0+). Isso está aumentando seu CPA em ~11%.
 - 4 criativos com mais de 10 dias ativos — novelty bias está erodindo performance.
 
-**Ação Imediata:** Pausar Colágeno Premium, escalar Protocolo Detox +20%, e corrigir CAPI para subir EMQ.`,
+**Ação Imediata:** Pausar Colágeno Premium, escalar Protocolo Detox +10%, e corrigir CAPI para subir EMQ.`,
 
   bidding: `**Estratégia de Lances Recomendada**
 
@@ -151,14 +151,14 @@ const containerStyle: React.CSSProperties = {
   maxHeight: 'calc(100vh - 120px)',
   background: 'rgba(10,10,10,0.6)',
   borderRadius: 20,
-  border: '1px solid rgba(16,185,129,0.15)',
+  border: '1px solid rgba(99,102,241,0.15)',
   overflow: 'hidden',
 };
 
 const headerStyle: React.CSSProperties = {
   padding: '20px 24px 16px',
   borderBottom: '1px solid rgba(255,255,255,0.06)',
-  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
 };
@@ -176,7 +176,7 @@ const messagesContainerStyle: React.CSSProperties = {
 const inputContainerStyle: React.CSSProperties = {
   padding: '16px 24px 20px',
   borderTop: '1px solid rgba(255,255,255,0.06)',
-  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
 };
@@ -211,7 +211,7 @@ const sendButtonStyle: React.CSSProperties = {
   height: 44,
   borderRadius: 10,
   border: 'none',
-  background: 'linear-gradient(135deg, #10b981, #34d399)',
+  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
   color: '#fff',
   cursor: 'pointer',
   display: 'flex',
@@ -219,7 +219,7 @@ const sendButtonStyle: React.CSSProperties = {
   justifyContent: 'center',
   flexShrink: 0,
   transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-  boxShadow: '0 2px 12px rgba(16,185,129,0.3)',
+  boxShadow: '0 2px 12px rgba(99,102,241,0.3)',
 };
 
 const topicPillStyle: React.CSSProperties = {
@@ -228,11 +228,11 @@ const topicPillStyle: React.CSSProperties = {
   gap: 6,
   padding: '8px 14px',
   borderRadius: 20,
-  border: '1px solid rgba(16,185,129,0.25)',
-  background: 'rgba(16,185,129,0.08)',
+  border: '1px solid rgba(99,102,241,0.25)',
+  background: 'rgba(99,102,241,0.08)',
   backdropFilter: 'blur(8px)',
   WebkitBackdropFilter: 'blur(8px)',
-  color: '#34d399',
+  color: '#8b5cf6',
   fontSize: 13,
   fontWeight: 500,
   cursor: 'pointer',
@@ -245,11 +245,11 @@ const userMessageStyle: React.CSSProperties = {
   maxWidth: '75%',
   padding: '12px 16px',
   borderRadius: '16px 16px 4px 16px',
-  background: 'linear-gradient(135deg, #10b981, #059669)',
+  background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
   color: '#fff',
   fontSize: 14,
   lineHeight: 1.6,
-  boxShadow: '0 2px 16px rgba(16,185,129,0.25)',
+  boxShadow: '0 2px 16px rgba(99,102,241,0.25)',
 };
 
 const assistantMessageStyle: React.CSSProperties = {
@@ -263,7 +263,7 @@ const assistantMessageStyle: React.CSSProperties = {
 const assistantBubbleStyle: React.CSSProperties = {
   padding: '14px 18px',
   borderRadius: '16px 16px 16px 4px',
-  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
   border: '1px solid rgba(255,255,255,0.06)',
   color: '#cbd5e1',
   fontSize: 14,
@@ -276,12 +276,12 @@ const botAvatarStyle: React.CSSProperties = {
   width: 34,
   height: 34,
   borderRadius: 10,
-  background: 'linear-gradient(135deg, #10b981, #34d399)',
+  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   flexShrink: 0,
-  boxShadow: '0 2px 12px rgba(16,185,129,0.3)',
+  boxShadow: '0 2px 12px rgba(99,102,241,0.3)',
 };
 
 const typingDotsContainerStyle: React.CSSProperties = {
@@ -289,7 +289,7 @@ const typingDotsContainerStyle: React.CSSProperties = {
   gap: 4,
   padding: '14px 18px',
   borderRadius: '16px 16px 16px 4px',
-  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
   border: '1px solid rgba(255,255,255,0.06)',
 };
 
@@ -421,8 +421,8 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               gap: 6,
               padding: '4px 10px',
               borderRadius: 20,
-              background: 'rgba(34,197,94,0.1)',
-              border: '1px solid rgba(34,197,94,0.2)',
+              background: 'rgba(74,222,128,0.1)',
+              border: '1px solid rgba(74,222,128,0.2)',
             }}
           >
             <div
@@ -430,11 +430,11 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                background: '#22c55e',
-                boxShadow: '0 0 8px rgba(34,197,94,0.5)',
+                background: '#4ade80',
+                boxShadow: '0 0 8px rgba(74,222,128,0.5)',
               }}
             />
-            <span style={{ fontSize: 11, color: '#22c55e', fontWeight: 500 }}>Online</span>
+            <span style={{ fontSize: 11, color: '#4ade80', fontWeight: 500 }}>Online</span>
           </div>
         </div>
 
@@ -457,13 +457,13 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                 style={{
                   ...topicPillStyle,
                   background: isHovered
-                    ? 'rgba(16,185,129,0.18)'
-                    : 'rgba(16,185,129,0.08)',
+                    ? 'rgba(99,102,241,0.18)'
+                    : 'rgba(99,102,241,0.08)',
                   borderColor: isHovered
-                    ? 'rgba(16,185,129,0.45)'
-                    : 'rgba(16,185,129,0.25)',
+                    ? 'rgba(99,102,241,0.45)'
+                    : 'rgba(99,102,241,0.25)',
                   transform: isHovered ? 'translateY(-1px)' : 'none',
-                  boxShadow: isHovered ? '0 4px 12px rgba(16,185,129,0.15)' : 'none',
+                  boxShadow: isHovered ? '0 4px 12px rgba(99,102,241,0.15)' : 'none',
                 }}
                 onClick={() => handleTopicClick(topic.id, topic.question)}
                 onMouseEnter={() => setHoveredTopic(topic.id)}
@@ -511,7 +511,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                     width: 8,
                     height: 8,
                     borderRadius: '50%',
-                    background: '#10b981',
+                    background: '#6366f1',
                     animation: `typingBounce 1.2s ease-in-out ${i * 0.15}s infinite`,
                   }}
                 />
@@ -529,9 +529,9 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
           style={{
             ...inputWrapperStyle,
             borderColor: inputFocused
-              ? 'rgba(16,185,129,0.4)'
+              ? 'rgba(99,102,241,0.4)'
               : 'rgba(255,255,255,0.08)',
-            boxShadow: inputFocused ? '0 0 0 3px rgba(16,185,129,0.1)' : 'none',
+            boxShadow: inputFocused ? '0 0 0 3px rgba(99,102,241,0.1)' : 'none',
           }}
         >
           <textarea
@@ -553,8 +553,8 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               ...sendButtonStyle,
               transform: hoveredSend ? 'scale(1.05)' : 'scale(1)',
               boxShadow: hoveredSend
-                ? '0 4px 20px rgba(16,185,129,0.45)'
-                : '0 2px 12px rgba(16,185,129,0.3)',
+                ? '0 4px 20px rgba(99,102,241,0.45)'
+                : '0 2px 12px rgba(99,102,241,0.3)',
             }}
           >
             <Send size={16} />

@@ -1,7 +1,7 @@
 # Ads Optimizer Pro
 
 Plataforma all-in-one de otimização de campanhas Meta Ads (Facebook/Instagram).
-12 módulos: Dashboard, Campanhas, Criativos + Entity ID, Signal Engine (CAPI), Públicos, Alertas, Agente IA, Pipeline, Criar Campanha, Auto-Scale, Playbook, Chrome Extension.
+13 módulos: Dashboard, Campanhas, Criativos + Entity ID, Signal Engine (CAPI), Públicos, Alertas, Agente IA, Pipeline, Criar Campanha, Auto-Scale, Signal Audit, Playbook, Chrome Extension (sidePanel).
 
 ## Stack
 
@@ -119,24 +119,23 @@ Mobile: sidebar vira overlay com backdrop, grids colapsam, tabs ficam scrolláve
 ### O que NÃO fazer
 - Não usar `localStorage` para tokens (segurança). Usar `sessionStorage` ou Zustand.
 - Não fazer polling agressivo à Graph API (mínimo 5min entre requests).
-- Não mudar budget em mais de 20% (regra hardcoded do Meta).
+- Não mudar budget em mais de 10% por vez (regra 10%/48h).
 - Não adicionar dependências de CSS-in-JS (styled-components, emotion). O padrão é inline + Tailwind.
 
-## Chrome Extension
+## Chrome Extension (sidePanel API)
 
 ```
 extension/
-├── manifest.json      # Manifest v3
-├── background.js      # Service worker: intercepta tokens da Graph API
-├── content.js         # Injeta side panel no Facebook Ads Manager
-├── panel.css          # Estilos do side panel (dark theme)
-├── popup.html         # Popup ao clicar no ícone
+├── manifest.json      # Manifest v3 + sidePanel
+├── background.js      # Service worker: sidePanel management + token capture + polling
+├── sidepanel.html     # Side panel UI (mini dashboard)
+├── sidepanel.js       # Side panel logic
 └── icons/             # 16, 32, 48, 128px
 ```
 
-- **background.js**: intercepta `chrome.webRequest` para `graph.facebook.com/*`, captura `access_token` e `act_XXXXX` da URL
-- **content.js**: detecta `/adsmanager/*`, injeta painel lateral com métricas, alertas e ações rápidas
-- **Comunicação**: `chrome.runtime.sendMessage` entre background ↔ content ↔ popup
+- **background.js**: `chrome.sidePanel.setPanelBehavior` + `setOptions` por tab (apenas Ads Manager)
+- **sidepanel.html/js**: mini dashboard com métricas, alertas, ações rápidas
+- **Comunicação**: `chrome.runtime.sendMessage` entre background ↔ sidepanel
 - **Storage**: `chrome.storage.session` (nunca localStorage)
 - **Polling**: `chrome.alarms` com intervalo de 5 minutos
 
@@ -153,7 +152,7 @@ extension/
 | Learning phase máxima | 14 dias |
 | Novelty bias | 7 dias |
 | Entity ID overcrowded | >3 criativos |
-| Auto-scale máximo | +20% budget |
+| Auto-scale máximo | +10% budget |
 | Auto-scale cooldown | 48h entre ajustes |
 | Decisão mínima | 7 dias de dados |
 

@@ -43,7 +43,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
           </span>
           <button onClick={() => handleCopy(snippet, 'snippet')} style={{
             display: 'flex', alignItems: 'center', gap: 4,
-            background: copied === 'snippet' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(6, 182, 212, 0.15)',
+            background: copied === 'snippet' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(96, 165, 250, 0.15)',
             border: `1px solid ${copied === 'snippet' ? 'rgba(74,222,128,0.3)' : 'rgba(96,165,250,0.3)'}`,
             borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
             color: copied === 'snippet' ? COLORS.success : COLORS.info, cursor: 'pointer',
@@ -83,7 +83,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 8 }}>
             <button onClick={() => handleCopy(fullScript, 'full')} style={{
               display: 'flex', alignItems: 'center', gap: 4,
-              background: copied === 'full' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+              background: copied === 'full' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(99, 102, 241, 0.15)',
               border: `1px solid ${copied === 'full' ? 'rgba(74,222,128,0.3)' : 'rgba(99,102,241,0.3)'}`,
               borderRadius: 6, padding: isMobile ? '8px 12px' : '4px 10px', fontSize: isMobile ? 12 : 11, fontWeight: 500,
               color: copied === 'full' ? COLORS.success : COLORS.accent, cursor: 'pointer',
@@ -108,7 +108,7 @@ export default function TrackingScriptPanel({ config, rules }: Props) {
 
       <div style={{
         marginTop: 12, fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5,
-        padding: '8px 12px', background: 'rgba(6, 182, 212, 0.05)', borderRadius: 8,
+        padding: '8px 12px', background: 'rgba(96, 165, 250, 0.05)', borderRadius: 8,
       }}>
         Cole o script antes do <code style={{ color: COLORS.info }}>&lt;/body&gt;</code> da sua LP. Ele coleta scroll, tempo, video, sessões, fbp/fbc automaticamente e dispara eventos sintéticos quando as condições são atingidas.
       </div>

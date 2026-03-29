@@ -54,13 +54,13 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
       <svg width={svgSize} height={svgSize} style={{ transform: 'rotate(-90deg)' }}>
         <defs>
           <linearGradient id="score-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-            <stop offset="50%" stopColor="#34d399" stopOpacity={0.8} />
+            <stop offset="0%" stopColor="#6366f1" stopOpacity={0.3} />
+            <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.8} />
             <stop offset="100%" stopColor={color} stopOpacity={1} />
           </linearGradient>
           <filter id="score-glow">
             <feGaussianBlur stdDeviation="6" result="coloredBlur" />
-            <feFlood floodColor="#10b981" floodOpacity="0.35" result="amberGlow" />
+            <feFlood floodColor="#6366f1" floodOpacity="0.35" result="amberGlow" />
             <feComposite in="amberGlow" in2="coloredBlur" operator="in" result="tintedGlow" />
             <feMerge>
               <feMergeNode in="tintedGlow" />
@@ -112,7 +112,7 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
           style={{
             transform: 'rotate(90deg)',
             transformOrigin: `${center}px ${center}px`,
-            fontFamily: "'Satoshi', 'General Sans', sans-serif",
+            fontFamily: "'Outfit', sans-serif",
             fontSize: isMobile ? 40 : 56,
             fontWeight: 900,
             fill: '#f5f5f5',
@@ -125,7 +125,7 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
       <div style={{ textAlign: 'center' }}>
         <div
           style={{
-            fontFamily: "'Satoshi', 'General Sans', sans-serif",
+            fontFamily: "'Outfit', sans-serif",
             fontSize: 13,
             fontWeight: 600,
             textTransform: 'uppercase',

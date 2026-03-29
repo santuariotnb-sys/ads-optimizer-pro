@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ads Optimizer Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0c0c14;
+      color: #e2e8f0;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      min-width: 320px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .header {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px; color: white;
+    }
+    .header-title { font-weight: 600; font-size: 15px; }
+    .status {
+      margin-left: auto;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; color: #64748b;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+    .status-dot.demo { background: #facc15; }
+    .status-dot.live { background: #4ade80; animation: pulse 2s infinite; }
+    @keyframes pulse { 50% { opacity: 0.5; } }
+
+    .section { padding: 16px; }
+    .section-title {
+      font-size: 11px; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .metrics-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .metric-card {
+      background: rgba(22,22,32,0.85);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .metric-label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    .metric-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px; font-weight: 700;
+    }
+    .metric-change {
+      font-size: 11px; margin-top: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .positive { color: #4ade80; }
+    .negative { color: #f87171; }
+
+    .alert-card {
+      background: rgba(22,22,32,0.85);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .alert-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .alert-dot.critical { background: #f87171; }
+    .alert-dot.success { background: #4ade80; }
+    .alert-dot.warning { background: #facc15; }
+    .alert-text { font-size: 12px; color: #94a3b8; }
+
+    .action-btn {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      background: rgba(22,22,32,0.85);
+      color: #e2e8f0;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 8px;
+    }
+    .action-btn:hover {
+      border-color: rgba(99,102,241,0.3);
+      background: rgba(99,102,241,0.08);
+    }
+    .action-btn.primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      border: none; color: white; font-weight: 600;
+    }
+    .action-btn.primary:hover {
+      opacity: 0.9;
+    }
+
+    .footer {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .footer a {
+      color: #6366f1; text-decoration: none; font-size: 12px; font-weight: 500;
+    }
+    .footer a:hover { text-decoration: underline; }
+
+    .emq-bar {
+      height: 4px; border-radius: 2px;
+      background: rgba(255,255,255,0.06);
+      margin-top: 6px;
+    }
+    .emq-fill {
+      height: 100%; border-radius: 2px;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      transition: width 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-logo">A</div>
+    <span class="header-title">Ads Optimizer Pro</span>
+    <div class="status">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Demo</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Métricas Hoje</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">CPA</div>
+        <div class="metric-value" id="metricCPA">R$ 52,40</div>
+        <div class="metric-change negative" id="changeCPA">-8.3%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">ROAS</div>
+        <div class="metric-value" id="metricROAS">3.24x</div>
+        <div class="metric-change positive" id="changeROAS">+12.5%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">CTR</div>
+        <div class="metric-value" id="metricCTR">1.92%</div>
+        <div class="metric-change positive" id="changeCTR">+5.2%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Spend</div>
+        <div class="metric-value" id="metricSpend">R$ 1.820</div>
+        <div class="metric-change positive" id="changeSpend">+15.0%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">EMQ Score</div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px;">
+      <span style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;color:#6366f1;" id="emqScore">6.8</span>
+      <span style="font-size:12px;color:#64748b;">/10</span>
+    </div>
+    <div class="emq-bar"><div class="emq-fill" id="emqFill" style="width:68%"></div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Alertas Ativos</div>
+    <div id="alertsList">
+      <div class="alert-card">
+        <div class="alert-dot critical"></div>
+        <div class="alert-text">CPA subiu 32% em 24h — Kit Skincare</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-dot success"></div>
+        <div class="alert-text">Winner: Protocolo Detox — escalar +10%</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-dot warning"></div>
+        <div class="alert-text">Frequência 3.2 — Retarget Carrinho</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Ações Rápidas</div>
+    <button class="action-btn primary" id="btnScale">Escalar Winners +10%</button>
+    <button class="action-btn" id="btnPause">Pausar Losers</button>
+    <button class="action-btn" id="btnRefresh">Refresh Métricas</button>
+  </div>
+
+  <div class="footer">
+    <a href="https://ads-optimizer-pro.vercel.app" target="_blank">Abrir App Completo ↗</a>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

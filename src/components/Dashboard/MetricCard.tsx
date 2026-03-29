@@ -51,8 +51,8 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
   const isMobile = useIsMobile();
   const isPositiveChange = change > 0;
   const isGood = invertChange ? !isPositiveChange : isPositiveChange;
-  const changeColor = isGood ? '#22c55e' : '#ef4444';
-  const sparkColor = '#10b981';
+  const changeColor = isGood ? '#4ade80' : '#f87171';
+  const sparkColor = '#6366f1';
   const arrow = isPositiveChange ? '\u2191' : '\u2193';
 
   return (
@@ -92,7 +92,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
         <span
           style={{
-            fontFamily: "'Satoshi', 'General Sans', sans-serif",
+            fontFamily: "'Outfit', sans-serif",
             fontSize: 11,
             fontWeight: 600,
             textTransform: 'uppercase',
@@ -125,7 +125,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
           style={{
             fontSize: isMobile ? 24 : 32,
             fontWeight: 800,
-            fontFamily: "'Satoshi', 'General Sans', sans-serif",
+            fontFamily: "'Outfit', sans-serif",
             color: '#f5f5f5',
             lineHeight: 1,
           }}

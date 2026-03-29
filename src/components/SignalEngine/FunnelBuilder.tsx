@@ -102,8 +102,8 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
             const isActive = funnel.type === t.type;
             return (
               <button key={t.type} onClick={() => setFunnel(f => ({ ...f, type: t.type }))} style={{
-                background: isActive ? 'rgba(16, 185, 129, 0.12)' : 'rgba(12, 12, 20, 0.5)',
-                border: `1px solid ${isActive ? 'rgba(16, 185, 129, 0.4)' : COLORS.border}`,
+                background: isActive ? 'rgba(99, 102, 241, 0.12)' : 'rgba(12, 12, 20, 0.5)',
+                border: `1px solid ${isActive ? 'rgba(99, 102, 241, 0.4)' : COLORS.border}`,
                 borderRadius: 12, padding: '14px 10px', cursor: 'pointer',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
                 transition: 'all 0.2s ease',
@@ -157,7 +157,7 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
         <div style={{
           display: 'flex', gap: isMobile ? 12 : 20, marginTop: 20, padding: isMobile ? '12px 14px' : '16px 20px',
         flexWrap: isMobile ? 'wrap' : 'nowrap',
-          background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.15)',
+          background: 'rgba(99, 102, 241, 0.06)', border: '1px solid rgba(99, 102, 241, 0.15)',
           borderRadius: 10,
         }}>
           <div>
@@ -166,14 +166,14 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
               R$ {funnel.epv.toFixed(2)}
             </div>
           </div>
-          <div style={{ width: 1, background: 'rgba(16, 185, 129, 0.15)' }} />
+          <div style={{ width: 1, background: 'rgba(99, 102, 241, 0.15)' }} />
           <div>
             <div style={{ fontSize: 11, color: COLORS.textMuted }}>Predicted LTV</div>
             <div style={{ fontSize: 20, fontWeight: 700, color: COLORS.success }}>
               R$ {funnel.predicted_ltv.toFixed(2)}
             </div>
           </div>
-          <div style={{ width: 1, background: 'rgba(16, 185, 129, 0.15)' }} />
+          <div style={{ width: 1, background: 'rgba(99, 102, 241, 0.15)' }} />
           <div>
             <div style={{ fontSize: 11, color: COLORS.textMuted }}>Eventos Ativos</div>
             <div style={{ fontSize: 20, fontWeight: 700, color: COLORS.warning }}>
@@ -224,9 +224,9 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
             {funnel.events.map(evt => (
               <label key={evt.id} style={{
                 display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px',
-                background: enabledEvents.has(evt.id) ? 'rgba(16, 185, 129, 0.06)' : 'transparent',
+                background: enabledEvents.has(evt.id) ? 'rgba(99, 102, 241, 0.06)' : 'transparent',
                 borderRadius: 8, cursor: 'pointer',
-                border: `1px solid ${enabledEvents.has(evt.id) ? 'rgba(16, 185, 129, 0.15)' : 'transparent'}`,
+                border: `1px solid ${enabledEvents.has(evt.id) ? 'rgba(99, 102, 241, 0.15)' : 'transparent'}`,
               }}>
                 <input type="checkbox" checked={enabledEvents.has(evt.id)}
                   onChange={() => toggleEvent(evt.id)}
@@ -237,8 +237,8 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
                     {evt.is_synthetic && (
                       <span style={{
                         fontSize: 9, fontWeight: 600, padding: '1px 6px', borderRadius: 4,
-                        background: 'rgba(52, 211, 153, 0.12)', color: COLORS.warning,
-                        border: '1px solid rgba(52, 211, 153, 0.2)',
+                        background: 'rgba(139, 92, 246, 0.12)', color: COLORS.warning,
+                        border: '1px solid rgba(139, 92, 246, 0.2)',
                       }}>SINTÉTICO</span>
                     )}
                   </div>

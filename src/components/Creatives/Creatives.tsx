@@ -7,27 +7,27 @@ import type { Creative, CreativeStatus } from '../../types/meta';
 import EntityIDMap from './EntityIDMap';
 
 const COLORS = {
-  bg: '#0a0a0a',
-  surface: '#0a0a0a',
+  bg: 'rgba(22, 22, 32, 0.85)',
+  surface: 'rgba(22, 22, 32, 0.85)',
   surfaceHover: '#111111',
   border: 'rgba(255, 255, 255, 0.06)',
   borderHover: 'rgba(255, 255, 255, 0.14)',
   text: '#f5f5f5',
   textMuted: '#a3a3a3',
-  accent: '#10b981',
-  success: '#22c55e',
-  danger: '#ef4444',
-  warning: '#10b981',
-  info: '#06b6d4',
+  accent: '#6366f1',
+  success: '#4ade80',
+  danger: '#f87171',
+  warning: '#6366f1',
+  info: '#60a5fa',
 };
 
 type Filter = 'all' | 'winner' | 'testing' | 'loser';
 type SortKey = 'score' | 'cpa' | 'hook_rate';
 
 const statusConfig: Record<CreativeStatus, { label: string; color: string; icon: typeof Trophy; bgAlpha: string }> = {
-  winner: { label: 'Winner', color: COLORS.success, icon: Trophy, bgAlpha: 'rgba(34, 197, 94, 0.1)' },
-  testing: { label: 'Testing', color: COLORS.info, icon: FlaskConical, bgAlpha: 'rgba(6, 182, 212, 0.1)' },
-  loser: { label: 'Loser', color: COLORS.danger, icon: XCircle, bgAlpha: 'rgba(239, 68, 68, 0.1)' },
+  winner: { label: 'Winner', color: COLORS.success, icon: Trophy, bgAlpha: 'rgba(74, 222, 128, 0.1)' },
+  testing: { label: 'Testing', color: COLORS.info, icon: FlaskConical, bgAlpha: 'rgba(96, 165, 250, 0.1)' },
+  loser: { label: 'Loser', color: COLORS.danger, icon: XCircle, bgAlpha: 'rgba(248, 113, 113, 0.1)' },
 };
 
 const formatIcons: Record<string, string> = {
@@ -43,10 +43,10 @@ function getFormatIcon(name: string): string {
 }
 
 function getFormatGradient(name: string): string {
-  if (name.includes('VSL') || name.includes('Reels')) return 'linear-gradient(135deg, #10b981 0%, #34d399 100%)';
-  if (name.includes('Carrossel')) return 'linear-gradient(135deg, #f97316 0%, #059669 100%)';
-  if (name.includes('UGC')) return 'linear-gradient(135deg, #06b6d4 0%, #22c55e 100%)';
-  if (name.includes('Story')) return 'linear-gradient(135deg, #10b981 0%, #f97316 100%)';
+  if (name.includes('VSL') || name.includes('Reels')) return 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)';
+  if (name.includes('Carrossel')) return 'linear-gradient(135deg, #f97316 0%, #4f46e5 100%)';
+  if (name.includes('UGC')) return 'linear-gradient(135deg, #60a5fa 0%, #4ade80 100%)';
+  if (name.includes('Story')) return 'linear-gradient(135deg, #6366f1 0%, #f97316 100%)';
   return 'linear-gradient(135deg, #475569 0%, #a3a3a3 100%)';
 }
 
@@ -93,7 +93,7 @@ function ScoreGauge({ score }: { score: number }) {
       </svg>
       <div style={{
         position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 11, fontWeight: 700, color, fontFamily: "'Satoshi', sans-serif",
+        fontSize: 11, fontWeight: 700, color, fontFamily: "'Outfit', sans-serif",
       }}>
         {score}
       </div>
@@ -124,16 +124,16 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
       style={{
         background: hovered ? COLORS.surfaceHover : COLORS.surface,
         border: fatigue
-          ? '2px solid rgba(239, 68, 68, 0.6)'
+          ? '2px solid rgba(248, 113, 113, 0.6)'
           : `1px solid ${hovered ? COLORS.borderHover : COLORS.border}`,
         borderRadius: 20,
         overflow: 'hidden',
         transition: 'all 0.25s ease',
         opacity: isLoser ? 0.6 : 1,
         boxShadow: isWinner
-          ? `0 0 20px rgba(34, 197, 94, 0.08), inset 0 1px 0 rgba(34, 197, 94, 0.1)`
+          ? `0 0 20px rgba(74, 222, 128, 0.08), inset 0 1px 0 rgba(74, 222, 128, 0.1)`
           : fatigue
-            ? '0 0 16px rgba(239, 68, 68, 0.12)'
+            ? '0 0 16px rgba(248, 113, 113, 0.12)'
             : '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
         animation: fatigue ? 'fatiguePulse 2s ease-in-out infinite' : 'none',
         position: 'relative',
@@ -182,8 +182,8 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
         {fatigue && (
           <div style={{
             position: 'absolute', bottom: 8, right: 8,
-            background: 'rgba(239, 68, 68, 0.2)',
-            border: '1px solid rgba(239, 68, 68, 0.4)',
+            background: 'rgba(248, 113, 113, 0.2)',
+            border: '1px solid rgba(248, 113, 113, 0.4)',
             borderRadius: 6, padding: '3px 8px',
             fontSize: 9, fontWeight: 600, color: COLORS.danger,
             display: 'flex', alignItems: 'center', gap: 4,
@@ -219,7 +219,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
               textAlign: 'center',
             }}>
               <div style={{ fontSize: 9, color: COLORS.textMuted, marginBottom: 2 }}>{m.label}</div>
-              <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Satoshi', sans-serif" }}>{m.value}</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: COLORS.text, fontFamily: "'Outfit', sans-serif" }}>{m.value}</div>
             </div>
           ))}
         </div>
@@ -282,8 +282,8 @@ export default function Creatives() {
       {/* Fatigue keyframe */}
       <style>{`
         @keyframes fatiguePulse {
-          0%, 100% { border-color: rgba(16, 185, 129, 0.6); }
-          50% { border-color: rgba(16, 185, 129, 0.2); }
+          0%, 100% { border-color: rgba(99, 102, 241, 0.6); }
+          50% { border-color: rgba(99, 102, 241, 0.2); }
         }
       `}</style>
 
@@ -309,8 +309,8 @@ export default function Creatives() {
               key={f.key}
               onClick={() => setFilter(f.key)}
               style={{
-                background: filter === f.key ? 'rgba(16, 185, 129, 0.15)' : 'rgba(26, 25, 24, 0.6)',
-                border: `1px solid ${filter === f.key ? 'rgba(16, 185, 129, 0.4)' : COLORS.border}`,
+                background: filter === f.key ? 'rgba(99, 102, 241, 0.15)' : 'rgba(26, 25, 24, 0.6)',
+                border: `1px solid ${filter === f.key ? 'rgba(99, 102, 241, 0.4)' : COLORS.border}`,
                 borderRadius: 8,
                 padding: '6px 14px',
                 color: filter === f.key ? COLORS.accent : COLORS.textMuted,
@@ -325,7 +325,7 @@ export default function Creatives() {
             >
               {f.label}
               <span style={{
-                background: filter === f.key ? 'rgba(16, 185, 129, 0.3)' : 'rgba(255,255,255,0.06)',
+                background: filter === f.key ? 'rgba(99, 102, 241, 0.3)' : 'rgba(255,255,255,0.06)',
                 borderRadius: 4,
                 padding: '1px 6px',
                 fontSize: 11,
@@ -343,8 +343,8 @@ export default function Creatives() {
               key={s.key}
               onClick={() => setSortBy(s.key)}
               style={{
-                background: sortBy === s.key ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
-                border: `1px solid ${sortBy === s.key ? 'rgba(16, 185, 129, 0.3)' : COLORS.border}`,
+                background: sortBy === s.key ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
+                border: `1px solid ${sortBy === s.key ? 'rgba(99, 102, 241, 0.3)' : COLORS.border}`,
                 borderRadius: 6,
                 padding: isMobile ? '8px 12px' : '4px 10px',
                 color: sortBy === s.key ? COLORS.accent : COLORS.textMuted,
@@ -373,7 +373,7 @@ export default function Creatives() {
       {filtered.length === 0 && (
         <div
           style={{
-            background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+            background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
             border: '1px solid rgba(255, 255, 255, 0.06)',
             borderRadius: 20,
             padding: 40,

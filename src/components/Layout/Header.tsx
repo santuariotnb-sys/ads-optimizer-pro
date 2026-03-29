@@ -11,6 +11,8 @@ const moduleTitles: Record<string, string> = {
   dashboard: 'Dashboard',
   campaigns: 'Campanhas',
   creatives: 'Criativos',
+  financial: 'Controle Financeiro',
+  utm: 'Rastreamento UTM',
   signal: 'Signal Engine',
   audiences: 'Públicos',
   alerts: 'Alertas',
@@ -18,7 +20,9 @@ const moduleTitles: Record<string, string> = {
   pipeline: 'Pipeline',
   create: 'Criar Campanha',
   autoscale: 'Auto-Scale',
+  signalaudit: 'Signal Audit',
   playbook: 'Playbook',
+  settings: 'Configurações',
 };
 
 const periods: { value: Period; label: string }[] = [
@@ -56,7 +60,7 @@ export default function Header() {
       <h1
         style={{
           fontSize: isMobile ? 16 : 20,
-          fontFamily: "'Satoshi', sans-serif",
+          fontFamily: "'Outfit', sans-serif",
           fontWeight: 700,
           color: '#f5f5f5',
           letterSpacing: '-0.02em',
@@ -77,7 +81,7 @@ export default function Header() {
             gap: 2,
             padding: 3,
             borderRadius: 10,
-            background: '#0a0a0a',
+            background: 'rgba(22, 22, 32, 0.85)',
             border: '1px solid rgba(255, 255, 255, 0.05)',
             overflowX: isMobile ? 'auto' : 'visible',
             flexWrap: 'nowrap',
@@ -105,10 +109,10 @@ export default function Header() {
                   fontWeight: isActive ? 600 : 500,
                   color: isActive ? '#ffffff' : isHovered ? '#a3a3a3' : '#737373',
                   background: isActive
-                    ? '#10b981'
+                    ? '#6366f1'
                     : 'transparent',
                   boxShadow: isActive
-                    ? '0 0 16px rgba(16, 185, 129, 0.2)'
+                    ? '0 0 16px rgba(99, 102, 241, 0.2)'
                     : 'none',
                   transition: `all 0.2s ${easing}`,
                   outline: 'none',
@@ -130,12 +134,12 @@ export default function Header() {
               openMetaLogin();
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.25)';
-              e.currentTarget.style.background = '#34d399';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(99, 102, 241, 0.25)';
+              e.currentTarget.style.background = '#8b5cf6';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.1)';
-              e.currentTarget.style.background = '#10b981';
+              e.currentTarget.style.boxShadow = '0 0 12px rgba(99, 102, 241, 0.1)';
+              e.currentTarget.style.background = '#6366f1';
             }}
             style={{
               display: 'flex',
@@ -144,14 +148,14 @@ export default function Header() {
               padding: '8px 16px',
               borderRadius: 10,
               border: 'none',
-              background: '#10b981',
+              background: '#6366f1',
               color: '#ffffff',
               fontSize: 13,
               fontWeight: 600,
               cursor: 'pointer',
               transition: `all 0.2s ${easing}`,
               outline: 'none',
-              boxShadow: '0 0 12px rgba(16, 185, 129, 0.1)',
+              boxShadow: '0 0 12px rgba(99, 102, 241, 0.1)',
             }}
           >
             <WifiOff size={15} />
@@ -165,12 +169,12 @@ export default function Header() {
               gap: 8,
               padding: '8px 14px',
               borderRadius: 10,
-              background: 'rgba(34, 197, 94, 0.08)',
-              border: '1px solid rgba(34, 197, 94, 0.15)',
+              background: 'rgba(74, 222, 128, 0.08)',
+              border: '1px solid rgba(74, 222, 128, 0.15)',
             }}
           >
-            <Wifi size={15} style={{ color: '#22c55e' }} />
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#22c55e' }}>Meta Conectado</span>
+            <Wifi size={15} style={{ color: '#4ade80' }} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: '#4ade80' }}>Meta Conectado</span>
           </div>
         )}
 
@@ -191,12 +195,12 @@ export default function Header() {
               height: 36,
               borderRadius: 8,
               border: '1px solid rgba(255, 255, 255, 0.05)',
-              background: hoveredIcon === 'theme' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(255, 255, 255, 0.02)',
+              background: hoveredIcon === 'theme' ? 'rgba(99, 102, 241, 0.06)' : 'rgba(255, 255, 255, 0.02)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: hoveredIcon === 'theme' ? '#10b981' : '#737373',
+              color: hoveredIcon === 'theme' ? '#6366f1' : '#737373',
               transition: `all 0.2s ${easing}`,
               outline: 'none',
             }}
@@ -215,7 +219,7 @@ export default function Header() {
               height: 36,
               borderRadius: 8,
               border: '1px solid rgba(255, 255, 255, 0.05)',
-              background: hoveredIcon === 'search' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(255, 255, 255, 0.02)',
+              background: hoveredIcon === 'search' ? 'rgba(99, 102, 241, 0.06)' : 'rgba(255, 255, 255, 0.02)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -232,14 +236,16 @@ export default function Header() {
         {/* Settings icon - hidden on mobile */}
         {!isMobile && (
           <button
+            onClick={() => useStore.getState().setCurrentModule('settings')}
             onMouseEnter={() => setHoveredIcon('settings')}
             onMouseLeave={() => setHoveredIcon(null)}
+            aria-label="Configurações"
             style={{
               width: 36,
               height: 36,
               borderRadius: 8,
               border: '1px solid rgba(255, 255, 255, 0.05)',
-              background: hoveredIcon === 'settings' ? 'rgba(16, 185, 129, 0.06)' : 'rgba(255, 255, 255, 0.02)',
+              background: hoveredIcon === 'settings' ? 'rgba(99, 102, 241, 0.06)' : 'rgba(255, 255, 255, 0.02)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',

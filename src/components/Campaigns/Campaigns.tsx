@@ -13,10 +13,10 @@ const statusLabel: Record<string, string> = {
 };
 
 const statusBorderColor: Record<string, string> = {
-  ACTIVE: '#22c55e',
+  ACTIVE: '#4ade80',
   PAUSED: '#a3a3a3',
-  LEARNING: '#10b981',
-  LEARNING_LIMITED: '#ef4444',
+  LEARNING: '#6366f1',
+  LEARNING_LIMITED: '#f87171',
 };
 
 const Campaigns: React.FC = () => {
@@ -58,7 +58,7 @@ const Campaigns: React.FC = () => {
             style={{
               fontSize: isMobile ? 20 : 24,
               fontWeight: 700,
-              fontFamily: "'Satoshi', sans-serif",
+              fontFamily: "'Outfit', sans-serif",
               color: '#f1f5f9',
               margin: 0,
             }}
@@ -77,12 +77,12 @@ const Campaigns: React.FC = () => {
             alignItems: 'center',
             gap: 8,
             background: 'rgba(255, 255, 255, 0.04)',
-            border: `1px solid ${searchFocused ? 'rgba(16,185,129,0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
+            border: `1px solid ${searchFocused ? 'rgba(99,102,241,0.4)' : 'rgba(255, 255, 255, 0.08)'}`,
             borderRadius: 10,
             padding: '8px 14px',
             width: isMobile ? '100%' : 280,
             transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: searchFocused ? '0 0 0 3px rgba(16,185,129,0.1)' : 'none',
+            boxShadow: searchFocused ? '0 0 0 3px rgba(99,102,241,0.1)' : 'none',
           }}
         >
           <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="rgba(168,162,158,0.5)" strokeWidth={2}>
@@ -113,7 +113,7 @@ const Campaigns: React.FC = () => {
       {filtered.length === 0 && (
         <div
           style={{
-            background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+            background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
             border: '1px solid rgba(255, 255, 255, 0.06)',
             borderRadius: 20,
             padding: 40,
@@ -138,7 +138,7 @@ const Campaigns: React.FC = () => {
           <div
             key={campaign.id}
             style={{
-              background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+              background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
               border: '1px solid rgba(255, 255, 255, 0.06)',
               borderLeft: `3px solid ${borderColor}`,
               borderRadius: 20,
@@ -220,7 +220,7 @@ const Campaigns: React.FC = () => {
                       style={{
                         fontSize: 14,
                         fontWeight: 700,
-                        fontFamily: "'Satoshi', sans-serif",
+                        fontFamily: "'Outfit', sans-serif",
                         color: scoreColor,
                       }}
                     >
@@ -239,7 +239,7 @@ const Campaigns: React.FC = () => {
               {/* Metrics row */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: isMobile ? 10 : 16 }}>
                 {[
-                  { label: 'ROAS', value: `${campaign.roas.toFixed(1)}x`, color: campaign.roas >= 3 ? '#22c55e' : campaign.roas >= 2 ? '#10b981' : '#ef4444' },
+                  { label: 'ROAS', value: `${campaign.roas.toFixed(1)}x`, color: campaign.roas >= 3 ? '#4ade80' : campaign.roas >= 2 ? '#6366f1' : '#f87171' },
                   { label: 'CPA', value: formatCurrency(campaign.cpa), color: '#94a3b8' },
                   { label: 'CTR', value: `${campaign.ctr.toFixed(1)}%`, color: '#94a3b8' },
                   { label: 'Gasto', value: formatCurrency(campaign.spend), color: '#94a3b8' },
@@ -261,7 +261,7 @@ const Campaigns: React.FC = () => {
                       style={{
                         fontSize: 16,
                         fontWeight: 700,
-                        fontFamily: "'Satoshi', sans-serif",
+                        fontFamily: "'Outfit', sans-serif",
                         color: m.color,
                       }}
                     >
@@ -274,10 +274,10 @@ const Campaigns: React.FC = () => {
               {/* Learning Phase Indicator */}
               {hasLearning && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <AlertTriangle size={14} color="#10b981" />
+                  <AlertTriangle size={14} color="#6366f1" />
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <span style={{ fontSize: 11, color: '#10b981', fontWeight: 600 }}>
+                      <span style={{ fontSize: 11, color: '#6366f1', fontWeight: 600 }}>
                         Fase de Aprendizado
                       </span>
                       <span style={{ fontSize: 11, color: 'rgba(168,162,158,0.6)' }}>
@@ -298,7 +298,7 @@ const Campaigns: React.FC = () => {
                           width: `${learningProgress}%`,
                           height: '100%',
                           borderRadius: 2,
-                          background: campaign.status === 'LEARNING_LIMITED' ? '#ef4444' : '#10b981',
+                          background: campaign.status === 'LEARNING_LIMITED' ? '#f87171' : '#6366f1',
                           transition: 'width 0.6s ease-out',
                         }}
                       />
@@ -316,12 +316,12 @@ const Campaigns: React.FC = () => {
                     gap: 8,
                     padding: '8px 12px',
                     borderRadius: 8,
-                    background: 'rgba(52, 211, 153, 0.08)',
-                    border: '1px solid rgba(52, 211, 153, 0.15)',
+                    background: 'rgba(139, 92, 246, 0.08)',
+                    border: '1px solid rgba(139, 92, 246, 0.15)',
                   }}
                 >
-                  <TrendingUp size={14} color="#059669" />
-                  <span style={{ fontSize: 12, color: '#34d399' }}>
+                  <TrendingUp size={14} color="#4f46e5" />
+                  <span style={{ fontSize: 12, color: '#8b5cf6' }}>
                     Sugestão: ajustar orçamento diário para{' '}
                     <strong>{formatCurrency(campaign.budget_suggestion)}</strong>
                     {campaign.budget_suggestion > campaign.daily_budget
@@ -353,8 +353,8 @@ const Campaigns: React.FC = () => {
                 >
                   {[
                     { icon: <Pause size={13} />, label: 'Pausar', color: '#a3a3a3' },
-                    { icon: <TrendingUp size={13} />, label: 'Escalar +20%', color: '#22c55e' },
-                    { icon: <Copy size={13} />, label: 'Duplicar', color: '#06b6d4' },
+                    { icon: <TrendingUp size={13} />, label: 'Escalar +20%', color: '#4ade80' },
+                    { icon: <Copy size={13} />, label: 'Duplicar', color: '#60a5fa' },
                   ].map((btn) => (
                     <button
                       key={btn.label}
@@ -473,7 +473,7 @@ const Campaigns: React.FC = () => {
                                 style={{
                                   fontSize: 12,
                                   fontWeight: 600,
-                                  fontFamily: "'Satoshi', sans-serif",
+                                  fontFamily: "'Outfit', sans-serif",
                                   color: '#94a3b8',
                                 }}
                               >

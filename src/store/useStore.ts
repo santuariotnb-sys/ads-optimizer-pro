@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Campaign, AdSet, Ad, Creative, Audience, Alert, DashboardMetrics, Period, AppMode, ChatMessage } from '../types/meta';
+import type { Campaign, AdSet, Ad, Creative, Audience, Alert, DashboardMetrics, Period, AppMode, ChatMessage, SignalAuditResult } from '../types/meta';
 
 interface AppState {
   theme: 'dark' | 'light';
@@ -23,6 +23,7 @@ interface AppState {
   currentModule: string;
   sidebarCollapsed: boolean;
   isLoading: boolean;
+  signalAudit: SignalAuditResult | null;
 
   setAccessToken: (token: string | null) => void;
   setAdAccountId: (id: string | null) => void;
@@ -43,6 +44,7 @@ interface AppState {
   toggleSidebar: () => void;
   toggleTheme: () => void;
   setIsLoading: (loading: boolean) => void;
+  setSignalAudit: (audit: SignalAuditResult | null) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -67,6 +69,7 @@ export const useStore = create<AppState>((set) => ({
   currentModule: 'dashboard',
   sidebarCollapsed: false,
   isLoading: false,
+  signalAudit: null,
 
   setAccessToken: (token) => set({ accessToken: token, mode: token ? 'live' : 'demo' }),
   setAdAccountId: (id) => set({ adAccountId: id }),
@@ -89,4 +92,5 @@ export const useStore = create<AppState>((set) => ({
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
   toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
   setIsLoading: (loading) => set({ isLoading: loading }),
+  setSignalAudit: (audit) => set({ signalAudit: audit }),
 }));

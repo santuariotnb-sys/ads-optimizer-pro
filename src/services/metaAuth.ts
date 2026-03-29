@@ -12,7 +12,7 @@ export function getMetaLoginUrl(): string {
     client_id: META_APP_ID,
     redirect_uri: META_REDIRECT_URI,
     scope: SCOPES,
-    response_type: 'token',
+    response_type: 'code',
     display: 'popup',
   });
   return `https://www.facebook.com/v21.0/dialog/oauth?${params.toString()}`;

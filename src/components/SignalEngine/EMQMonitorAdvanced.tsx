@@ -13,7 +13,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
   const isMobile = useIsMobile();
 
   const score = analysis.overall_score;
-  const gaugeColor = score >= 9 ? COLORS.success : score >= 8 ? '#22c55e' : score >= 6 ? COLORS.warning : COLORS.danger;
+  const gaugeColor = score >= 9 ? COLORS.success : score >= 8 ? '#4ade80' : score >= 6 ? COLORS.warning : COLORS.danger;
 
   const radius = isMobile ? 50 : 62;
   const circumference = 2 * Math.PI * radius;
@@ -22,7 +22,7 @@ export default function EMQMonitorAdvanced({ analysis }: Props) {
 
   const levelConfig = {
     excellent: { label: 'EXCELENTE', color: COLORS.success, icon: CheckCircle },
-    good: { label: 'BOM', color: '#22c55e', icon: CheckCircle },
+    good: { label: 'BOM', color: '#4ade80', icon: CheckCircle },
     warning: { label: 'AVISO', color: COLORS.warning, icon: AlertTriangle },
     critical: { label: 'CRÍTICO', color: COLORS.danger, icon: AlertTriangle },
   };

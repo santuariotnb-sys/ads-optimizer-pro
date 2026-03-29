@@ -229,3 +229,28 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
 }
+
+export type AuditZone = 'green' | 'yellow' | 'red';
+
+export interface SignalAuditPillar {
+  id: string;
+  name: string;
+  maturity: number;
+  risk: number;
+  zone: AuditZone;
+  details: string[];
+}
+
+export interface RedLineCheck {
+  label: string;
+  value: boolean;
+}
+
+export interface SignalAuditResult {
+  overallMaturity: number;
+  overallRisk: number;
+  zone: AuditZone;
+  pillars: SignalAuditPillar[];
+  redLineChecks: RedLineCheck[];
+  lastAuditTime: string;
+}

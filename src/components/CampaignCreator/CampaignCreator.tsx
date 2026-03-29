@@ -3,7 +3,7 @@ import { ChevronRight, ChevronLeft, Check, Upload, Sparkles, Info } from 'lucide
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
   border: '1px solid rgba(255, 255, 255, 0.06)',
   borderRadius: 20,
   padding: 32,
@@ -126,14 +126,14 @@ export default function CampaignCreator() {
 
   const getInputStyle = (field: string): React.CSSProperties => ({
     ...inputBase,
-    borderColor: focusedField === field ? '#10b981' : 'rgba(255,255,255,0.08)',
-    boxShadow: focusedField === field ? '0 0 12px rgba(16,185,129,0.15)' : 'none',
+    borderColor: focusedField === field ? '#6366f1' : 'rgba(255,255,255,0.08)',
+    boxShadow: focusedField === field ? '0 0 12px rgba(99,102,241,0.15)' : 'none',
   });
 
   const getSelectStyle = (field: string): React.CSSProperties => ({
     ...selectBase,
-    borderColor: focusedField === field ? '#10b981' : 'rgba(255,255,255,0.08)',
-    boxShadow: focusedField === field ? '0 0 12px rgba(16,185,129,0.15)' : 'none',
+    borderColor: focusedField === field ? '#6366f1' : 'rgba(255,255,255,0.08)',
+    boxShadow: focusedField === field ? '0 0 12px rgba(99,102,241,0.15)' : 'none',
   });
 
   const renderStepIndicator = () => (
@@ -149,12 +149,12 @@ export default function CampaignCreator() {
                 width: isMobile ? 32 : 40, height: isMobile ? 32 : 40, borderRadius: '50%',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 14, fontWeight: 700,
-                background: isCompleted ? '#22c55e'
-                  : isActive ? 'linear-gradient(135deg, #10b981, #34d399)'
+                background: isCompleted ? '#4ade80'
+                  : isActive ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
                   : 'rgba(255,255,255,0.06)',
                 color: isUpcoming ? '#475569' : '#fff',
-                border: isActive ? '2px solid #10b981' : 'none',
-                boxShadow: isActive ? '0 0 20px rgba(16,185,129,0.3)' : isCompleted ? '0 0 12px rgba(34,197,94,0.3)' : 'none',
+                border: isActive ? '2px solid #6366f1' : 'none',
+                boxShadow: isActive ? '0 0 20px rgba(99,102,241,0.3)' : isCompleted ? '0 0 12px rgba(74,222,128,0.3)' : 'none',
                 transition: 'all 0.3s',
               }}>
                 {isCompleted ? <Check size={18} /> : i + 1}
@@ -171,7 +171,7 @@ export default function CampaignCreator() {
             {i < stepLabels.length - 1 && (
               <div style={{
                 width: isMobile ? 40 : 80, height: 2,
-                background: i < step ? '#22c55e' : 'rgba(255,255,255,0.08)',
+                background: i < step ? '#4ade80' : 'rgba(255,255,255,0.08)',
                 margin: '0 12px', marginBottom: 28,
                 borderRadius: 1, transition: 'background 0.3s',
               }} />
@@ -250,15 +250,15 @@ export default function CampaignCreator() {
               <label key={cat} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '8px 14px',
-                background: isChecked ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${isChecked ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                background: isChecked ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${isChecked ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.08)'}`,
                 borderRadius: 8, cursor: 'pointer', fontSize: 13, transition: 'all 0.2s',
               }}>
                 <input type="checkbox" checked={isChecked} onChange={() => toggleSpecialCategory(cat)} style={{ display: 'none' }} />
                 <div style={{
                   width: 18, height: 18, borderRadius: 4,
-                  border: `2px solid ${isChecked ? '#10b981' : 'rgba(255,255,255,0.2)'}`,
-                  background: isChecked ? '#10b981' : 'transparent',
+                  border: `2px solid ${isChecked ? '#6366f1' : 'rgba(255,255,255,0.2)'}`,
+                  background: isChecked ? '#6366f1' : 'transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s',
                 }}>
                   {isChecked && <Check size={12} color="#fff" />}
@@ -281,13 +281,13 @@ export default function CampaignCreator() {
           {form.countries.map(country => (
             <span key={country} style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '6px 12px', background: 'rgba(16,185,129,0.15)',
-              border: '1px solid rgba(16,185,129,0.3)', borderRadius: 20,
-              fontSize: 13, color: '#34d399',
+              padding: '6px 12px', background: 'rgba(99,102,241,0.15)',
+              border: '1px solid rgba(99,102,241,0.3)', borderRadius: 20,
+              fontSize: 13, color: '#8b5cf6',
             }}>
               {country}
               <button onClick={() => removeCountry(country)} style={{
-                background: 'none', border: 'none', color: '#34d399',
+                background: 'none', border: 'none', color: '#8b5cf6',
                 cursor: 'pointer', padding: 0, fontSize: 16, lineHeight: 1,
               }}>×</button>
             </span>
@@ -305,8 +305,8 @@ export default function CampaignCreator() {
             onKeyDown={e => e.key === 'Enter' && addCountry()}
           />
           <button onClick={addCountry} style={{
-            background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.3)',
-            borderRadius: 10, padding: '12px 20px', color: '#34d399',
+            background: 'rgba(99,102,241,0.2)', border: '1px solid rgba(99,102,241,0.3)',
+            borderRadius: 10, padding: '12px 20px', color: '#8b5cf6',
             cursor: 'pointer', fontSize: 14, fontWeight: 600,
           }}>Adicionar</button>
         </div>
@@ -340,19 +340,19 @@ export default function CampaignCreator() {
             <label key={opt.value} style={{
               flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               padding: '10px 16px',
-              background: form.gender === opt.value ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${form.gender === opt.value ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.08)'}`,
+              background: form.gender === opt.value ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${form.gender === opt.value ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.08)'}`,
               borderRadius: 10, cursor: 'pointer', fontSize: 14, transition: 'all 0.2s',
             }}>
               <input type="radio" name="gender" value={opt.value} checked={form.gender === opt.value}
                 onChange={e => updateForm('gender', e.target.value)} style={{ display: 'none' }} />
               <div style={{
                 width: 16, height: 16, borderRadius: '50%',
-                border: `2px solid ${form.gender === opt.value ? '#10b981' : 'rgba(255,255,255,0.2)'}`,
+                border: `2px solid ${form.gender === opt.value ? '#6366f1' : 'rgba(255,255,255,0.2)'}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {form.gender === opt.value && (
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }} />
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1' }} />
                 )}
               </div>
               {opt.label}
@@ -385,8 +385,8 @@ export default function CampaignCreator() {
             <label key={opt.value} style={{
               flex: 1, display: 'flex', alignItems: 'center', gap: 8,
               padding: '12px 16px',
-              background: form.attributionWindow === opt.value ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${form.attributionWindow === opt.value ? 'rgba(16,185,129,0.4)' : 'rgba(255,255,255,0.08)'}`,
+              background: form.attributionWindow === opt.value ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
+              border: `1px solid ${form.attributionWindow === opt.value ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.08)'}`,
               borderRadius: 10, cursor: 'pointer', fontSize: 14, transition: 'all 0.2s',
             }}>
               <input type="radio" name="attribution" value={opt.value}
@@ -394,17 +394,17 @@ export default function CampaignCreator() {
                 onChange={e => updateForm('attributionWindow', e.target.value)} style={{ display: 'none' }} />
               <div style={{
                 width: 16, height: 16, borderRadius: '50%',
-                border: `2px solid ${form.attributionWindow === opt.value ? '#10b981' : 'rgba(255,255,255,0.2)'}`,
+                border: `2px solid ${form.attributionWindow === opt.value ? '#6366f1' : 'rgba(255,255,255,0.2)'}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {form.attributionWindow === opt.value && (
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10b981' }} />
+                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1' }} />
                 )}
               </div>
               <span>{opt.label}</span>
               {opt.recommended && (
                 <span style={{
-                  background: 'rgba(34,197,94,0.15)', color: '#22c55e',
+                  background: 'rgba(74,222,128,0.15)', color: '#4ade80',
                   fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6, marginLeft: 'auto',
                 }}>Recomendado</span>
               )}
@@ -419,7 +419,7 @@ export default function CampaignCreator() {
           <label style={{ ...labelStyle, marginBottom: 0 }}>Placements</label>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{
-              background: 'rgba(16,185,129,0.15)', color: '#34d399',
+              background: 'rgba(99,102,241,0.15)', color: '#8b5cf6',
               fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 6,
             }}>Recomendado</span>
             <button onClick={() => updateForm('advantagePlacements', !form.advantagePlacements)} style={{
@@ -427,9 +427,9 @@ export default function CampaignCreator() {
             }}>
               <div style={{
                 width: 48, height: 26, borderRadius: 13,
-                background: form.advantagePlacements ? '#10b981' : 'rgba(255,255,255,0.1)',
+                background: form.advantagePlacements ? '#6366f1' : 'rgba(255,255,255,0.1)',
                 position: 'relative', transition: 'background 0.2s',
-                boxShadow: form.advantagePlacements ? '0 0 12px rgba(16,185,129,0.4)' : 'none',
+                boxShadow: form.advantagePlacements ? '0 0 12px rgba(99,102,241,0.4)' : 'none',
               }}>
                 <div style={{
                   width: 20, height: 20, borderRadius: '50%', background: '#fff',
@@ -449,11 +449,11 @@ export default function CampaignCreator() {
       {/* Info Banner */}
       <div style={{
         display: 'flex', alignItems: 'flex-start', gap: 12,
-        padding: '14px 18px', background: 'rgba(16,185,129,0.08)',
-        border: '1px solid rgba(16,185,129,0.2)', borderRadius: 12, marginTop: 4,
+        padding: '14px 18px', background: 'rgba(99,102,241,0.08)',
+        border: '1px solid rgba(99,102,241,0.2)', borderRadius: 12, marginTop: 4,
       }}>
-        <Info size={18} color="#10b981" style={{ flexShrink: 0, marginTop: 2 }} />
-        <span style={{ fontSize: 13, color: '#34d399', lineHeight: 1.5 }}>
+        <Info size={18} color="#6366f1" style={{ flexShrink: 0, marginTop: 2 }} />
+        <span style={{ fontSize: 13, color: '#8b5cf6', lineHeight: 1.5 }}>
           Broad targeting é recomendado — o Andromeda otimiza melhor sem restrições de interesses
         </span>
       </div>
@@ -484,13 +484,13 @@ export default function CampaignCreator() {
             input.click();
           }}
           style={{
-            border: `2px dashed ${dragOver ? '#10b981' : 'rgba(255,255,255,0.12)'}`,
+            border: `2px dashed ${dragOver ? '#6366f1' : 'rgba(255,255,255,0.12)'}`,
             borderRadius: 14, padding: 48, textAlign: 'center',
-            background: dragOver ? 'rgba(16,185,129,0.06)' : 'rgba(255,255,255,0.02)',
+            background: dragOver ? 'rgba(99,102,241,0.06)' : 'rgba(255,255,255,0.02)',
             transition: 'all 0.2s', cursor: 'pointer',
           }}
         >
-          <Upload size={40} color={dragOver ? '#10b981' : '#475569'} style={{ marginBottom: 16 }} />
+          <Upload size={40} color={dragOver ? '#6366f1' : '#475569'} style={{ marginBottom: 16 }} />
           <p style={{ fontSize: 16, fontWeight: 600, color: '#94a3b8', marginBottom: 8, marginTop: 0 }}>
             Arraste seu criativo aqui
           </p>
@@ -498,7 +498,7 @@ export default function CampaignCreator() {
             ou clique para selecionar um arquivo
           </p>
           {form.creativeFile && (
-            <p style={{ fontSize: 13, color: '#22c55e', marginTop: 12, marginBottom: 0 }}>
+            <p style={{ fontSize: 13, color: '#4ade80', marginTop: 12, marginBottom: 0 }}>
               <Check size={14} style={{ verticalAlign: 'middle', marginRight: 4 }} />
               {form.creativeFile.name}
             </p>
@@ -532,11 +532,11 @@ export default function CampaignCreator() {
       {/* Info */}
       <div style={{
         display: 'flex', alignItems: 'flex-start', gap: 12,
-        padding: '14px 18px', background: 'rgba(16,185,129,0.08)',
-        border: '1px solid rgba(16,185,129,0.2)', borderRadius: 12,
+        padding: '14px 18px', background: 'rgba(99,102,241,0.08)',
+        border: '1px solid rgba(99,102,241,0.2)', borderRadius: 12,
       }}>
-        <Info size={18} color="#10b981" style={{ flexShrink: 0, marginTop: 2 }} />
-        <span style={{ fontSize: 13, color: '#34d399', lineHeight: 1.5 }}>
+        <Info size={18} color="#6366f1" style={{ flexShrink: 0, marginTop: 2 }} />
+        <span style={{ fontSize: 13, color: '#8b5cf6', lineHeight: 1.5 }}>
           Recomendamos 6 criativos por ad set com Entity IDs diferentes
         </span>
       </div>
@@ -551,7 +551,7 @@ export default function CampaignCreator() {
       <div style={{ ...glassCard, maxWidth: isMobile ? '100%' : 800, padding: isMobile ? 16 : 32 }}>
         <h1 style={{
           fontSize: 28, fontWeight: 700, marginBottom: 8, marginTop: 0,
-          background: 'linear-gradient(135deg, #f5f5f5, #10b981)',
+          background: 'linear-gradient(135deg, #f5f5f5, #6366f1)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>
           Criar Nova Campanha
@@ -591,13 +591,13 @@ export default function CampaignCreator() {
           </button>
 
           <button onClick={fillDefaults}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(16,185,129,0.12)'; e.currentTarget.style.borderColor = 'rgba(16,185,129,0.3)'; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99,102,241,0.12)'; e.currentTarget.style.borderColor = 'rgba(99,102,241,0.3)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
             style={{
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '10px 20px', background: 'rgba(255,255,255,0.04)',
             border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
-            color: '#10b981', cursor: 'pointer', fontSize: 13, fontWeight: 600,
+            color: '#6366f1', cursor: 'pointer', fontSize: 13, fontWeight: 600,
             transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', minHeight: 44,
           }}>
             <Sparkles size={16} /> Preencher Defaults Recomendados
@@ -608,13 +608,13 @@ export default function CampaignCreator() {
               if (step < 2) setStep(s => s + 1);
               else alert('Campanha criada com sucesso!');
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(16,185,129,0.45)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(16,185,129,0.3)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 6px 24px rgba(99,102,241,0.45)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 4px 16px rgba(99,102,241,0.3)'; e.currentTarget.style.transform = 'translateY(0)'; }}
             style={{
               display: 'flex', alignItems: 'center', gap: 8,
-              padding: '10px 24px', background: 'linear-gradient(135deg, #10b981, #34d399)',
+              padding: '10px 24px', background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
               border: 'none', borderRadius: 12, color: '#fff', cursor: 'pointer',
-              fontSize: 14, fontWeight: 600, boxShadow: '0 4px 16px rgba(16,185,129,0.3)',
+              fontSize: 14, fontWeight: 600, boxShadow: '0 4px 16px rgba(99,102,241,0.3)',
               transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', minHeight: 44,
             }}
           >

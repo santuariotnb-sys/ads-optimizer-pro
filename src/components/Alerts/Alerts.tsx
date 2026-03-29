@@ -8,7 +8,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 type TabKey = 'all' | 'critical' | 'warning' | 'info' | 'success';
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
   border: '1px solid rgba(255, 255, 255, 0.06)',
   borderRadius: 20,
   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -62,14 +62,14 @@ export default function Alerts() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <div style={{
           width: 40, height: 40, borderRadius: 12,
-          background: 'linear-gradient(135deg, #10b981, #34d399)',
+          background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 20px rgba(16,185,129,0.3)',
+          boxShadow: '0 0 20px rgba(99,102,241,0.3)',
         }}>
           <Bell size={20} color="#fff" />
         </div>
         <div>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'General Sans', sans-serif" }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
             Central de Alertas
           </h2>
           <span style={{ fontSize: 13, color: '#a3a3a3' }}>
@@ -83,7 +83,7 @@ export default function Alerts() {
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
           const count = counts[tab.key];
-          const severityColor = tab.key !== 'all' ? getSeverityColor(tab.key) : '#10b981';
+          const severityColor = tab.key !== 'all' ? getSeverityColor(tab.key) : '#6366f1';
 
           return (
             <button
@@ -91,7 +91,7 @@ export default function Alerts() {
               onClick={() => setActiveTab(tab.key)}
               style={{
                 padding: '8px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', outline: 'none',
-                fontSize: 13, fontWeight: 600, fontFamily: "'General Sans', sans-serif",
+                fontSize: 13, fontWeight: 600, fontFamily: "'Outfit', sans-serif",
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
                 background: isActive ? `${severityColor}20` : 'rgba(255,255,255,0.04)',
                 color: isActive ? severityColor : '#a3a3a3',
@@ -101,7 +101,7 @@ export default function Alerts() {
               {tab.label}
               {count > 0 && (
                 <span style={{
-                  background: severityColor, color: '#0a0a0a',
+                  background: severityColor, color: 'rgba(22, 22, 32, 0.85)',
                   fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 10,
                   minWidth: 18, textAlign: 'center',
                 }}>
@@ -141,13 +141,13 @@ export default function Alerts() {
               {/* Content */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', fontFamily: "'General Sans', sans-serif" }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
                     {alert.title}
                   </span>
                   {alert.campaign_id && (
                     <span style={{
                       fontSize: 10, padding: '2px 8px', borderRadius: 8,
-                      background: 'rgba(16,185,129,0.15)', color: '#34d399',
+                      background: 'rgba(99,102,241,0.15)', color: '#8b5cf6',
                       fontFamily: "'JetBrains Mono', monospace",
                     }}>
                       {alert.campaign_id}
@@ -186,7 +186,7 @@ export default function Alerts() {
 
         {filtered.length === 0 && (
           <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
-            <CheckCircle size={32} color="#22c55e" style={{ marginBottom: 12, opacity: 0.5 }} />
+            <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 12, opacity: 0.5 }} />
             <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhum alerta nesta categoria</div>
           </div>
         )}

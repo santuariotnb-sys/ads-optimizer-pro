@@ -6,14 +6,14 @@ import type { EMQBreakdown } from '../../types/meta';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const COLORS = {
-  surface: '#0a0a0a',
+  surface: 'rgba(22, 22, 32, 0.85)',
   border: 'rgba(255, 255, 255, 0.06)',
   text: '#f5f5f5',
   textMuted: '#a3a3a3',
-  accent: '#10b981',
-  success: '#22c55e',
-  danger: '#ef4444',
-  warning: '#10b981',
+  accent: '#6366f1',
+  success: '#4ade80',
+  danger: '#f87171',
+  warning: '#6366f1',
 };
 
 const paramLabels: Record<string, string> = {
@@ -44,7 +44,7 @@ export default function EMQMonitor() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+      background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
       border: `1px solid ${COLORS.border}`,
       borderRadius: 20,
       padding: isMobile ? 16 : 24,
@@ -59,8 +59,8 @@ export default function EMQMonitor() {
       {/* Low EMQ Alert */}
       {isLow && (
         <div style={{
-          background: 'rgba(239, 68, 68, 0.08)',
-          border: '1px solid rgba(239, 68, 68, 0.2)',
+          background: 'rgba(248, 113, 113, 0.08)',
+          border: '1px solid rgba(248, 113, 113, 0.2)',
           borderRadius: 8, padding: '8px 12px', marginBottom: 16,
           display: 'flex', alignItems: 'center', gap: 8,
           fontSize: 12, color: COLORS.danger,
@@ -102,7 +102,7 @@ export default function EMQMonitor() {
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         }}>
-          <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: gaugeColor, lineHeight: 1, fontFamily: "'Satoshi', sans-serif" }}>
+          <span style={{ fontSize: isMobile ? 24 : 32, fontWeight: 700, color: gaugeColor, lineHeight: 1, fontFamily: "'Outfit', sans-serif" }}>
             {emq.total.toFixed(1)}
           </span>
           <span style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>

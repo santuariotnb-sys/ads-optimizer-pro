@@ -7,7 +7,7 @@ const stages = [
     id: 'andromeda',
     title: 'Andromeda',
     subtitle: 'Retrieval Engine',
-    color: '#10b981',
+    color: '#6366f1',
     icon: Cpu,
     stats: '1B+ ads → ~1.000 em <200ms',
     details: [
@@ -28,7 +28,7 @@ const stages = [
     id: 'gem',
     title: 'GEM',
     subtitle: 'Ranking Model',
-    color: '#34d399',
+    color: '#8b5cf6',
     icon: Brain,
     stats: 'Maior foundation model de recomendação do mundo',
     details: [
@@ -49,7 +49,7 @@ const stages = [
     id: 'auction',
     title: 'Leilão',
     subtitle: 'Auction System',
-    color: '#22c55e',
+    color: '#4ade80',
     icon: Gavel,
     stats: 'Valor = Lance × Taxa de Ação × Qualidade',
     details: [
@@ -91,7 +91,7 @@ const containerStyle: React.CSSProperties = {
   padding: '32px 24px',
   background: 'rgba(10,10,10,0.6)',
   borderRadius: 20,
-  border: '1px solid rgba(16,185,129,0.15)',
+  border: '1px solid rgba(99,102,241,0.15)',
 };
 
 const titleSectionStyle: React.CSSProperties = {
@@ -111,7 +111,7 @@ function getCardStyle(color: string, isHovered: boolean, isExpanded: boolean): R
     flex: 1,
     padding: '28px 24px',
     borderRadius: 20,
-    background: 'linear-gradient(145deg, #0a0a0a 0%, #060606 100%)',
+    background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
     border: `1px solid ${isHovered || isExpanded ? color + '55' : 'rgba(255,255,255,0.06)'}`,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
@@ -167,7 +167,7 @@ const connectorLineStyle: React.CSSProperties = {
   left: 0,
   right: 0,
   height: 2,
-  background: 'linear-gradient(90deg, rgba(16,185,129,0.3), rgba(52,211,153,0.3))',
+  background: 'linear-gradient(90deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))',
   transform: 'translateY(-50%)',
 };
 
@@ -352,7 +352,7 @@ export default function Pipeline() {
                           fontWeight: 700,
                           color: stage.color,
                           marginBottom: 2,
-                          fontFamily: "'Satoshi', sans-serif",
+                          fontFamily: "'Outfit', sans-serif",
                         }}
                       >
                         {m.value}
@@ -438,8 +438,8 @@ export default function Pipeline() {
               {index < stages.length - 1 && (
                 isMobile ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 40, position: 'relative', justifyContent: 'center' }}>
-                    <div style={{ width: 2, height: '100%', background: 'linear-gradient(180deg, rgba(16,185,129,0.3), rgba(52,211,153,0.3))' }} />
-                    <ChevronDown size={20} color="rgba(16,185,129,0.5)" style={{ position: 'absolute', zIndex: 1 }} />
+                    <div style={{ width: 2, height: '100%', background: 'linear-gradient(180deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))' }} />
+                    <ChevronDown size={20} color="rgba(99,102,241,0.5)" style={{ position: 'absolute', zIndex: 1 }} />
                   </div>
                 ) : (
                   <div style={connectorStyle}>
@@ -449,13 +449,13 @@ export default function Pipeline() {
                         key={di}
                         style={getFlowDotStyle(
                           delay,
-                          index === 0 ? '#10b981' : '#34d399'
+                          index === 0 ? '#6366f1' : '#8b5cf6'
                         )}
                       />
                     ))}
                     <ChevronRight
                       size={20}
-                      color="rgba(16,185,129,0.5)"
+                      color="rgba(99,102,241,0.5)"
                       style={{ position: 'relative', zIndex: 1 }}
                     />
                   </div>
