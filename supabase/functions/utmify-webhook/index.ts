@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { sendPushNotification } from '../_shared/web-push.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -174,6 +175,50 @@ Deno.serve(async (req: Request) => {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    // Send push notification for approved sales
+    if (status === 'approved') {
+      try {
+        const { data: subscriptions } = await supabase
+          .from('push_subscriptions')
+          .select('endpoint, p256dh, auth')
+          .eq('user_id', userId);
+
+        if (subscriptions && subscriptions.length > 0) {
+          const vapidKeys = {
+            publicKey: Deno.env.get('VAPID_PUBLIC_KEY')!,
+            privateKey: Deno.env.get('VAPID_PRIVATE_KEY')!,
+            subject: Deno.env.get('VAPID_SUBJECT')!,
+          };
+
+          const amount = orderTotal.toFixed(2).replace('.', ',');
+          const notifPayload = {
+            title: '\u{1F4B0} Nova Venda Aprovada!',
+            body: `${payload.customer?.name || 'Cliente'} \u2014 ${productName || 'Produto'} \u2014 R$ ${amount}`,
+            tag: `sale-${payload.order.id}`,
+            url: '/',
+          };
+
+          const results = await Promise.allSettled(
+            subscriptions.map(sub => sendPushNotification(sub, notifPayload, vapidKeys))
+          );
+
+          // Clean up expired subscriptions
+          for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            if (result.status === 'fulfilled' && result.value.expired) {
+              await supabase
+                .from('push_subscriptions')
+                .delete()
+                .eq('endpoint', subscriptions[i].endpoint)
+                .eq('user_id', userId);
+            }
+          }
+        }
+      } catch {
+        // Push failure should never fail the webhook
+      }
     }
 
     // Update webhook log to processed

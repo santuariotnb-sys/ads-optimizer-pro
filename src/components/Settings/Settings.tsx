@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { usePushNotifications } from '../../hooks/usePushNotifications';
 import { getIntegrations, upsertIntegration, getWebhookUrl, getWebhookStats, type Integration } from '../../services/integrationService';
 import { supabase } from '../../lib/supabase';
 import { COLORS, COLORS_LIGHT } from '../../utils/constants';
@@ -33,6 +34,7 @@ export default function Settings() {
   const [profile, setProfile] = useState({ timezone: 'America/Sao_Paulo', currency: 'BRL', default_roas_target: 3.0, default_cpa_target: 50, closing_day: 1 });
   const [refreshKey, setRefreshKey] = useState(0);
   const [notifToggles, setNotifToggles] = useState<Record<string, boolean>>({ 'In-App': true, 'Email': false, 'WhatsApp': false, 'Telegram': false });
+  const push = usePushNotifications();
 
   useEffect(() => {
     if (mode !== 'live') return;
@@ -305,6 +307,39 @@ export default function Settings() {
           <h3 style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
             <Bell size={16} color={c.accent} /> Canais de Notificação
           </h3>
+          {/* Push Notifications (real) */}
+          {push.isSupported && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: `1px solid ${c.border}` }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: c.text }}>Push (Celular)</div>
+                <div style={{ fontSize: 12, color: c.textMuted }}>
+                  {push.permission === 'denied'
+                    ? 'Bloqueado pelo navegador — ative nas configurações do dispositivo'
+                    : 'Notificações push no celular ao vivo'}
+                </div>
+              </div>
+              <div
+                onClick={() => {
+                  if (push.permission === 'denied' || push.isLoading) return;
+                  if (push.isSubscribed) push.unsubscribe();
+                  else push.subscribe();
+                }}
+                style={{
+                  width: 44, height: 24, borderRadius: 12, position: 'relative',
+                  cursor: push.permission === 'denied' ? 'not-allowed' : 'pointer',
+                  opacity: push.permission === 'denied' ? 0.5 : 1,
+                  background: push.isSubscribed ? c.accent : c.surface3, transition: 'background 0.2s',
+                }}
+              >
+                <div style={{
+                  width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3,
+                  left: push.isSubscribed ? 23 : 3, transition: 'left 0.2s',
+                }} />
+              </div>
+            </div>
+          )}
+
+          {/* Other channels */}
           {[
             { label: 'In-App', desc: 'Notificações dentro da plataforma' },
             { label: 'Email', desc: 'Alertas enviados para seu email' },

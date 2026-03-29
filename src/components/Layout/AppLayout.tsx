@@ -27,10 +27,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           zIndex: 10,
           paddingTop: 80,
           paddingBottom: 100,
-          paddingLeft: isMobile ? 12 : 32,
-          paddingRight: isMobile ? 12 : 32,
-          maxWidth: 1680,
-          margin: '0 auto',
+          paddingLeft: isMobile ? 12 : 24,
+          paddingRight: isMobile ? 12 : 24,
           minHeight: '100vh',
         }}
       >

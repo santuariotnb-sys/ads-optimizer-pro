@@ -55,31 +55,26 @@ export default function TopNav() {
         }}
       >
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 'auto' : 200 }}>
+        <div
+          onClick={() => setCurrentModule('opt-overview')}
+          style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 'auto' : 220, cursor: 'pointer' }}
+        >
           <img
             src="/logo-everest.png"
             alt="Ads.Everest"
-            onClick={() => setCurrentModule('opt-overview')}
             style={{
-              width: 48,
-              height: 48,
-              borderRadius: 13,
+              width: 42,
+              height: 42,
+              borderRadius: 12,
               objectFit: 'cover',
               filter: 'drop-shadow(0 4px 14px rgba(15,23,42,0.15))',
-              animation: 'logoFloat 3s ease-in-out infinite',
-              cursor: 'pointer',
             }}
           />
           {!isMobile && (
-            <img
-              src="/logo-text-everest.png"
-              alt="Ads.Everest"
-              style={{
-                height: 26,
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 1px 2px rgba(15,23,42,0.06))',
-              }}
-            />
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>
+              <span style={{ color: '#0f172a' }}>Ads</span>
+              <span style={{ color: '#b8854c' }}>.Everest</span>
+            </span>
           )}
         </div>
 

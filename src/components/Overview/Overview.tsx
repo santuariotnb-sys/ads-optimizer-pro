@@ -85,7 +85,7 @@ const progressTrack: React.CSSProperties = {
   overflow: 'hidden',
 };
 
-function ProgressBar({ percent, delay = 0 }: { percent: number; delay?: number }) {
+function ProgressBar({ percent, delay = 0, gradient }: { percent: number; delay?: number; gradient?: string }) {
   return (
     <div style={progressTrack}>
       <motion.div
@@ -95,7 +95,7 @@ function ProgressBar({ percent, delay = 0 }: { percent: number; delay?: number }
         style={{
           height: '100%',
           borderRadius: 20,
-          background: 'linear-gradient(90deg, #78716c, #1e293b)',
+          background: gradient || 'linear-gradient(90deg, #78716c, #1e293b)',
           boxShadow: '0 1px 6px rgba(30,41,59,.3)',
         }}
       />
@@ -110,12 +110,13 @@ interface KPIProps {
   value: string;
   delta: number;
   barPercent: number;
+  barGradient?: string;
   invertDelta?: boolean;
   icon: React.ReactNode;
   delay: number;
 }
 
-function KPICard({ label, value, delta, barPercent, invertDelta, icon, delay }: KPIProps) {
+function KPICard({ label, value, delta, barPercent, barGradient, invertDelta, icon, delay }: KPIProps) {
   const isGood = invertDelta ? delta < 0 : delta > 0;
   return (
     <AlpineCard delay={delay} padding={20}>
@@ -130,7 +131,7 @@ function KPICard({ label, value, delta, barPercent, invertDelta, icon, delay }: 
           {delta > 0 ? '+' : ''}{delta}%
         </span>
       </div>
-      <ProgressBar percent={barPercent} delay={delay + 300} />
+      <ProgressBar percent={barPercent} delay={delay + 300} gradient={barGradient} />
     </AlpineCard>
   );
 }
@@ -260,8 +261,9 @@ function AccountGauge({ score }: { score: number }) {
       <svg width={180} height={110} viewBox="0 0 180 110">
         <defs>
           <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#78716c" />
-            <stop offset="100%" stopColor="#1e293b" />
+            <stop offset="0%" stopColor="#ef4444" />
+            <stop offset="50%" stopColor="#f59e0b" />
+            <stop offset="100%" stopColor="#3b82f6" />
           </linearGradient>
         </defs>
         {/* track */}
@@ -372,10 +374,11 @@ export default function Overview() {
           delay={0}
         />
         <KPICard
-          label={<Tooltip text="Receita ÷ Gasto com anúncios">Retorno sobre Gasto</Tooltip>}
+          label={<Tooltip text="Retorno sobre Investimento: receita ÷ gasto">ROI</Tooltip>}
           value={`${animatedROAS.toFixed(1)}x`}
           delta={18.6}
           barPercent={84}
+          barGradient="linear-gradient(90deg, #ef4444, #f59e0b, #10b981)"
           icon={<TrendingUp size={16} />}
           delay={60}
         />
