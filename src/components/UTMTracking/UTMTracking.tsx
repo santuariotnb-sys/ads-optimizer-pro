@@ -548,9 +548,8 @@ export default function UTMTracking() {
           zIndex: 0,
         }} />
       <div
+        className="tilt-card"
         style={S.card}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'perspective(800px) rotateX(2deg) rotateY(-3deg) translateY(-4px)'; e.currentTarget.style.boxShadow = '18px 18px 44px rgba(15,23,42,0.12), -10px -10px 30px rgba(255,255,255,0.95), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(255,255,255,0.2)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)'; e.currentTarget.style.boxShadow = '12px 12px 30px rgba(15,23,42,0.08), -8px -8px 24px rgba(255,255,255,0.90), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(255,255,255,0.15)'; }}
       >
         <div style={S.cardReflection} />
         <div style={S.cardSheen} />
@@ -562,7 +561,7 @@ export default function UTMTracking() {
           onMouseLeave={dragScroll.onMouseLeave}
           style={{ ...S.tableWrap, cursor: 'grab' }}
         >
-          {activeView === 'utm-campanhas' && (
+          {activeView === 'utm-campanhas' && !isMobile && (
             <table style={S.table}>
               <thead>
                 <tr>
@@ -607,6 +606,38 @@ export default function UTMTracking() {
                 ))}
               </tbody>
             </table>
+          )}
+
+          {/* Mobile: Cards */}
+          {activeView === 'utm-campanhas' && isMobile && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 4 }}>
+              {CAMPANHAS_DATA.map((r, idx) => (
+                <div key={idx} style={{
+                  background: 'rgba(255,255,255,0.6)', borderRadius: 14, padding: 14,
+                  border: '1px solid rgba(15,23,42,0.06)',
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', flex: 1, marginRight: 8 }}>{r.campanha}</span>
+                    <span style={statusBadge(r.status)}>{STATUS_LABEL[r.status]}</span>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                    {[
+                      { l: 'ROAS', v: `${r.roas.toFixed(2)}x`, c: roasColor(r.roas) },
+                      { l: 'CPA', v: formatCurrency(r.cpa), c: '#0f172a' },
+                      { l: 'Vendas', v: String(r.vendas), c: '#0f172a' },
+                      { l: 'Gastos', v: formatCurrency(r.gastos), c: '#0f172a' },
+                      { l: 'Faturamento', v: formatCurrency(r.faturamento), c: '#0f172a' },
+                      { l: 'Lucro', v: formatCurrency(r.lucro), c: lucroColor(r.lucro) },
+                    ].map(m => (
+                      <div key={m.l} style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{m.l}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: m.c, fontFamily: "'JetBrains Mono', monospace", marginTop: 2 }}>{m.v}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
 
           {activeView === 'utm-utms' && (

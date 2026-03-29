@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import {
   Upload, Eye, Sparkles, Film, Image as ImageIcon, Palette,
@@ -188,7 +189,7 @@ export default function CreativeVision() {
       </AlpineCard>
 
       {/* Upload Area */}
-      <AlpineCard padding={0}>
+      <AlpineCard padding={0} tilt={false}>
         <div
           onDrop={handleDrop}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }}
