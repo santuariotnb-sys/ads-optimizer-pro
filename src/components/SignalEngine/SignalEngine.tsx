@@ -405,7 +405,6 @@ export default function SignalEngine() {
       <FunnelBuilder
         config={mockFunnelConfig}
         onSave={() => setCurrentView('dashboard')}
-        onTestConnection={() => {}}
         onBack={() => setCurrentView('dashboard')}
       />
     );

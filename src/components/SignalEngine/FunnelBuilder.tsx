@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { FunnelConfig, FunnelType, FunnelValues } from '../../types/capi';
 import { calculatePredictedLTV, calculateEPV } from '../../services/capi/enrichment';
-import { Settings, Package, Briefcase, Monitor, Users, Wrench, Save, Wifi, Eye, ChevronDown, ChevronUp } from 'lucide-react';
+import { Settings, Package, Briefcase, Monitor, Users, Wrench, Save, Wifi, Eye, ChevronDown, ChevronUp, X, CheckCircle, AlertTriangle } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
@@ -16,11 +16,11 @@ const FUNNEL_TEMPLATES: { type: FunnelType; label: string; icon: typeof Package;
 interface Props {
   config: FunnelConfig;
   onSave: (config: FunnelConfig) => void;
-  onTestConnection: () => void;
+
   onBack: () => void;
 }
 
-export default function FunnelBuilder({ config, onSave, onTestConnection, onBack }: Props) {
+export default function FunnelBuilder({ config, onSave, onBack }: Props) {
   const isMobile = useIsMobile();
   const [funnel, setFunnel] = useState<FunnelConfig>(config);
   const [showAdvanced, setShowAdvanced] = useState(false);
@@ -43,13 +43,70 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
     });
   };
 
+  const [showJsonPreview, setShowJsonPreview] = useState(false);
+  const [testResult, setTestResult] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [saveMsg, setSaveMsg] = useState<string | null>(null);
+
   const handleSave = () => {
-    onSave({
+    const updated = {
       ...funnel,
       events: funnel.events.map(e => ({ ...e, enabled: enabledEvents.has(e.id) })),
       updated_at: new Date().toISOString(),
-    });
+    };
+    onSave(updated);
+    setSaveMsg('Funil salvo com sucesso!');
+    setTimeout(() => setSaveMsg(null), 3000);
   };
+
+  const handleTestConnection = useCallback(async () => {
+    setTestResult(null);
+    if (!funnel.pixel_id || !funnel.access_token) {
+      setTestResult({ ok: false, msg: 'Preencha o Pixel ID e Access Token primeiro.' });
+      return;
+    }
+    try {
+      const url = `https://graph.facebook.com/v21.0/${funnel.pixel_id}?access_token=${funnel.access_token}&fields=id,name`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.error) {
+        setTestResult({ ok: false, msg: `Erro: ${data.error.message}` });
+      } else {
+        setTestResult({ ok: true, msg: `Conectado! Pixel: ${data.name || data.id}` });
+      }
+    } catch {
+      setTestResult({ ok: false, msg: 'Falha na conexão. Verifique sua internet e credenciais.' });
+    }
+    setTimeout(() => setTestResult(null), 5000);
+  }, [funnel.pixel_id, funnel.access_token]);
+
+  const getPreviewPayload = useCallback(() => ({
+    data: [{
+      event_name: 'Purchase',
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: 'evt_preview_' + Date.now().toString(36),
+      event_source_url: 'https://seusite.com.br/checkout/obrigado',
+      action_source: 'website',
+      user_data: {
+        em: ['5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8'],
+        ph: ['a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6ab'],
+        external_id: ['user_12345_hashed'],
+        client_ip_address: '203.0.113.42',
+        client_user_agent: 'Mozilla/5.0 (Linux; Android 12)',
+        fbp: 'fb.1.1234567890.987654321',
+        fbc: 'fb.1.1234567890.AbC123',
+      },
+      custom_data: {
+        value: funnel.values.front_end,
+        currency: 'BRL',
+        predicted_ltv: funnel.predicted_ltv,
+        content_name: funnel.type === 'infoproduto' ? 'Produto Digital' : 'Produto',
+        customer_type: 'new',
+        time_on_page: 185,
+        scroll_depth: 92,
+      },
+    }],
+    access_token: funnel.access_token ? '***REDACTED***' : 'TOKEN_NAO_CONFIGURADO',
+  }), [funnel]);
 
   const inputStyle: React.CSSProperties = {
     background: 'rgba(12, 12, 20, 0.6)',
@@ -255,19 +312,41 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
         )}
       </div>
 
+      {/* Status messages */}
+      {testResult && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 10, marginBottom: 12,
+          background: testResult.ok ? 'rgba(16,185,129,0.06)' : 'rgba(239,68,68,0.06)',
+          border: `1px solid ${testResult.ok ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'}`,
+          color: testResult.ok ? '#10b981' : '#ef4444', fontSize: 13, fontWeight: 500,
+        }}>
+          {testResult.ok ? <CheckCircle size={14} /> : <AlertTriangle size={14} />}
+          {testResult.msg}
+        </div>
+      )}
+      {saveMsg && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 10, marginBottom: 12,
+          background: 'rgba(16,185,129,0.06)', border: '1px solid rgba(16,185,129,0.15)',
+          color: '#10b981', fontSize: 13, fontWeight: 500,
+        }}>
+          <CheckCircle size={14} /> {saveMsg}
+        </div>
+      )}
+
       {/* Actions */}
       <div style={{ display: 'flex', gap: 12, justifyContent: isMobile ? 'stretch' : 'flex-end', flexDirection: isMobile ? 'column' : 'row' }}>
-        <button onClick={onTestConnection} style={{
+        <button onClick={handleTestConnection} style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
+          background: 'rgba(15,23,42,0.03)', border: `1px solid ${COLORS.border}`,
           borderRadius: 10, padding: '10px 20px', color: COLORS.text, fontSize: 13,
           fontWeight: 500, cursor: 'pointer',
         }}>
           <Wifi size={14} /> Testar Conexão
         </button>
-        <button onClick={() => {}} style={{
+        <button onClick={() => setShowJsonPreview(true)} style={{
           display: 'flex', alignItems: 'center', gap: 6,
-          background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
+          background: 'rgba(15,23,42,0.03)', border: `1px solid ${COLORS.border}`,
           borderRadius: 10, padding: '10px 20px', color: COLORS.text, fontSize: 13,
           fontWeight: 500, cursor: 'pointer',
         }}>
@@ -283,6 +362,54 @@ export default function FunnelBuilder({ config, onSave, onTestConnection, onBack
           <Save size={14} /> Salvar Funil
         </button>
       </div>
+
+      {/* JSON Preview Modal */}
+      {showJsonPreview && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 200,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div onClick={() => setShowJsonPreview(false)} style={{
+            position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
+          }} />
+          <div style={{
+            position: 'relative', width: '90%', maxWidth: 640, maxHeight: '80vh',
+            background: '#f8f8f6', borderRadius: 20, padding: 24,
+            border: '1px solid rgba(15,23,42,0.1)',
+            boxShadow: '0 30px 60px rgba(15,23,42,0.3)',
+            overflow: 'auto',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <span style={{ fontSize: 16, fontWeight: 600, color: '#0f172a' }}>Preview do Payload CAPI</span>
+              <button onClick={() => setShowJsonPreview(false)} style={{
+                width: 32, height: 32, borderRadius: 8, border: '1px solid rgba(15,23,42,0.1)',
+                background: 'rgba(15,23,42,0.03)', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b',
+              }}>
+                <X size={14} />
+              </button>
+            </div>
+            <pre style={{
+              background: 'rgba(15,23,42,0.04)', borderRadius: 12, padding: 16,
+              fontSize: 11, lineHeight: 1.6, color: '#334155',
+              fontFamily: "'JetBrains Mono', monospace",
+              overflow: 'auto', maxHeight: '60vh',
+              border: '1px solid rgba(15,23,42,0.06)',
+            }}>
+              {JSON.stringify(getPreviewPayload(), null, 2)}
+            </pre>
+            <button onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify(getPreviewPayload(), null, 2));
+            }} style={{
+              marginTop: 12, padding: '8px 16px', borderRadius: 8, border: '1px solid rgba(99,102,241,0.3)',
+              background: 'rgba(99,102,241,0.06)', color: '#6366f1', fontSize: 12, fontWeight: 600,
+              cursor: 'pointer',
+            }}>
+              Copiar JSON
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
