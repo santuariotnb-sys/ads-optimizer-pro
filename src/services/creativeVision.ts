@@ -122,17 +122,53 @@ function blobToDataURL(blob: Blob): Promise<string> {
 }
 
 // Extrai frames via Canvas (fallback simples)
-async function extractWithCanvas(video: HTMLVideoElement, count: number): Promise<FrameData[]> {
+async function extractWithCanvas(videoOrFile: HTMLVideoElement | File, count: number): Promise<FrameData[]> {
+  // Se recebeu File, criar um HTMLVideoElement a partir dele
+  let video: HTMLVideoElement;
+  let shouldCleanup = false;
+
+  if (videoOrFile instanceof File) {
+    video = document.createElement('video');
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = 'auto';
+    video.src = URL.createObjectURL(videoOrFile);
+    shouldCleanup = true;
+
+    // Esperar vídeo carregar metadata
+    await new Promise<void>((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Timeout ao carregar vídeo')), 15000);
+      video.onloadedmetadata = () => { clearTimeout(timeout); resolve(); };
+      video.onerror = () => { clearTimeout(timeout); reject(new Error('Falha ao carregar vídeo')); };
+    });
+  } else {
+    video = videoOrFile;
+    // Garantir que metadata está carregada
+    if (video.readyState < 1) {
+      await new Promise<void>((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('Timeout ao carregar vídeo')), 15000);
+        video.onloadedmetadata = () => { clearTimeout(timeout); resolve(); };
+        video.onerror = () => { clearTimeout(timeout); reject(new Error('Falha ao carregar vídeo')); };
+      });
+    }
+  }
+
   const frames: FrameData[] = [];
   const duration = video.duration;
-  if (!duration || duration <= 0) return frames;
+  if (!duration || duration <= 0) {
+    if (shouldCleanup) URL.revokeObjectURL(video.src);
+    return frames;
+  }
 
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  if (!ctx) return frames;
+  if (!ctx) {
+    if (shouldCleanup) URL.revokeObjectURL(video.src);
+    return frames;
+  }
 
   canvas.width = 640;
-  canvas.height = 360;
+  canvas.height = Math.round(640 * (video.videoHeight / video.videoWidth)) || 360;
 
   for (let i = 0; i < count; i++) {
     const time = (duration / (count + 1)) * (i + 1);
@@ -147,6 +183,8 @@ async function extractWithCanvas(video: HTMLVideoElement, count: number): Promis
       isHook: i === 0,
     });
   }
+
+  if (shouldCleanup) URL.revokeObjectURL(video.src);
   return frames;
 }
 
@@ -156,7 +194,7 @@ export async function extractVideoFrames(
   count = 6,
   onProgress?: (msg: string) => void,
 ): Promise<FrameData[]> {
-  // Se recebeu File, usar FFmpeg
+  // Se recebeu File, tenta FFmpeg primeiro, depois Canvas com o mesmo File
   if (videoOrFile instanceof File) {
     try {
       onProgress?.('Carregando FFmpeg...');
@@ -167,17 +205,26 @@ export async function extractVideoFrames(
       }
     } catch (err) {
       console.warn('FFmpeg falhou, usando Canvas como fallback:', err);
-      onProgress?.('FFmpeg indisponível, usando método alternativo...');
     }
+
+    // Fallback: Canvas a partir do File
+    try {
+      onProgress?.('Extraindo frames via Canvas...');
+      const frames = await extractWithCanvas(videoOrFile, count);
+      if (frames.length > 0) {
+        onProgress?.(`${frames.length} frames extraídos`);
+        return frames;
+      }
+    } catch (err) {
+      console.warn('Canvas fallback falhou:', err);
+      onProgress?.('Falha ao extrair frames do vídeo');
+    }
+    return [];
   }
 
-  // Fallback: Canvas (precisa de HTMLVideoElement)
-  if (videoOrFile instanceof HTMLVideoElement) {
-    onProgress?.('Extraindo frames...');
-    return extractWithCanvas(videoOrFile, count);
-  }
-
-  return [];
+  // Se recebeu HTMLVideoElement direto
+  onProgress?.('Extraindo frames...');
+  return extractWithCanvas(videoOrFile, count);
 }
 
 export async function imageToFrame(file: File): Promise<FrameData> {

@@ -76,15 +76,17 @@ export default function CommandBar() {
         boxShadow: '0 8px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04)',
       }}
     >
-      {/* Logo */}
-      <img
-        src="/logo-everest.png"
-        alt="Ads.Everest"
-        style={{ width: 32, height: 32, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
-      />
-
-      {/* Separator */}
-      <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />
+      {/* Logo + Separator — hidden on mobile for compactness */}
+      {!isMobile && (
+        <>
+          <img
+            src="/logo-everest.png"
+            alt="Ads.Everest"
+            style={{ width: 32, height: 32, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
+          />
+          <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />
+        </>
+      )}
 
       {/* Quick actions */}
       {actions.map((action) => {
@@ -127,11 +129,13 @@ export default function CommandBar() {
         );
       })}
 
-      {/* Separator */}
-      <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />
-
-      {/* Live clock */}
-      <LiveClock />
+      {/* Separator + Live clock — hidden on mobile to save space */}
+      {!isMobile && (
+        <>
+          <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />
+          <LiveClock />
+        </>
+      )}
     </motion.div>
   );
 }

@@ -280,7 +280,7 @@ export default function App() {
   return (
     <AppLayout>
       <SubNav items={subNavItems} />
-      <main style={{ flex: 1, padding: isMobile ? 12 : 24, paddingBottom: 100, overflow: 'auto' }}>
+      <main style={{ flex: 1, padding: isMobile ? 12 : 24, paddingBottom: 100, overflow: 'auto', maxWidth: '100vw', boxSizing: 'border-box' }}>
         <ModuleRouter />
       </main>
     </AppLayout>

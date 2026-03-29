@@ -25,6 +25,7 @@ export interface Campaign {
   budget_suggestion?: number;
   learning_days?: number;
   learning_conversions?: number;
+  last_budget_change?: string;
 }
 
 export interface AdSet {

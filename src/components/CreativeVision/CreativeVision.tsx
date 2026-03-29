@@ -77,8 +77,11 @@ export default function CreativeVision() {
 
   const [progress, setProgress] = useState<string | null>(null);
 
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const handleAnalyze = async () => {
     if (!file || !apiKey) return;
+    setShowConfirmModal(false);
     setAnalyzing(true);
     setError(null);
     setResult(null);
@@ -88,11 +91,9 @@ export default function CreativeVision() {
       let extractedFrames: FrameData[];
 
       if (creativeType === 'video') {
-        // Tenta FFmpeg com o File direto, fallback para Canvas
         extractedFrames = await extractVideoFrames(file, 6, setProgress);
-        // Se FFmpeg falhou e retornou vazio, tenta Canvas
-        if (extractedFrames.length === 0 && videoRef.current) {
-          extractedFrames = await extractVideoFrames(videoRef.current, 6, setProgress);
+        if (extractedFrames.length === 0) {
+          throw new Error('Não foi possível extrair frames do vídeo. Tente outro formato (MP4 H.264).');
         }
       } else {
         setProgress('Processando imagem...');
@@ -266,7 +267,7 @@ export default function CreativeVision() {
           })}
         </div>
         <button
-          onClick={handleAnalyze}
+          onClick={() => analyzing ? undefined : setShowConfirmModal(true)}
           disabled={!canAnalyze}
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -282,6 +283,93 @@ export default function CreativeVision() {
           {analyzing ? (progress || 'Analisando...') : 'Analisar Criativo'}
         </button>
       </div>
+
+      {/* Modal de confirmação */}
+      {showConfirmModal && (
+        <div
+          onClick={() => setShowConfirmModal(false)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(4px)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            onClick={e => e.stopPropagation()}
+            style={{
+              background: '#fff', borderRadius: 20, padding: 28,
+              maxWidth: 380, width: '90%',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 10,
+                background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <Sparkles size={18} color="#fff" />
+              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', margin: 0, fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                Confirmar Análise
+              </h3>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b' }}>
+                <span>Arquivo</span>
+                <span style={{ color: '#0f172a', fontWeight: 500, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {file?.name}
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b' }}>
+                <span>Tipo</span>
+                <span style={{ color: '#0f172a', fontWeight: 500 }}>
+                  {creativeType === 'video' ? 'Vídeo' : creativeType === 'image' ? 'Imagem' : 'Carousel'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b' }}>
+                <span>IA</span>
+                <span style={{ color: '#0f172a', fontWeight: 500 }}>
+                  {provider === 'claude' ? 'Claude (Anthropic)' : 'GPT-4o (OpenAI)'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b' }}>
+                <span>Tamanho</span>
+                <span style={{ color: '#0f172a', fontWeight: 500, fontFamily: "'JetBrains Mono', monospace" }}>
+                  {file ? `${(file.size / 1024 / 1024).toFixed(1)} MB` : '—'}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                style={{
+                  flex: 1, padding: '10px 16px', borderRadius: 10, border: '1px solid rgba(15,23,42,0.1)',
+                  background: 'transparent', color: '#64748b', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleAnalyze}
+                style={{
+                  flex: 1, padding: '10px 16px', borderRadius: 10, border: 'none',
+                  background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff',
+                  fontSize: 13, fontWeight: 600, cursor: 'pointer',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                }}
+              >
+                Analisar
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
 
       {error && (
         <div style={{

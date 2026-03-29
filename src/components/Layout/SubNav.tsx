@@ -41,7 +41,8 @@ export default function SubNav({ items }: SubNavProps) {
               onClick={() => setCurrentModule(item.id)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 6,
-                padding: '8px 14px', borderRadius: 10, border: 'none',
+                padding: '10px 14px', borderRadius: 10, border: 'none',
+                minHeight: 44,
                 background: isActive ? 'rgba(15,23,42,0.06)' : 'transparent',
                 color: isActive ? '#0f172a' : '#64748b',
                 fontSize: 13, fontWeight: isActive ? 600 : 500,

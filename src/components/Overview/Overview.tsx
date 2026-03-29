@@ -580,7 +580,7 @@ export default function Overview() {
           <div style={{ marginTop: 12 }}>
             <WeeklyChart />
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginTop: 16 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '1fr 1fr 1fr', gap: 10, marginTop: 16 }}>
             {[
               { label: 'Campanhas Ativas', value: String(activeCampaigns) },
               { label: 'Conversões', value: String(Math.round(conversions)) },

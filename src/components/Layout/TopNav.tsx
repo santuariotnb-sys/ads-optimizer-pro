@@ -63,9 +63,9 @@ export default function TopNav() {
             src="/logo-everest.png"
             alt="Ads.Everest"
             style={{
-              width: 67,
-              height: 67,
-              borderRadius: 18,
+              width: isMobile ? 36 : 67,
+              height: isMobile ? 36 : 67,
+              borderRadius: isMobile ? 10 : 18,
               objectFit: 'cover',
               filter: 'drop-shadow(0 8px 22px rgba(15,23,42,0.22))',
               animation: 'logoFloat 4s ease-in-out infinite',
@@ -137,8 +137,8 @@ export default function TopNav() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: 36,
-                    height: 36,
+                    width: 44,
+                    height: 44,
                     borderRadius: 10,
                     border: isActive ? '1px solid rgba(255,255,255,.72)' : '1px solid transparent',
                     background: isActive ? 'rgba(255,255,255,.60)' : 'transparent',
