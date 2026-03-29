@@ -175,7 +175,7 @@ export default function AutoScale() {
           <Shield size={20} color="#6366f1" />
           Regras de Segurança
         </h2>
-        <div style={{ ...glassCard, padding: isMobile ? 16 : 24, marginBottom: isMobile ? 24 : 32 }}>
+        <div className="tilt-card" style={{ ...glassCard, padding: isMobile ? 16 : 24, marginBottom: isMobile ? 24 : 32 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {safetyRules.map((rule, i) => (
               <div key={i} style={{
@@ -201,7 +201,7 @@ export default function AutoScale() {
           <Activity size={20} color="#6366f1" />
           Log de Atividades
         </h2>
-        <div style={{ ...glassCard, padding: 8 }}>
+        <div className="tilt-card" style={{ ...glassCard, padding: 8 }}>
           {activityLog.map((entry, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: 14,

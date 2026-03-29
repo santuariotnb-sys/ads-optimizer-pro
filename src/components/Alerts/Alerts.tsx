@@ -187,7 +187,7 @@ export default function Alerts() {
         })}
 
         {filtered.length === 0 && (
-          <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
+          <div className="tilt-card" style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
             <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 12, opacity: 0.5 }} />
             <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum alerta nesta categoria</div>
           </div>

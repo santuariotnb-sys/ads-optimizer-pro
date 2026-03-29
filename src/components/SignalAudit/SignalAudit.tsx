@@ -107,7 +107,7 @@ export default function SignalAudit() {
   if (!signalAudit) {
     return (
       <div style={{ padding: isMobile ? 16 : 32, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
-        <div style={{ ...glassCard, textAlign: 'center', maxWidth: 400 }}>
+        <div className="tilt-card" style={{ ...glassCard, textAlign: 'center', maxWidth: 400 }}>
           <ShieldCheck size={48} color="#6366f1" style={{ margin: '0 auto 16px' }} />
           <h3 style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', marginBottom: 8 }}>Signal Audit</h3>
           <p style={{ fontSize: 14, color: '#64748b' }}>Conecte sua conta Meta para executar a auditoria de sinais.</p>
@@ -201,7 +201,7 @@ export default function SignalAudit() {
       </div>
 
       {/* Red Line Checklist */}
-      <div style={{ ...glassCard }}>
+      <div className="tilt-card" style={{ ...glassCard }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
           <Activity size={18} color="#f87171" />
           <h3 style={{ fontSize: 16, fontWeight: 600, color: '#0f172a', margin: 0 }}>

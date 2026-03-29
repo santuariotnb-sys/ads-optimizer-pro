@@ -550,7 +550,7 @@ export default function CampaignCreator() {
       padding: isMobile ? 0 : 8,
       color: '#0f172a',
     }}>
-      <div style={{ ...glassCard, maxWidth: isMobile ? '100%' : 800, padding: isMobile ? 16 : 32 }}>
+      <div className="tilt-card" style={{ ...glassCard, maxWidth: isMobile ? '100%' : 800, padding: isMobile ? 16 : 32 }}>
         <h1 style={{
           fontSize: 28, fontWeight: 700, marginBottom: 8, marginTop: 0,
           background: 'linear-gradient(135deg, #0f172a, #6366f1)',

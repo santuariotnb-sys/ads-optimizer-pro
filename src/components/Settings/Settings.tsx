@@ -150,7 +150,7 @@ export default function Settings() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="glass-card"
+                className="glass-card tilt-card"
                 style={{ padding: 20, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
@@ -248,7 +248,7 @@ export default function Settings() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card"
+          className="glass-card tilt-card"
           style={{ padding: 24, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` }}
         >
           <h3 style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -301,7 +301,7 @@ export default function Settings() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass-card"
+          className="glass-card tilt-card"
           style={{ padding: 24, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` }}
         >
           <h3 style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>

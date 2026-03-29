@@ -216,7 +216,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
 
   if (!stats || stats.eventsTotal === 0) {
     return (
-      <div style={{ ...glassCard, padding: 48, textAlign: 'center' as const, display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 16 }}>
+      <div className="tilt-card" style={{ ...glassCard, padding: 48, textAlign: 'center' as const, display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 16 }}>
         <Radio size={40} style={{ color: '#94a3b8', opacity: 0.5 }} />
         <p style={{ fontSize: 16, fontWeight: 600, color: '#0f172a', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
           Nenhum evento recebido ainda
@@ -257,7 +257,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
 
       {/* Funnel Info Bar */}
       {funnel.funnel_name && (
-        <div style={{ ...glassCard, padding: 16, display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 24, flexWrap: 'wrap' }}>
+        <div className="tilt-card" style={{ ...glassCard, padding: 16, display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 24, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, color: '#64748b', fontWeight: 500 }}>FUNIL:</span>
           <span style={{ fontSize: 14, color: '#0f172a', fontWeight: 600 }}>{funnel.funnel_name}</span>
           <span style={{ fontSize: 12, color: '#64748b' }}>Front: {formatCurrency(Number(funnel.front_price || 0))}</span>
@@ -268,7 +268,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
       {/* Pipeline + EMQ Breakdown */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         {/* Pipeline */}
-        <div style={glassCard}>
+        <div className="tilt-card" style={glassCard}>
           <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Pipeline Hoje</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {pipelineStages.map((stage, i) => {
@@ -295,7 +295,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
         </div>
 
         {/* EMQ Breakdown */}
-        <div style={glassCard}>
+        <div className="tilt-card" style={glassCard}>
           <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>EMQ Breakdown</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {emqItems.map(item => {
@@ -320,7 +320,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
       </div>
 
       {/* Delivery Status */}
-      <div style={{ ...glassCard, padding: 16 }}>
+      <div className="tilt-card" style={{ ...glassCard, padding: 16 }}>
         <div style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 24, flexDirection: isMobile ? 'column' : 'row' }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>DELIVERY STATUS</span>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
@@ -372,7 +372,7 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Basic Info */}
-      <div style={glassCard}>
+      <div className="tilt-card" style={glassCard}>
         <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Informações do Funil</h3>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
           <div>
@@ -389,7 +389,7 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
       </div>
 
       {/* Funnel Values */}
-      <div style={glassCard}>
+      <div className="tilt-card" style={glassCard}>
         <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Valores do Funil</h3>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 16 }}>
           <div>
@@ -445,7 +445,7 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
       </div>
 
       {/* Connection */}
-      <div style={glassCard}>
+      <div className="tilt-card" style={glassCard}>
         <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Conexão</h3>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
           <div>
@@ -498,14 +498,14 @@ function ScriptTab({ funnel, copied, onCopy }: {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {!funnel.id && (
-        <div style={{ ...glassCard, padding: 16, borderColor: 'rgba(250,204,21,0.2)', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="tilt-card" style={{ ...glassCard, padding: 16, borderColor: 'rgba(250,204,21,0.2)', display: 'flex', alignItems: 'center', gap: 12 }}>
           <AlertTriangle size={18} style={{ color: '#facc15', flexShrink: 0 }} />
           <span style={{ fontSize: 13, color: '#facc15' }}>Configure e salve o funil primeiro para gerar o script com ID correto.</span>
         </div>
       )}
 
       {/* Script Preview */}
-      <div style={glassCard}>
+      <div className="tilt-card" style={glassCard}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', fontFamily: "'Outfit', sans-serif", margin: 0 }}>
             Script de Tracking
@@ -536,7 +536,7 @@ function ScriptTab({ funnel, copied, onCopy }: {
       </div>
 
       {/* Usage Examples */}
-      <div style={glassCard}>
+      <div className="tilt-card" style={glassCard}>
         <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 16, fontFamily: "'Outfit', sans-serif" }}>Como Usar na LP</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <CodeExample title="Capturar Lead" code='AdsEdge.lead("email@ex.com", "11999998888", "Maria Santos");' />

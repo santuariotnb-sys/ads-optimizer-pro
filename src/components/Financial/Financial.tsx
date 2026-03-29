@@ -143,7 +143,7 @@ export default function Financial() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="glass-card"
+            className="glass-card tilt-card"
             style={{ padding: 16, borderRadius: 14, background: c.surface2, border: `1px solid ${c.border}` }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -162,7 +162,7 @@ export default function Financial() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass-card"
+        className="glass-card tilt-card"
         style={{ padding: 24, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` }}
       >
         <h3 style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -205,7 +205,7 @@ export default function Financial() {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="glass-card"
+        className="glass-card tilt-card"
         style={{ padding: 24, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>

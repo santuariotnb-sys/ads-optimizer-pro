@@ -233,7 +233,7 @@ export default function Audiences() {
           </div>
         ))}
         {mockAudiences.length === 0 && (
-          <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
+          <div className="tilt-card" style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
             <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma audiência encontrada</div>
           </div>
         )}

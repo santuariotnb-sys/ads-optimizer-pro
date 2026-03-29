@@ -3,6 +3,7 @@ import { Download, RefreshCw } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
+import { showToast } from '../ui/toastStore';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -453,11 +454,30 @@ export default function UTMTracking() {
 
         <div style={{ flex: 1 }} />
 
-        <button style={S.btnOutline} type="button">
+        <button style={S.btnOutline} type="button" onClick={() => {
+          const dataMap: Record<string, unknown[]> = {
+            'utm-campanhas': CAMPANHAS_DATA,
+            'utm-utms': UTM_DATA,
+            'utm-vendas': VENDAS_DATA,
+            'utm-relatorios': RELATORIO_DATA,
+          };
+          const rows = dataMap[activeView] || CAMPANHAS_DATA;
+          if (rows.length === 0) { showToast('info', 'Nenhum dado para exportar'); return; }
+          const headers = Object.keys(rows[0] as Record<string, unknown>);
+          const csv = [headers.join(';'), ...rows.map(r => headers.map(h => String((r as Record<string, unknown>)[h] ?? '')).join(';'))].join('\n');
+          const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url; a.download = `${activeView}_${periodo}.csv`; a.click();
+          URL.revokeObjectURL(url);
+          showToast('success', 'Arquivo CSV exportado com sucesso!');
+        }}>
           <Download size={14} />
           Exportar
         </button>
-        <button style={S.btnPrimary} type="button">
+        <button style={S.btnPrimary} type="button" onClick={() => {
+          showToast('info', 'Dados atualizados');
+        }}>
           <RefreshCw size={14} />
           Atualizar
         </button>

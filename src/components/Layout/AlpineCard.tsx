@@ -19,7 +19,7 @@ const springConfig = { stiffness: 170, damping: 18 };
 export default function AlpineCard({
   children,
   padding = 24,
-  tilt = false,
+  tilt = true,
   delay = 0,
   glow,
   onClick,

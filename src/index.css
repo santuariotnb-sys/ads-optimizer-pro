@@ -392,6 +392,17 @@ body {
   box-shadow: inset 3px 3px 6px rgba(15,23,42,0.08), inset -2px -2px 4px rgba(255,255,255,0.6) !important;
   transform: scale(0.97) !important;
 }
+
+/* 3D Tilt card effect */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.5s cubic-bezier(.4,0,.2,1);
+  will-change: transform;
+}
+.tilt-card:hover {
+  transform: perspective(800px) rotateX(2deg) rotateY(-3deg) translateY(-4px);
+  box-shadow: 18px 18px 44px rgba(15,23,42,0.12), -10px -10px 30px rgba(255,255,255,0.95), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(255,255,255,0.2) !important;
+}
 @keyframes pulse-live {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }

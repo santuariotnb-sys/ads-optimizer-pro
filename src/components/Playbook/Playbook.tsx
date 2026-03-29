@@ -132,6 +132,7 @@ export default function Playbook() {
             return (
               <div
                 key={entry.id}
+                className="tilt-card"
                 onClick={() => toggleExpand(entry.id)}
                 onMouseEnter={() => setHoveredEntry(entry.id)}
                 onMouseLeave={() => setHoveredEntry(null)}
@@ -192,7 +193,7 @@ export default function Playbook() {
             );
           })}
           {filteredEntries.length === 0 && (
-            <div style={{
+            <div className="tilt-card" style={{
               ...glassCard, padding: 40, textAlign: 'center',
             }}>
               <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum item nesta categoria</div>

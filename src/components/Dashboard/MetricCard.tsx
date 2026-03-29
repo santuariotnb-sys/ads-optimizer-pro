@@ -60,8 +60,10 @@ const MetricCard: React.FC<MetricCardProps> = ({ label, value, change, sparkline
       variants={cardVariants}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{
-        y: -3,
-        transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+        y: -4,
+        rotateX: 2,
+        rotateY: -3,
+        transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
       }}
       style={{
         background: 'rgba(10, 10, 10, 0.8)',
