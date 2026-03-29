@@ -55,9 +55,11 @@ export default function TopNav() {
       >
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 'auto' : 180 }}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 3L2 21h20L14 3l-3 6-3-6z" />
-          </svg>
+          <img
+            src="/logo-everest.png"
+            alt="Ads.Everest"
+            style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover' }}
+          />
           {!isMobile && (
             <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 600 }}>
               <span style={{ color: '#0f172a' }}>Ads</span>

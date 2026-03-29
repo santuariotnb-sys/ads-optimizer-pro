@@ -76,23 +76,12 @@ export default function CommandBar() {
         boxShadow: '0 8px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04)',
       }}
     >
-      {/* Mountain logo icon */}
-      <div
-        style={{
-          width: 32,
-          height: 32,
-          borderRadius: 10,
-          background: 'linear-gradient(135deg, #1e293b, #334155)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexShrink: 0,
-        }}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M8 3L2 21h20L14 3l-3 6-3-6z" />
-        </svg>
-      </div>
+      {/* Logo */}
+      <img
+        src="/logo-everest.png"
+        alt="Ads.Everest"
+        style={{ width: 32, height: 32, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
+      />
 
       {/* Separator */}
       <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />
