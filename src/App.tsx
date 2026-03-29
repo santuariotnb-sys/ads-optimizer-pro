@@ -20,6 +20,7 @@ import Playbook from './components/Playbook/Playbook';
 import Financial from './components/Financial/Financial';
 import UTMTracking from './components/UTMTracking/UTMTracking';
 import Settings from './components/Settings/Settings';
+import CreativeVision from './components/CreativeVision/CreativeVision';
 
 import { parseCallbackToken } from './services/metaAuth';
 import { MetaApiService } from './services/metaApi';
@@ -31,7 +32,7 @@ import {
 import {
   LayoutDashboard, Megaphone, Radio, DollarSign, Settings as SettingsIcon,
   BarChart3, Link2, ShoppingCart,
-  Sparkles, Layers,
+  Sparkles, Layers, Eye,
 } from 'lucide-react';
 
 // Sub-nav definitions for each main tab
@@ -54,6 +55,7 @@ const utmNav = [
 const creativeNav = [
   { id: 'cre-dashboard', label: 'Criativos', icon: Sparkles },
   { id: 'cre-entity', label: 'Agrupamentos', icon: Layers },
+  { id: 'cre-vision', label: 'Análise IA', icon: Eye },
 ];
 
 function getActiveTab(module: string): 'opt' | 'utm' | 'cre' {
@@ -123,6 +125,8 @@ function ModuleRouter() {
       return <Creatives />;
     case 'cre-entity':
       return <Creatives />;
+    case 'cre-vision':
+      return <CreativeVision />;
 
     // Legacy fallbacks
     case 'audiences': return <Audiences />;
