@@ -32,7 +32,7 @@ import {
 import {
   LayoutDashboard, Megaphone, Radio, DollarSign, Settings as SettingsIcon,
   BarChart3, Link2, ShoppingCart,
-  Sparkles, Layers, Eye,
+  Sparkles, Eye,
 } from 'lucide-react';
 
 // Sub-nav definitions for each main tab
@@ -54,7 +54,6 @@ const utmNav = [
 
 const creativeNav = [
   { id: 'cre-dashboard', label: 'Criativos', icon: Sparkles },
-  { id: 'cre-entity', label: 'Agrupamentos', icon: Layers },
   { id: 'cre-vision', label: 'Análise IA', icon: Eye },
 ];
 
