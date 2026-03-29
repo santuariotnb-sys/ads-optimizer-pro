@@ -50,7 +50,7 @@ export default function TopNav() {
           background: 'rgba(255,255,255,.38)',
           backdropFilter: 'blur(32px) saturate(1.8)',
           WebkitBackdropFilter: 'blur(32px) saturate(1.8)',
-          borderBottom: '1px solid rgba(255,255,255,.55)',
+          borderBottom: '1px solid rgba(15,23,42,0.08)',
         }}
       >
         {/* Logo */}

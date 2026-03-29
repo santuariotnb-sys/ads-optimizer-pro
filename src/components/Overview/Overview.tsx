@@ -344,7 +344,7 @@ export default function Overview() {
   /* ── Quick Actions ── */
   const actions = [
     { label: 'Criar Campanha', icon: <Plus size={14} />, module: 'create-campaign', num: 1 },
-    { label: 'Gerar Relat\u00f3rio', icon: <FileText size={14} />, module: 'pipeline', num: 2 },
+    { label: 'Gerar Relatório', icon: <FileText size={14} />, module: 'pipeline', num: 2 },
     { label: 'Signal Audit', icon: <Shield size={14} />, module: 'signal-audit', num: 3 },
     { label: 'Escalar Winners', icon: <Zap size={14} />, module: 'auto-scale', num: 4 },
   ];
@@ -359,7 +359,7 @@ export default function Overview() {
       {/* ── ROW 1: KPI Grid ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 16 }}>
         <KPICard
-          label="Custo por Aquisi\u00e7\u00e3o"
+          label="Custo por Aquisição"
           value={formatCurrency(animatedCPA)}
           delta={-12.4}
           barPercent={78}
@@ -384,7 +384,7 @@ export default function Overview() {
           delay={120}
         />
         <KPICard
-          label="Total Convers\u00f5es"
+          label="Total Conversões"
           value={formatNumber(animatedConversions)}
           delta={22.1}
           barPercent={91}
@@ -466,12 +466,12 @@ export default function Overview() {
 
         {/* Account Score Gauge */}
         <AlpineCard delay={300} padding={24}>
-          <p style={{ ...labelStyle, marginBottom: 4 }}>Pontua\u00e7\u00e3o da Conta</p>
+          <p style={{ ...labelStyle, marginBottom: 4 }}>Pontuação da Conta</p>
           <AccountGauge score={accountScore} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 16 }}>
             {[
               { label: 'CPA Trend', value: '-12%', color: '#4ade80' },
-              { label: 'CTR M\u00e9dio', value: '2.1%', color: '#60a5fa' },
+              { label: 'CTR Médio', value: '2.1%', color: '#60a5fa' },
               { label: 'Account Health', value: 'Bom', color: '#facc15' },
               { label: 'Learning Phase', value: '2/6', color: '#94a3b8' },
             ].map((s) => (
@@ -572,8 +572,8 @@ export default function Overview() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginTop: 16 }}>
             {[
               { label: 'Campanhas Ativas', value: String(activeCampaigns) },
-              { label: 'Convers\u00f5es', value: String(Math.round(conversions)) },
-              { label: 'Varia\u00e7\u00e3o', value: '+22%' },
+              { label: 'Conversões', value: String(Math.round(conversions)) },
+              { label: 'Variação', value: '+22%' },
             ].map((s) => (
               <div
                 key={s.label}
@@ -598,7 +598,7 @@ export default function Overview() {
 
         {/* Quick Actions */}
         <AlpineCard delay={480} padding={20}>
-          <p style={labelStyle}>A\u00e7\u00f5es R\u00e1pidas</p>
+          <p style={labelStyle}>Ações Rápidas</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
             {actions.map((a) => (
               <motion.button

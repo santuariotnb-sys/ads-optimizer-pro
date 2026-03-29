@@ -30,11 +30,11 @@ function StatCards() {
     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12, marginBottom: isMobile ? 16 : 24 }}>
       {cards.map(c => (
         <div key={c.label} style={{
-          background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-          border: '1px solid rgba(255, 255, 255, 0.06)',
+          background: 'rgba(255, 255, 255, 0.34)',
+          border: '1px solid rgba(15, 23, 42, 0.08)',
           borderRadius: 20, padding: isMobile ? '12px 14px' : '18px 20px',
           position: 'relative', overflow: 'hidden',
-          boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+          boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
         }}>
           <div style={{
             position: 'absolute', top: -20, right: -20, width: 80, height: 80,
@@ -58,10 +58,10 @@ function SignalLadder() {
   const isMobile = useIsMobile();
   return (
     <div style={{
-      background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'rgba(255, 255, 255, 0.34)',
+      border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: isMobile ? 16 : 24, position: 'relative', overflow: 'hidden',
-      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
     }}>
       <div style={{
         position: 'absolute', top: '50%', left: '50%', width: 200, height: 200,
@@ -87,7 +87,7 @@ function SignalLadder() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 0, position: 'relative' }}>
         <div style={{
           position: 'absolute', left: 18, top: 18, width: 2,
-          height: 'calc(100% - 36px)', background: 'rgba(255,255,255,0.04)', borderRadius: 1,
+          height: 'calc(100% - 36px)', background: 'rgba(15,23,42,0.04)', borderRadius: 1,
         }} />
         <div style={{
           position: 'absolute', left: 17, top: 18, width: 4,
@@ -112,10 +112,10 @@ function SignalLadder() {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: isActive
                   ? `linear-gradient(135deg, ${COLORS.accent}, ${COLORS.accentLight})`
-                  : isPast ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.04)',
+                  : isPast ? 'rgba(99, 102, 241, 0.2)' : 'rgba(15,23,42,0.04)',
                 border: isActive
                   ? `2px solid ${COLORS.accent}`
-                  : isPast ? '2px solid rgba(99, 102, 241, 0.4)' : '2px solid rgba(255,255,255,0.08)',
+                  : isPast ? '2px solid rgba(99, 102, 241, 0.4)' : '2px solid rgba(15,23,42,0.08)',
                 boxShadow: isActive ? `0 0 16px ${COLORS.accent}44` : 'none',
                 transition: 'all 0.3s ease', zIndex: 2,
               }}>
@@ -127,7 +127,7 @@ function SignalLadder() {
                   {level.name}
                 </span>
                 <span style={{
-                  background: isActive ? 'rgba(99, 102, 241, 0.15)' : 'rgba(255,255,255,0.04)',
+                  background: isActive ? 'rgba(99, 102, 241, 0.15)' : 'rgba(15,23,42,0.04)',
                   borderRadius: 4, padding: '1px 6px', fontSize: 9, fontWeight: 600,
                   color: isActive ? COLORS.accent : COLORS.textMuted,
                 }}>
@@ -196,10 +196,10 @@ function CAPIPayloadPreview() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'rgba(255, 255, 255, 0.34)',
+      border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: isMobile ? 16 : 24, display: 'flex', flexDirection: 'column', height: '100%',
-      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -263,7 +263,7 @@ function CAPIPayloadPreview() {
       </div>
 
       <div style={{
-        flex: 1, background: 'rgba(10, 10, 10, 0.6)', border: `1px solid ${COLORS.border}`,
+        flex: 1, background: 'rgba(15, 23, 42, 0.04)', border: `1px solid ${COLORS.border}`,
         borderRadius: 10, overflow: 'auto', minHeight: 0,
       }}>
         <pre style={{
@@ -295,10 +295,10 @@ function FunnelFlow() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'rgba(255, 255, 255, 0.34)',
+      border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: 20, marginBottom: 20,
-      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.text }}>Funil Ativo:</span>
@@ -339,10 +339,10 @@ function SyntheticEventsSummary() {
 
   return (
     <div style={{
-      background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-      border: '1px solid rgba(255, 255, 255, 0.06)',
+      background: 'rgba(255, 255, 255, 0.34)',
+      border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: isMobile ? 16 : 24,
-      boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
         <Zap size={18} color={COLORS.warning} />
@@ -359,7 +359,7 @@ function SyntheticEventsSummary() {
         {rules.map(rule => (
           <div key={rule.id} style={{
             display: 'flex', alignItems: 'center', gap: 12, padding: '8px 12px',
-            background: 'rgba(10, 10, 10, 0.4)', borderRadius: 8,
+            background: 'rgba(15, 23, 42, 0.04)', borderRadius: 8,
           }}>
             <div style={{
               width: 6, height: 6, borderRadius: '50%', background: COLORS.success,
@@ -371,7 +371,7 @@ function SyntheticEventsSummary() {
             <span style={{ fontSize: 13, fontWeight: 700, color: COLORS.text }}>{rule.fires_24h}</span>
             <div style={{
               flex: 1, maxWidth: 100, height: 6, borderRadius: 3,
-              background: 'rgba(255,255,255,0.04)', overflow: 'hidden',
+              background: 'rgba(15,23,42,0.04)', overflow: 'hidden',
             }}>
               <div style={{
                 height: '100%', width: `${rule.fire_rate}%`, borderRadius: 3,
@@ -430,11 +430,11 @@ export default function SignalEngine() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button onClick={() => setCurrentView('funnel-builder')}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = COLORS.border; }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(15,23,42,0.06)'; e.currentTarget.style.borderColor = 'rgba(15,23,42,0.12)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(15,23,42,0.04)'; e.currentTarget.style.borderColor = COLORS.border; }}
             style={{
             display: 'flex', alignItems: 'center', gap: 6,
-            background: 'rgba(255,255,255,0.06)', border: `1px solid ${COLORS.border}`,
+            background: 'rgba(15,23,42,0.06)', border: `1px solid ${COLORS.border}`,
             borderRadius: 10, padding: '8px 16px', color: COLORS.text, fontSize: 12,
             fontWeight: 500, cursor: 'pointer', transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
             outline: 'none',

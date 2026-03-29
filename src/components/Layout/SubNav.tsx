@@ -26,8 +26,9 @@ export default function SubNav({ items }: SubNavProps) {
         alignItems: 'center',
         gap: 4,
         padding: 4,
-        background: 'rgba(255,255,255,.08)',
+        background: 'rgba(15,23,42,0.03)',
         borderRadius: 16,
+        borderBottom: '1px solid rgba(15,23,42,0.06)',
         overflowX: 'auto',
         overflowY: 'hidden',
         flexWrap: 'nowrap',
@@ -53,17 +54,17 @@ export default function SubNav({ items }: SubNavProps) {
               gap: 6,
               padding: isMobile ? '6px 12px' : '7px 16px',
               borderRadius: 12,
-              border: isActive ? '1px solid rgba(255,255,255,.65)' : '1px solid transparent',
+              border: isActive ? '1px solid rgba(15,23,42,0.12)' : '1px solid transparent',
               background: isActive
-                ? 'rgba(255,255,255,.42)'
+                ? 'rgba(15,23,42,0.06)'
                 : isHovered
-                  ? 'rgba(255,255,255,.15)'
+                  ? 'rgba(15,23,42,0.04)'
                   : 'transparent',
               boxShadow: isActive ? '0 2px 8px rgba(0,0,0,.05)' : 'none',
-              color: isActive ? '#0f172a' : '#64748b',
+              color: isActive ? '#0f172a' : '#475569',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: 13,
-              fontWeight: 500,
+              fontSize: 13.5,
+              fontWeight: isActive ? 600 : 500,
               cursor: 'pointer',
               whiteSpace: 'nowrap',
               flexShrink: 0,

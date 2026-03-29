@@ -7,16 +7,16 @@ import type { Creative, CreativeStatus } from '../../types/meta';
 import EntityIDMap from './EntityIDMap';
 
 const COLORS = {
-  bg: 'rgba(22, 22, 32, 0.85)',
-  surface: 'rgba(22, 22, 32, 0.85)',
-  surfaceHover: '#111111',
-  border: 'rgba(255, 255, 255, 0.06)',
-  borderHover: 'rgba(255, 255, 255, 0.14)',
-  text: '#f5f5f5',
-  textMuted: '#a3a3a3',
+  bg: 'rgba(255, 255, 255, 0.34)',
+  surface: 'rgba(255, 255, 255, 0.34)',
+  surfaceHover: 'rgba(255, 255, 255, 0.55)',
+  border: 'rgba(15, 23, 42, 0.08)',
+  borderHover: 'rgba(15, 23, 42, 0.14)',
+  text: '#0f172a',
+  textMuted: '#64748b',
   accent: '#6366f1',
-  success: '#4ade80',
-  danger: '#f87171',
+  success: '#10b981',
+  danger: '#ef4444',
   warning: '#6366f1',
   info: '#60a5fa',
 };
@@ -87,7 +87,7 @@ function ScoreGauge({ score }: { score: number }) {
   return (
     <div style={{ position: 'relative', width: 44, height: 44 }}>
       <svg width={44} height={44} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={22} cy={22} r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={3} />
+        <circle cx={22} cy={22} r={radius} fill="none" stroke="rgba(15,23,42,0.08)" strokeWidth={3} />
         <circle cx={22} cy={22} r={radius} fill="none" stroke={color} strokeWidth={3}
           strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" />
       </svg>
@@ -131,10 +131,10 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
         transition: 'all 0.25s ease',
         opacity: isLoser ? 0.6 : 1,
         boxShadow: isWinner
-          ? `0 0 20px rgba(74, 222, 128, 0.08), inset 0 1px 0 rgba(74, 222, 128, 0.1)`
+          ? `0 0 20px rgba(16, 185, 129, 0.08), inset 0 1px 0 rgba(16, 185, 129, 0.1)`
           : fatigue
-            ? '0 0 16px rgba(248, 113, 113, 0.12)'
-            : '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+            ? '0 0 16px rgba(239, 68, 68, 0.12)'
+            : '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
         animation: fatigue ? 'fatiguePulse 2s ease-in-out infinite' : 'none',
         position: 'relative',
         transform: hovered ? 'translateY(-1px)' : 'translateY(0)',
@@ -154,7 +154,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
         {/* Entity ID badge */}
         <div style={{
           position: 'absolute', top: 8, left: 8,
-          background: 'rgba(0,0,0,0.5)',
+          background: 'rgba(255,255,255,0.75)',
           backdropFilter: 'blur(8px)',
           borderRadius: 6, padding: '3px 8px',
           fontSize: 10, fontWeight: 600, color: COLORS.text,
@@ -214,7 +214,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
         }}>
           {metrics.map(m => (
             <div key={m.label} style={{
-              background: 'rgba(10, 10, 10, 0.5)',
+              background: 'rgba(15, 23, 42, 0.04)',
               borderRadius: 6, padding: '5px 7px',
               textAlign: 'center',
             }}>
@@ -309,7 +309,7 @@ export default function Creatives() {
               key={f.key}
               onClick={() => setFilter(f.key)}
               style={{
-                background: filter === f.key ? 'rgba(99, 102, 241, 0.15)' : 'rgba(26, 25, 24, 0.6)',
+                background: filter === f.key ? 'rgba(99, 102, 241, 0.1)' : 'rgba(255, 255, 255, 0.5)',
                 border: `1px solid ${filter === f.key ? 'rgba(99, 102, 241, 0.4)' : COLORS.border}`,
                 borderRadius: 8,
                 padding: '6px 14px',
@@ -325,7 +325,7 @@ export default function Creatives() {
             >
               {f.label}
               <span style={{
-                background: filter === f.key ? 'rgba(99, 102, 241, 0.3)' : 'rgba(255,255,255,0.06)',
+                background: filter === f.key ? 'rgba(99, 102, 241, 0.2)' : 'rgba(15,23,42,0.06)',
                 borderRadius: 4,
                 padding: '1px 6px',
                 fontSize: 11,
@@ -373,15 +373,16 @@ export default function Creatives() {
       {filtered.length === 0 && (
         <div
           style={{
-            background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            background: 'rgba(255, 255, 255, 0.34)',
+            backdropFilter: 'blur(28px)',
+            border: '1px solid rgba(255, 255, 255, 0.55)',
             borderRadius: 20,
             padding: 40,
             textAlign: 'center',
-            boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+            boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06)',
           }}
         >
-          <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhum criativo encontrado</div>
+          <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum criativo encontrado</div>
         </div>
       )}
     </div>

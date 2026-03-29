@@ -11,10 +11,10 @@ const ZONE_CONFIG: Record<AuditZone, { label: string; color: string; bg: string;
 };
 
 const glassCard: React.CSSProperties = {
-  background: 'rgba(22, 22, 32, 0.85)',
-  backdropFilter: 'blur(16px)',
-  WebkitBackdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255, 255, 255, 0.34)',
+  backdropFilter: 'blur(28px)',
+  WebkitBackdropFilter: 'blur(28px)',
+  border: '1px solid rgba(255, 255, 255, 0.55)',
   borderRadius: 16,
   padding: 24,
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -30,7 +30,7 @@ function ScoreGauge({ score, label, size = 120 }: { score: number; label: string
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={8} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(15,23,42,0.08)" strokeWidth={8} />
         <circle
           cx={size / 2} cy={size / 2} r={radius} fill="none"
           stroke={color} strokeWidth={8} strokeLinecap="round"
@@ -41,7 +41,7 @@ function ScoreGauge({ score, label, size = 120 }: { score: number; label: string
       <div style={{ position: 'relative', marginTop: -size + 8, height: size - 16, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: size * 0.3, fontWeight: 700, color }}>{score}%</span>
       </div>
-      <span style={{ fontSize: 13, color: '#94a3b8', marginTop: 4 }}>{label}</span>
+      <span style={{ fontSize: 13, color: '#334155', marginTop: 4 }}>{label}</span>
     </div>
   );
 }
@@ -70,7 +70,7 @@ function PillarCard({ pillar, isExpanded, onToggle }: { pillar: SignalAuditPilla
             <span style={{ fontSize: 11, color: '#64748b' }}>Maturidade</span>
             <span style={{ fontSize: 11, color: '#4ade80', fontFamily: "'JetBrains Mono', monospace" }}>{pillar.maturity}/5</span>
           </div>
-          <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
+          <div style={{ height: 4, borderRadius: 2, background: 'rgba(15,23,42,0.06)' }}>
             <div style={{ height: '100%', borderRadius: 2, width: `${maturityPct}%`, background: '#4ade80', transition: 'width 0.5s ease' }} />
           </div>
         </div>
@@ -79,14 +79,14 @@ function PillarCard({ pillar, isExpanded, onToggle }: { pillar: SignalAuditPilla
             <span style={{ fontSize: 11, color: '#64748b' }}>Risco</span>
             <span style={{ fontSize: 11, color: riskPct > 40 ? '#f87171' : '#facc15', fontFamily: "'JetBrains Mono', monospace" }}>{pillar.risk}/5</span>
           </div>
-          <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)' }}>
+          <div style={{ height: 4, borderRadius: 2, background: 'rgba(15,23,42,0.06)' }}>
             <div style={{ height: '100%', borderRadius: 2, width: `${riskPct}%`, background: riskPct > 40 ? '#f87171' : '#facc15', transition: 'width 0.5s ease' }} />
           </div>
         </div>
       </div>
 
       {isExpanded && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingTop: 12, borderTop: '1px solid rgba(15,23,42,0.08)' }}>
           {pillar.details.map((d, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <div style={{ width: 4, height: 4, borderRadius: '50%', background: zone.color, flexShrink: 0 }} />
@@ -109,7 +109,7 @@ export default function SignalAudit() {
       <div style={{ padding: isMobile ? 16 : 32, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
         <div style={{ ...glassCard, textAlign: 'center', maxWidth: 400 }}>
           <ShieldCheck size={48} color="#6366f1" style={{ margin: '0 auto 16px' }} />
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#e2e8f0', marginBottom: 8 }}>Signal Audit</h3>
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', marginBottom: 8 }}>Signal Audit</h3>
           <p style={{ fontSize: 14, color: '#64748b' }}>Conecte sua conta Meta para executar a auditoria de sinais.</p>
         </div>
       </div>
@@ -127,7 +127,7 @@ export default function SignalAudit() {
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24 }}>
         <ShieldCheck size={28} color="#6366f1" />
         <div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#e2e8f0', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
             META SIGNAL AUDIT
           </h2>
           <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>
@@ -204,7 +204,7 @@ export default function SignalAudit() {
       <div style={{ ...glassCard }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
           <Activity size={18} color="#f87171" />
-          <h3 style={{ fontSize: 16, fontWeight: 600, color: '#e2e8f0', margin: 0 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: '#0f172a', margin: 0 }}>
             Checklist de Linha Vermelha
           </h3>
           {isContaminated && (

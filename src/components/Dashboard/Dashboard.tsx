@@ -40,13 +40,13 @@ const Dashboard: React.FC = () => {
               fontSize: isMobile ? 22 : 28,
               fontWeight: 700,
               fontFamily: "'Outfit', sans-serif",
-              color: '#f5f5f5',
+              color: '#0f172a',
               margin: 0,
             }}
           >
             Dashboard
           </h1>
-          <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#a3a3a3', margin: '4px 0 0' }}>
+          <p style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
             Visao geral da performance das campanhas
           </p>
         </div>
@@ -54,10 +54,10 @@ const Dashboard: React.FC = () => {
           style={{
             display: 'flex',
             gap: 4,
-            background: 'rgba(255, 255, 255, 0.04)',
+            background: 'rgba(15, 23, 42, 0.04)',
             borderRadius: 10,
             padding: 3,
-            border: '1px solid rgba(255, 255, 255, 0.06)',
+            border: '1px solid rgba(15, 23, 42, 0.08)',
           }}
         >
           {(['today', '7d', '14d', '30d'] as const).map((p) => (
@@ -117,13 +117,13 @@ const Dashboard: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
         style={{
-          background: 'rgba(10, 10, 10, 0.8)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.06)',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
+          background: 'rgba(255, 255, 255, 0.34)',
+          backdropFilter: 'blur(28px)',
+          WebkitBackdropFilter: 'blur(28px)',
+          border: '1px solid rgba(255, 255, 255, 0.55)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.7)',
           borderRadius: 20,
-          boxShadow: '0 0 0 0.5px rgba(255,255,255,0.04) inset, 0 1px 0 0 rgba(255,255,255,0.06) inset, 0 -1px 0 0 rgba(0,0,0,0.4) inset, 0 2px 4px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.25), 0 24px 48px rgba(0,0,0,0.15)',
+          boxShadow: '0 1px 2px rgba(15,23,42,0.04), 0 4px 16px rgba(15,23,42,0.06), 0 12px 40px rgba(15,23,42,0.04)',
           overflow: 'hidden',
           position: 'relative',
         }}
@@ -132,7 +132,7 @@ const Dashboard: React.FC = () => {
         <div style={{
           position: 'absolute',
           top: 0, left: 0, right: 0, height: '40%',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%)',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)',
           borderRadius: '20px 20px 0 0',
           pointerEvents: 'none',
         }} />
@@ -140,7 +140,7 @@ const Dashboard: React.FC = () => {
         <div
           style={{
             padding: '16px 20px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+            borderBottom: '1px solid rgba(15, 23, 42, 0.08)',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -152,7 +152,7 @@ const Dashboard: React.FC = () => {
               fontSize: 16,
               fontWeight: 700,
               fontFamily: "'Outfit', sans-serif",
-              color: '#f5f5f5',
+              color: '#0f172a',
               margin: 0,
             }}
           >
@@ -179,10 +179,10 @@ const Dashboard: React.FC = () => {
                       fontWeight: 600,
                       textTransform: 'uppercase',
                       letterSpacing: '0.06em',
-                      color: '#525252',
-                      background: 'rgba(8, 8, 8, 0.8)',
+                      color: '#64748b',
+                      background: 'rgba(248, 248, 246, 0.8)',
                       textAlign: h === 'Nome' ? 'left' : 'right',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.04)',
+                      borderBottom: '1px solid rgba(15, 23, 42, 0.06)',
                       fontFamily: "'Outfit', sans-serif",
                     }}
                   >
@@ -219,8 +219,8 @@ const Dashboard: React.FC = () => {
                         padding: isMobile ? '10px 10px' : '14px 16px',
                         fontSize: isMobile ? 12 : 13,
                         fontWeight: 500,
-                        color: '#f5f5f5',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
+                        color: '#0f172a',
+                        borderBottom: '1px solid rgba(15, 23, 42, 0.05)',
                         maxWidth: isMobile ? 160 : 280,
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
@@ -235,7 +235,7 @@ const Dashboard: React.FC = () => {
                       style={{
                         padding: '14px 16px',
                         textAlign: 'right',
-                        borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
+                        borderBottom: '1px solid rgba(15, 23, 42, 0.05)',
                       }}
                     >
                       <span
@@ -266,7 +266,7 @@ const Dashboard: React.FC = () => {
                       {formatCurrency(campaign.spend)}
                     </td>
                     <td style={isMobile ? mobileCellStyle : cellStyle}>
-                      <span style={{ color: campaign.roas >= 3 ? '#4ade80' : campaign.roas >= 2 ? '#6366f1' : '#f87171' }}>
+                      <span style={{ color: campaign.roas >= 3 ? '#4ade80' : campaign.roas >= 2 ? '#6366f1' : '#ef4444' }}>
                         {campaign.roas.toFixed(1)}x
                       </span>
                     </td>
@@ -280,7 +280,7 @@ const Dashboard: React.FC = () => {
                     )}
                     {!isMobile && (
                       <td style={cellStyle}>
-                        <span style={{ color: campaign.frequency > 2.5 ? '#f87171' : '#a3a3a3' }}>
+                        <span style={{ color: campaign.frequency > 2.5 ? '#ef4444' : '#64748b' }}>
                           {campaign.frequency.toFixed(1)}
                         </span>
                       </td>
@@ -326,9 +326,9 @@ const cellStyle: React.CSSProperties = {
   padding: '14px 16px',
   fontSize: 13,
   fontWeight: 500,
-  color: '#d4d4d4',
+  color: '#334155',
   textAlign: 'right',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
+  borderBottom: '1px solid rgba(15, 23, 42, 0.05)',
   fontFamily: "'JetBrains Mono', monospace",
 };
 
@@ -336,9 +336,9 @@ const mobileCellStyle: React.CSSProperties = {
   padding: '10px 10px',
   fontSize: 11,
   fontWeight: 500,
-  color: '#d4d4d4',
+  color: '#334155',
   textAlign: 'right',
-  borderBottom: '1px solid rgba(255, 255, 255, 0.03)',
+  borderBottom: '1px solid rgba(15, 23, 42, 0.05)',
   fontFamily: "'JetBrains Mono', monospace",
 };
 
