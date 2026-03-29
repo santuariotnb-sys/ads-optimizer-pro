@@ -113,6 +113,7 @@ const Campaigns: React.FC = () => {
       {/* Campaign Cards */}
       {filtered.length === 0 && (
         <div
+          className="tilt-card"
           style={{
             background: 'rgba(255, 255, 255, 0.34)',
             border: '1px solid rgba(15, 23, 42, 0.08)',
@@ -138,6 +139,7 @@ const Campaigns: React.FC = () => {
         return (
           <div
             key={campaign.id}
+            className="tilt-card"
             style={{
               background: 'rgba(255, 255, 255, 0.34)',
               border: '1px solid rgba(15, 23, 42, 0.08)',

@@ -24,6 +24,12 @@ const AccountScore: React.FC<AccountScoreProps> = ({ score }) => {
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+      whileHover={{
+        y: -4,
+        rotateX: 2,
+        rotateY: -3,
+        transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+      }}
       style={{
         background: 'rgba(10, 10, 10, 0.8)',
         backdropFilter: 'blur(20px)',

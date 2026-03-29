@@ -119,6 +119,7 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
 
   return (
     <div
+      className="tilt-card"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -372,6 +373,7 @@ export default function Creatives() {
       </div>
       {filtered.length === 0 && (
         <div
+          className="tilt-card"
           style={{
             background: 'rgba(255, 255, 255, 0.34)',
             backdropFilter: 'blur(28px)',

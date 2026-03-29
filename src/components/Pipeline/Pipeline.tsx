@@ -219,7 +219,7 @@ export default function Pipeline() {
   };
 
   return (
-    <div style={{ ...containerStyle, padding: isMobile ? '20px 16px' : '32px 24px' }}>
+    <div className="tilt-card" style={{ ...containerStyle, padding: isMobile ? '20px 16px' : '32px 24px' }}>
       <style>{animationKeyframes}</style>
 
       {/* Title */}

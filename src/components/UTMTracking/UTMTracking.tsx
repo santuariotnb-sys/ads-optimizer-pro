@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { Download, RefreshCw } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -302,6 +302,55 @@ const S = {
 };
 
 // Profundidade alternada neumorphic — coluna "levantada" vs "afundada"
+// Sticky columns: col 0 (STATUS ~90px), col 1 (CAMPANHA ~280px)
+const STICKY_W0 = 90;
+const STICKY_W1 = 280;
+
+function stickyCol(col: 0 | 1, isHeader: boolean): React.CSSProperties {
+  const left = col === 0 ? 0 : STICKY_W0;
+  return {
+    position: 'sticky',
+    left,
+    zIndex: isHeader ? 4 : 3,
+    background: isHeader ? 'rgba(240,243,248,0.95)' : 'rgba(255,255,255,0.95)',
+    backdropFilter: 'blur(8px)',
+    ...(col === 1 ? { boxShadow: '4px 0 12px rgba(15,23,42,0.06)' } : {}),
+  };
+}
+
+// Drag-to-scroll hook
+function useDragScroll() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!ref.current) return;
+    isDragging.current = true;
+    startX.current = e.pageX - ref.current.offsetLeft;
+    scrollLeft.current = ref.current.scrollLeft;
+    ref.current.style.cursor = 'grabbing';
+    ref.current.style.userSelect = 'none';
+  }, []);
+
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isDragging.current || !ref.current) return;
+    const x = e.pageX - ref.current.offsetLeft;
+    ref.current.scrollLeft = scrollLeft.current - (x - startX.current);
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    isDragging.current = false;
+    if (ref.current) {
+      ref.current.style.cursor = 'grab';
+      ref.current.style.userSelect = '';
+    }
+  }, []);
+
+  return { ref, onMouseDown, onMouseMove, onMouseUp, onMouseLeave: onMouseUp };
+}
+
 function colDepthTh(i: number): React.CSSProperties {
   if (i % 2 === 0) return {
     background: 'rgba(245,247,250,0.80)',
@@ -402,6 +451,7 @@ export default function UTMTracking() {
   const [produto, setProduto] = useState('all');
   const [conta, setConta] = useState('all');
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
+  const dragScroll = useDragScroll();
 
   // Determine active view
   const validViews = ['utm-campanhas', 'utm-utms', 'utm-vendas', 'utm-relatorios'];
@@ -504,13 +554,27 @@ export default function UTMTracking() {
       >
         <div style={S.cardReflection} />
         <div style={S.cardSheen} />
-        <div style={S.tableWrap}>
+        <div
+          ref={dragScroll.ref}
+          onMouseDown={dragScroll.onMouseDown}
+          onMouseMove={dragScroll.onMouseMove}
+          onMouseUp={dragScroll.onMouseUp}
+          onMouseLeave={dragScroll.onMouseLeave}
+          style={{ ...S.tableWrap, cursor: 'grab' }}
+        >
           {activeView === 'utm-campanhas' && (
             <table style={S.table}>
               <thead>
                 <tr>
-                  {['STATUS', 'CAMPANHA', 'ORCAMENTO', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI', 'CTR', 'CPM', 'IMPRESSOES', 'CLIQUES'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...colDepthTh(i), ...(i >= 2 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
+                  {['STATUS', 'CAMPANHA', 'ORÇAMENTO', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI', 'CTR', 'CPM', 'IMPRESSÕES', 'CLIQUES'].map((h, i) => (
+                    <th key={h} style={{
+                      ...S.th, ...colDepthTh(i),
+                      ...(i >= 2 ? S.thRight : {}),
+                      ...(i === 1 ? highlightTh : {}),
+                      ...(i <= 1 ? stickyCol(i as 0 | 1, true) : {}),
+                      ...(i === 0 ? { minWidth: STICKY_W0 } : {}),
+                      ...(i === 1 ? { minWidth: STICKY_W1 } : {}),
+                    }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -522,10 +586,10 @@ export default function UTMTracking() {
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td style={{ ...S.td, ...colDepthTd(0) }}>
+                    <td style={{ ...S.td, ...colDepthTd(0), ...stickyCol(0, false), minWidth: STICKY_W0 }}>
                       <span style={statusBadge(r.status)}>{STATUS_LABEL[r.status]}</span>
                     </td>
-                    <td style={{ ...S.td, ...colDepthTd(1), ...highlightTd, fontWeight: 600, maxWidth: 280 }}>{r.campanha}</td>
+                    <td style={{ ...S.td, ...colDepthTd(1), ...highlightTd, ...stickyCol(1, false), fontWeight: 600, minWidth: STICKY_W1 }}>{r.campanha}</td>
                     <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(2) }}>{formatCurrency(r.orcamento)}/dia</td>
                     <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(3), fontWeight: 700 }}>{r.vendas}</td>
                     <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(4) }}>{formatCurrency(r.cpa)}</td>

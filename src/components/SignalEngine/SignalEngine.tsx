@@ -29,7 +29,7 @@ function StatCards() {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12, marginBottom: isMobile ? 16 : 24 }}>
       {cards.map(c => (
-        <div key={c.label} style={{
+        <div key={c.label} className="tilt-card" style={{
           background: 'rgba(255, 255, 255, 0.34)',
           border: '1px solid rgba(15, 23, 42, 0.08)',
           borderRadius: 20, padding: isMobile ? '12px 14px' : '18px 20px',
@@ -57,7 +57,7 @@ function StatCards() {
 function SignalLadder() {
   const isMobile = useIsMobile();
   return (
-    <div style={{
+    <div className="tilt-card" style={{
       background: 'rgba(255, 255, 255, 0.34)',
       border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: isMobile ? 16 : 24, position: 'relative', overflow: 'hidden',
@@ -195,7 +195,7 @@ function CAPIPayloadPreview() {
   ];
 
   return (
-    <div style={{
+    <div className="tilt-card" style={{
       background: 'rgba(255, 255, 255, 0.34)',
       border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: isMobile ? 16 : 24, display: 'flex', flexDirection: 'column', height: '100%',
@@ -294,7 +294,7 @@ function FunnelFlow() {
   const maxCount = stages[0].count;
 
   return (
-    <div style={{
+    <div className="tilt-card" style={{
       background: 'rgba(255, 255, 255, 0.34)',
       border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: 20, marginBottom: 20,
@@ -338,7 +338,7 @@ function SyntheticEventsSummary() {
   const rules = mockCAPIState.syntheticRules.filter(r => r.enabled && r.fires_24h > 0);
 
   return (
-    <div style={{
+    <div className="tilt-card" style={{
       background: 'rgba(255, 255, 255, 0.34)',
       border: '1px solid rgba(15, 23, 42, 0.08)',
       borderRadius: 20, padding: isMobile ? 16 : 24,

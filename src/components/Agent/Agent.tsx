@@ -391,7 +391,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
   };
 
   return (
-    <div style={containerStyle}>
+    <div className="tilt-card" style={containerStyle}>
       <style>{typingKeyframes}</style>
 
       {/* Header */}
