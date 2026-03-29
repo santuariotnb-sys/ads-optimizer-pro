@@ -154,11 +154,11 @@ const S = {
   },
   select: {
     padding: '8px 14px',
-    borderRadius: 12,
-    border: '1px solid rgba(255,255,255,0.45)',
-    background: 'rgba(255,255,255,0.22)',
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
+    borderRadius: 14,
+    border: 'none',
+    background: 'rgba(240,243,248,0.65)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
     color: '#334155',
     fontSize: 13,
     fontWeight: 500,
@@ -171,16 +171,16 @@ const S = {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right 10px center',
     paddingRight: 30,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
-    transition: 'all 0.15s',
+    boxShadow: '6px 6px 14px rgba(15,23,42,0.07), -4px -4px 10px rgba(255,255,255,0.85), inset 0 1px 0 rgba(255,255,255,0.6)',
+    transition: 'all 0.25s cubic-bezier(.4,0,.2,1)',
   },
   btnOutline: {
     padding: '8px 18px',
-    borderRadius: 12,
-    border: '1px solid rgba(255,255,255,0.45)',
-    background: 'rgba(255,255,255,0.18)',
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
+    borderRadius: 14,
+    border: 'none',
+    background: 'rgba(240,243,248,0.6)',
+    backdropFilter: 'blur(20px)',
+    WebkitBackdropFilter: 'blur(20px)',
     color: '#475569',
     fontSize: 13,
     fontWeight: 600,
@@ -189,13 +189,13 @@ const S = {
     alignItems: 'center',
     gap: 6,
     fontFamily: 'Outfit, sans-serif',
-    transition: 'all 0.15s',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
+    transition: 'all 0.25s cubic-bezier(.4,0,.2,1)',
+    boxShadow: '6px 6px 14px rgba(15,23,42,0.07), -4px -4px 10px rgba(255,255,255,0.85), inset 0 1px 0 rgba(255,255,255,0.5)',
   },
   btnPrimary: {
     padding: '8px 20px',
-    borderRadius: 12,
-    border: '1px solid rgba(59,130,246,0.3)',
+    borderRadius: 14,
+    border: 'none',
     background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
     color: '#fff',
     fontSize: 13,
@@ -205,30 +205,43 @@ const S = {
     alignItems: 'center',
     gap: 6,
     fontFamily: 'Outfit, sans-serif',
-    transition: 'all 0.15s',
-    boxShadow: '0 2px 8px rgba(59,130,246,0.25), inset 0 1px 0 rgba(255,255,255,0.2)',
+    transition: 'all 0.25s cubic-bezier(.4,0,.2,1)',
+    boxShadow: '4px 4px 14px rgba(59,130,246,0.30), -3px -3px 8px rgba(255,255,255,0.5), inset 0 1px 0 rgba(255,255,255,0.25)',
   },
   card: {
     position: 'relative' as const,
-    background: 'rgba(255,255,255,0.18)',
-    backdropFilter: 'blur(40px) saturate(1.4)',
-    WebkitBackdropFilter: 'blur(40px) saturate(1.4)',
-    border: '1px solid rgba(255,255,255,0.35)',
-    borderRadius: 18,
+    background: 'rgba(240,243,248,0.55)',
+    backdropFilter: 'blur(48px) saturate(1.6)',
+    WebkitBackdropFilter: 'blur(48px) saturate(1.6)',
+    border: '1px solid rgba(255,255,255,0.50)',
+    borderRadius: 22,
     overflow: 'hidden' as const,
-    boxShadow: '0 4px 24px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(255,255,255,0.1)',
+    boxShadow: '12px 12px 30px rgba(15,23,42,0.08), -8px -8px 24px rgba(255,255,255,0.90), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(255,255,255,0.15)',
+    transition: 'transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s cubic-bezier(.4,0,.2,1)',
   },
-  // Reflexo interno no topo do card — simula brilho de vidro
+  // Reflexo interno — camada superior de brilho tipo vidro real
   cardReflection: {
     position: 'absolute' as const,
     top: 0,
     left: 0,
     right: 0,
-    height: 48,
-    background: 'linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 100%)',
+    height: 60,
+    background: 'linear-gradient(180deg, rgba(255,255,255,0.50) 0%, rgba(255,255,255,0.08) 60%, rgba(255,255,255,0) 100%)',
     pointerEvents: 'none' as const,
     zIndex: 1,
-    borderRadius: '18px 18px 0 0',
+    borderRadius: '22px 22px 0 0',
+  },
+  // Segunda camada — reflexo lateral sutil
+  cardSheen: {
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.06) 100%)',
+    pointerEvents: 'none' as const,
+    zIndex: 1,
+    borderRadius: 22,
   },
   tableWrap: {
     position: 'relative' as const,
@@ -249,15 +262,16 @@ const S = {
     textTransform: 'uppercase' as const,
     letterSpacing: '0.06em',
     textAlign: 'left' as const,
-    background: 'rgba(255,255,255,0.35)',
-    backdropFilter: 'blur(20px)',
+    background: 'rgba(240,243,248,0.70)',
+    backdropFilter: 'blur(16px)',
     whiteSpace: 'nowrap' as const,
-    borderBottom: '1px solid rgba(255,255,255,0.5)',
-    borderRight: '1px solid rgba(255,255,255,0.2)',
+    borderBottom: '1px solid rgba(255,255,255,0.6)',
+    borderRight: '1px solid rgba(255,255,255,0.25)',
     fontFamily: 'Outfit, sans-serif',
     position: 'sticky' as const,
     top: 0,
     zIndex: 2,
+    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)',
   },
   thRight: {
     textAlign: 'right' as const,
@@ -281,30 +295,30 @@ const S = {
     textAlign: 'right' as const,
   },
   trHover: {
-    transition: 'background 0.12s',
+    transition: 'background 0.2s cubic-bezier(.4,0,.2,1), box-shadow 0.2s cubic-bezier(.4,0,.2,1)',
   },
 };
 
-// Profundidade alternada — coluna "levantada" vs "afundada"
+// Profundidade alternada neumorphic — coluna "levantada" vs "afundada"
 function colDepthTh(i: number): React.CSSProperties {
   if (i % 2 === 0) return {
-    background: 'rgba(255,255,255,0.45)',
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.03)',
+    background: 'rgba(245,247,250,0.80)',
+    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(15,23,42,0.03)',
   };
   return {
-    background: 'rgba(15,23,42,0.04)',
-    boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.04)',
+    background: 'rgba(230,235,242,0.55)',
+    boxShadow: 'inset 0 1px 2px rgba(15,23,42,0.04), inset 0 -1px 0 rgba(255,255,255,0.4)',
   };
 }
 
 function colDepthTd(i: number): React.CSSProperties {
   if (i % 2 === 0) return {
-    background: 'rgba(255,255,255,0.22)',
-    boxShadow: 'inset 1px 0 0 rgba(255,255,255,0.35), inset -1px 0 0 rgba(255,255,255,0.35)',
+    background: 'rgba(255,255,255,0.30)',
+    boxShadow: 'inset 1px 0 0 rgba(255,255,255,0.45), inset -1px 0 0 rgba(255,255,255,0.45)',
   };
   return {
-    background: 'rgba(15,23,42,0.02)',
-    boxShadow: 'inset 1px 0 0 rgba(0,0,0,0.02), inset -1px 0 0 rgba(0,0,0,0.02)',
+    background: 'rgba(235,238,244,0.25)',
+    boxShadow: 'inset 1px 0 0 rgba(15,23,42,0.02), inset -1px 0 0 rgba(15,23,42,0.02)',
   };
 }
 
@@ -400,8 +414,8 @@ export default function UTMTracking() {
     ? { ...S.select, width: '100%' }
     : S.select;
 
-  const rowHoverBg = 'rgba(59,130,246,0.06)';
-  const rowStripeBg = 'rgba(255,255,255,0.3)';
+  const rowHoverBg = 'rgba(255,255,255,0.50)';
+  const rowStripeBg = 'rgba(255,255,255,0.20)';
 
   const highlightTh: React.CSSProperties = { background: 'rgba(59,130,246,0.10)', color: '#1e40af', borderBottom: '1px solid rgba(59,130,246,0.20)', boxShadow: 'inset 0 -2px 0 rgba(59,130,246,0.15)' };
   const highlightTd: React.CSSProperties = { background: 'rgba(59,130,246,0.04)', borderRight: '1px solid rgba(59,130,246,0.08)', borderLeft: '1px solid rgba(59,130,246,0.08)' };
@@ -462,8 +476,13 @@ export default function UTMTracking() {
           pointerEvents: 'none',
           zIndex: 0,
         }} />
-      <div style={S.card}>
+      <div
+        style={S.card}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '16px 16px 40px rgba(15,23,42,0.10), -10px -10px 30px rgba(255,255,255,0.95), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(255,255,255,0.2)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '12px 12px 30px rgba(15,23,42,0.08), -8px -8px 24px rgba(255,255,255,0.90), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(255,255,255,0.15)'; }}
+      >
         <div style={S.cardReflection} />
+        <div style={S.cardSheen} />
         <div style={S.tableWrap}>
           {activeView === 'utm-campanhas' && (
             <table style={S.table}>

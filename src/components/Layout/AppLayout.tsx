@@ -1,11 +1,9 @@
-import { useIsMobile } from '../../hooks/useMediaQuery';
 import TopNav from './TopNav';
 import CommandBar from './CommandBar';
 import EverestBg from './EverestBg';
 import { ToastContainer } from '../ui/Toast';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const isMobile = useIsMobile();
 
   return (
     <div
@@ -21,19 +19,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <TopNav />
       <ToastContainer />
 
-      <main
+      <div
         style={{
           position: 'relative',
           zIndex: 10,
-          paddingTop: 80,
-          paddingBottom: 100,
-          paddingLeft: isMobile ? 12 : 24,
-          paddingRight: isMobile ? 12 : 24,
+          display: 'flex',
+          paddingTop: 64,
           minHeight: '100vh',
         }}
       >
+        {/* Sidebar rendered by App.tsx via children */}
         {children}
-      </main>
+      </div>
 
       <CommandBar />
     </div>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
@@ -17,25 +17,62 @@ export default function SubNav({ items }: SubNavProps) {
   const setCurrentModule = useStore((s) => s.setCurrentModule);
   const isMobile = useIsMobile();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
+  if (isMobile) {
+    // Mobile: horizontal scrollable pills at top
+    return (
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          padding: '12px 12px 8px',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          scrollbarWidth: 'none',
+          borderBottom: '1px solid rgba(15,23,42,0.06)',
+        }}
+      >
+        {items.map((item) => {
+          const isActive = currentModule === item.id;
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setCurrentModule(item.id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '8px 14px', borderRadius: 10, border: 'none',
+                background: isActive ? 'rgba(15,23,42,0.06)' : 'transparent',
+                color: isActive ? '#0f172a' : '#64748b',
+                fontSize: 13, fontWeight: isActive ? 600 : 500,
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+              }}
+            >
+              <Icon size={14} />
+              {item.label}
+            </button>
+          );
+        })}
+        <style>{`div::-webkit-scrollbar { display: none; }`}</style>
+      </div>
+    );
+  }
+
+  // Desktop: vertical sidebar
   return (
-    <div
-      ref={scrollRef}
+    <nav
       style={{
+        width: 220,
+        flexShrink: 0,
         display: 'flex',
-        alignItems: 'center',
-        gap: 4,
-        padding: 4,
-        background: 'rgba(15,23,42,0.03)',
-        borderRadius: 16,
-        borderBottom: '1px solid rgba(15,23,42,0.06)',
-        overflowX: 'auto',
-        overflowY: 'hidden',
-        flexWrap: 'nowrap',
-        WebkitOverflowScrolling: 'touch',
-        scrollbarWidth: 'none',
-        msOverflowStyle: 'none',
+        flexDirection: 'column',
+        gap: 2,
+        padding: '20px 12px',
+        borderRight: '1px solid rgba(15,23,42,0.06)',
+        background: 'rgba(255,255,255,0.3)',
+        backdropFilter: 'blur(20px)',
+        minHeight: 'calc(100vh - 64px)',
       }}
     >
       {items.map((item) => {
@@ -52,36 +89,31 @@ export default function SubNav({ items }: SubNavProps) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 6,
-              padding: isMobile ? '6px 12px' : '7px 16px',
+              gap: 10,
+              padding: '10px 14px',
               borderRadius: 12,
-              border: isActive ? '1px solid rgba(15,23,42,0.12)' : '1px solid transparent',
+              border: 'none',
               background: isActive
                 ? 'rgba(15,23,42,0.06)'
                 : isHovered
-                  ? 'rgba(15,23,42,0.04)'
+                  ? 'rgba(15,23,42,0.03)'
                   : 'transparent',
-              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,.05)' : 'none',
-              color: isActive ? '#0f172a' : '#475569',
+              borderLeft: isActive ? '3px solid #6366f1' : '3px solid transparent',
+              color: isActive ? '#0f172a' : '#64748b',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontSize: 13.5,
               fontWeight: isActive ? 600 : 500,
               cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
-              transition: 'all 0.2s cubic-bezier(0.4,0,0.2,1)',
+              transition: 'all 0.15s ease',
+              textAlign: 'left',
+              width: '100%',
             }}
           >
-            <Icon size={15} />
+            <Icon size={16} />
             {item.label}
           </button>
         );
       })}
-
-      {/* Hide scrollbar via inline style tag */}
-      <style>{`
-        div::-webkit-scrollbar { display: none; }
-      `}</style>
-    </div>
+    </nav>
   );
 }

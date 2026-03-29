@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useStore } from './store/useStore';
+import { useIsMobile } from './hooks/useMediaQuery';
 import AppLayout from './components/Layout/AppLayout';
 import SubNav from './components/Layout/SubNav';
 import { DashboardSkeleton } from './components/LoadingSkeleton';
@@ -143,6 +144,7 @@ function ModuleRouter() {
 }
 
 export default function App() {
+  const isMobile = useIsMobile();
   const setCampaigns = useStore((s) => s.setCampaigns);
   const setAdSets = useStore((s) => s.setAdSets);
   const setAds = useStore((s) => s.setAds);
@@ -278,9 +280,9 @@ export default function App() {
   return (
     <AppLayout>
       <SubNav items={subNavItems} />
-      <div style={{ marginTop: 16 }}>
+      <main style={{ flex: 1, padding: isMobile ? 12 : 24, paddingBottom: 100, overflow: 'auto' }}>
         <ModuleRouter />
-      </div>
+      </main>
     </AppLayout>
   );
 }
