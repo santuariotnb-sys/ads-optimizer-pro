@@ -10,8 +10,6 @@ import Overview from './components/Overview/Overview';
 import Campaigns from './components/Campaigns/Campaigns';
 import Creatives from './components/Creatives/Creatives';
 import SignalEngine from './components/SignalEngine/SignalEngine';
-import SignalAudit from './components/SignalAudit/SignalAudit';
-import SignalGateway from './components/SignalGateway/SignalGateway';
 import Audiences from './components/Audiences/Audiences';
 import Alerts from './components/Alerts/Alerts';
 import Agent from './components/Agent/Agent';
@@ -31,37 +29,31 @@ import {
 } from './data/mockData';
 
 import {
-  LayoutDashboard, Megaphone, Radio, TrendingUp, DollarSign, Settings as SettingsIcon,
-  BarChart3, Link2, ShoppingCart, Zap, Globe,
-  Sparkles, Image, GitCompare, Upload,
-  Satellite, ShieldCheck,
+  LayoutDashboard, Megaphone, Radio, DollarSign, Settings as SettingsIcon,
+  BarChart3, Link2, ShoppingCart,
+  Sparkles, Layers,
 } from 'lucide-react';
 
 // Sub-nav definitions for each main tab
 const optimizerNav = [
-  { id: 'opt-overview', label: 'Overview', icon: LayoutDashboard },
+  { id: 'opt-overview', label: 'Visão Geral', icon: LayoutDashboard },
   { id: 'opt-campaigns', label: 'Campanhas', icon: Megaphone },
-  { id: 'opt-signal', label: 'Signal', icon: Radio },
-  { id: 'opt-gateway', label: 'Gateway', icon: Satellite },
-  { id: 'opt-audit', label: 'Audit', icon: ShieldCheck },
-  { id: 'opt-scale', label: 'Escala', icon: TrendingUp },
+  { id: 'opt-signal', label: 'Rastreamento', icon: Radio },
   { id: 'opt-financial', label: 'Financeiro', icon: DollarSign },
-  { id: 'opt-settings', label: 'Config', icon: SettingsIcon },
+  { id: 'opt-settings', label: 'Configurações', icon: SettingsIcon },
 ];
 
 const utmNav = [
-  { id: 'utm-dashboard', label: 'Dashboard', icon: BarChart3 },
-  { id: 'utm-sources', label: 'Fontes', icon: Link2 },
-  { id: 'utm-sales', label: 'Vendas', icon: ShoppingCart },
-  { id: 'utm-links', label: 'Links', icon: Zap },
-  { id: 'utm-webhooks', label: 'Webhooks', icon: Globe },
+  { id: 'utm-campanhas', label: 'Campanhas', icon: Megaphone },
+  { id: 'utm-utms', label: 'UTMs', icon: Link2 },
+  { id: 'utm-vendas', label: 'Vendas', icon: ShoppingCart },
+  { id: 'utm-despesas', label: 'Despesas', icon: DollarSign },
+  { id: 'utm-relatorios', label: 'Relatórios', icon: BarChart3 },
 ];
 
 const creativeNav = [
-  { id: 'cre-dashboard', label: 'Dashboard', icon: Sparkles },
-  { id: 'cre-analysis', label: 'Criativos', icon: Image },
-  { id: 'cre-compare', label: 'Comparar', icon: GitCompare },
-  { id: 'cre-upload', label: 'Upload', icon: Upload },
+  { id: 'cre-dashboard', label: 'Criativos', icon: Sparkles },
+  { id: 'cre-entity', label: 'Agrupamentos', icon: Layers },
 ];
 
 function getActiveTab(module: string): 'opt' | 'utm' | 'cre' {
@@ -95,20 +87,11 @@ function ModuleRouter() {
       return <Campaigns />;
     case 'opt-signal':
     case 'signal':
-      return <SignalEngine />;
     case 'opt-gateway':
     case 'gateway':
-      return <SignalGateway />;
     case 'opt-audit':
     case 'signalaudit':
-      return <SignalAudit />;
-    case 'opt-scale':
-      return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <AutoScale />
-          <Audiences />
-        </div>
-      );
+      return <SignalEngine />;
     case 'opt-financial':
     case 'financial':
       return <Financial />;
@@ -117,24 +100,28 @@ function ModuleRouter() {
       return <Settings />;
 
     // UTM tab
+    case 'utm-campanhas':
+    case 'utm-utms':
+    case 'utm-vendas':
+    case 'utm-relatorios':
     case 'utm-dashboard':
     case 'utm-sources':
     case 'utm-links':
+    case 'utm-sales':
+    case 'utm-webhooks':
     case 'utm':
       return <UTMTracking />;
-    case 'utm-sales':
-      return <UTMTracking />;
-    case 'utm-webhooks':
-      return <UTMTracking />;
+    case 'utm-despesas':
+      return <Financial />;
 
     // Creative tab
     case 'cre-dashboard':
     case 'cre-analysis':
+    case 'cre-compare':
+    case 'cre-upload':
     case 'creatives':
       return <Creatives />;
-    case 'cre-compare':
-      return <Creatives />;
-    case 'cre-upload':
+    case 'cre-entity':
       return <Creatives />;
 
     // Legacy fallbacks

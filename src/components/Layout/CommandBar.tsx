@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
-import { LayoutDashboard, Target, Radio, Link, Palette } from 'lucide-react';
+import { LayoutDashboard, Target, Link, Palette } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface QuickAction {
@@ -12,11 +12,10 @@ interface QuickAction {
 }
 
 const actions: QuickAction[] = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard, module: 'opt-overview' },
-  { id: 'campanhas', label: 'Campanhas', icon: Target, module: 'opt-campaigns' },
-  { id: 'signal', label: 'Signal', icon: Radio, module: 'opt-signal' },
-  { id: 'utm', label: 'UTM', icon: Link, module: 'utm-dashboard' },
-  { id: 'criativos', label: 'Criativos', icon: Palette, module: 'cre-dashboard' },
+  { id: 'opt-overview', label: 'Visão Geral', icon: LayoutDashboard, module: 'opt-overview' },
+  { id: 'utm-campanhas', label: 'Campanhas', icon: Target, module: 'utm-campanhas' },
+  { id: 'utm-utms', label: 'UTMs', icon: Link, module: 'utm-utms' },
+  { id: 'cre-dashboard', label: 'Criativos', icon: Palette, module: 'cre-dashboard' },
 ];
 
 function LiveClock() {

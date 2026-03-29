@@ -14,9 +14,9 @@ interface TabDef {
 }
 
 const tabs: TabDef[] = [
-  { id: 'opt', label: 'OPTIMIZER', icon: LayoutDashboard, defaultModule: 'opt-overview' },
+  { id: 'opt', label: 'PAINEL', icon: LayoutDashboard, defaultModule: 'opt-overview' },
   { id: 'utm', label: 'UTM STUDIO', icon: Link, defaultModule: 'utm-dashboard' },
-  { id: 'cre', label: 'CREATIVE', icon: Sparkles, defaultModule: 'cre-dashboard' },
+  { id: 'cre', label: 'CRIATIVOS', icon: Sparkles, defaultModule: 'cre-dashboard' },
 ];
 
 function getActiveTab(currentModule: string): TabId {

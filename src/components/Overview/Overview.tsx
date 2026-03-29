@@ -287,7 +287,7 @@ function AccountGauge({ score }: { score: number }) {
           {animatedScore}%
         </text>
         <text x={90} y={100} textAnchor="middle" fontSize={10} fill="#64748b" fontFamily="Outfit">
-          Account Score
+          Pontuação
         </text>
       </svg>
     </div>
@@ -345,8 +345,8 @@ export default function Overview() {
   const actions = [
     { label: 'Criar Campanha', icon: <Plus size={14} />, module: 'create', num: 1 },
     { label: 'Gerar Relatório', icon: <FileText size={14} />, module: 'opt-financial', num: 2 },
-    { label: 'Signal Audit', icon: <Shield size={14} />, module: 'opt-audit', num: 3 },
-    { label: 'Escalar Winners', icon: <Zap size={14} />, module: 'opt-scale', num: 4 },
+    { label: 'Auditoria de Sinal', icon: <Shield size={14} />, module: 'opt-audit', num: 3 },
+    { label: 'Escalar Vencedoras', icon: <Zap size={14} />, module: 'opt-scale', num: 4 },
   ];
 
   const navigate = useCallback((mod: string) => setCurrentModule(mod), [setCurrentModule]);
@@ -405,7 +405,7 @@ export default function Overview() {
         <AlpineCard delay={240} padding={24}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div>
-              <p style={labelStyle}>Signal Quality</p>
+              <p style={labelStyle}>Qualidade do Sinal</p>
               <p style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', margin: '4px 0 0' }}>Ads.Everest</p>
             </div>
             <span
@@ -422,7 +422,7 @@ export default function Overview() {
               }}
             >
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80', animation: 'pulse 2s infinite' }} />
-              Live
+              Ao Vivo
             </span>
           </div>
 
@@ -447,11 +447,11 @@ export default function Overview() {
                 minWidth: 140,
               }}
             >
-              <p style={{ ...labelStyle, marginBottom: 12 }}>Core Metrics</p>
+              <p style={{ ...labelStyle, marginBottom: 12 }}>Métricas Principais</p>
               {[
-                { label: 'EMQ Score', value: emq.toFixed(1) },
-                { label: 'Match Rate', value: '89%' },
-                { label: 'Recovery', value: '+34%' },
+                { label: 'Score EMQ', value: emq.toFixed(1) },
+                { label: 'Taxa de Match', value: '89%' },
+                { label: 'Recuperação', value: '+34%' },
               ].map((m) => (
                 <div key={m.label} style={{ marginBottom: 10 }}>
                   <p style={{ fontSize: 10, color: '#94a3b8', margin: 0 }}>{m.label}</p>
@@ -470,10 +470,10 @@ export default function Overview() {
           <AccountGauge score={accountScore} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 16 }}>
             {[
-              { label: 'CPA Trend', value: '-12%', color: '#4ade80' },
+              { label: 'Tendência CPA', value: '-12%', color: '#4ade80' },
               { label: 'CTR Médio', value: '2.1%', color: '#60a5fa' },
-              { label: 'Account Health', value: 'Bom', color: '#facc15' },
-              { label: 'Learning Phase', value: '2/6', color: '#94a3b8' },
+              { label: 'Saúde da Conta', value: 'Bom', color: '#facc15' },
+              { label: 'Fase de Aprendizado', value: '2/6', color: '#94a3b8' },
             ].map((s) => (
               <div
                 key={s.label}
@@ -509,7 +509,7 @@ export default function Overview() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
             <div>
               <p style={labelStyle}>Campanhas</p>
-              <p style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', margin: '2px 0 0' }}>Top Performers</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', margin: '2px 0 0' }}>Melhores Campanhas</p>
             </div>
             <button
               onClick={() => navigate('opt-campaigns')}

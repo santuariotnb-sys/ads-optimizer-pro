@@ -358,7 +358,7 @@ const Campaigns: React.FC = () => {
                   ].map((btn) => (
                     <button
                       key={btn.label}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => { e.stopPropagation(); alert(`${btn.label}: disponível no modo Live. Conecte sua conta Meta nas Configurações.`); }}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
