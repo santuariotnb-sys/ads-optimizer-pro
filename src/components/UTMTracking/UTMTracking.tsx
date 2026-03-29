@@ -608,33 +608,64 @@ export default function UTMTracking() {
             </table>
           )}
 
-          {/* Mobile: Cards */}
+          {/* Mobile: Tag bolha + carrossel de métricas */}
           {activeView === 'utm-campanhas' && isMobile && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 4 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, padding: 4 }}>
               {CAMPANHAS_DATA.map((r, idx) => (
                 <div key={idx} style={{
-                  background: 'rgba(255,255,255,0.6)', borderRadius: 14, padding: 14,
+                  borderRadius: 16, overflow: 'hidden',
                   border: '1px solid rgba(15,23,42,0.06)',
+                  background: 'rgba(255,255,255,0.5)',
                 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', flex: 1, marginRight: 8 }}>{r.campanha}</span>
+                  {/* Bolha: nome da campanha + status */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    padding: '12px 14px', gap: 8,
+                    background: 'rgba(255,255,255,0.7)',
+                    backdropFilter: 'blur(12px)',
+                    borderBottom: '1px solid rgba(15,23,42,0.05)',
+                    position: 'sticky', top: 0, zIndex: 2,
+                  }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+                      {r.campanha}
+                    </span>
                     <span style={statusBadge(r.status)}>{STATUS_LABEL[r.status]}</span>
                   </div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+
+                  {/* Carrossel de métricas arrastável */}
+                  <div style={{
+                    display: 'flex', gap: 0, overflowX: 'auto',
+                    WebkitOverflowScrolling: 'touch',
+                    scrollSnapType: 'x mandatory',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                  }}>
                     {[
                       { l: 'ROAS', v: `${r.roas.toFixed(2)}x`, c: roasColor(r.roas) },
                       { l: 'CPA', v: formatCurrency(r.cpa), c: '#0f172a' },
-                      { l: 'Vendas', v: String(r.vendas), c: '#0f172a' },
+                      { l: 'Vendas', v: String(r.vendas), c: '#16a34a' },
                       { l: 'Gastos', v: formatCurrency(r.gastos), c: '#0f172a' },
                       { l: 'Faturamento', v: formatCurrency(r.faturamento), c: '#0f172a' },
                       { l: 'Lucro', v: formatCurrency(r.lucro), c: lucroColor(r.lucro) },
+                      { l: 'Margem', v: `${r.margem.toFixed(1)}%`, c: '#0f172a' },
+                      { l: 'ROI', v: `${r.roi}%`, c: '#0f172a' },
+                      { l: 'CTR', v: `${r.ctr.toFixed(1)}%`, c: '#0f172a' },
+                      { l: 'CPM', v: formatCurrency(r.cpm), c: '#0f172a' },
+                      { l: 'Impressões', v: formatNumber(r.impressoes), c: '#64748b' },
+                      { l: 'Cliques', v: formatNumber(r.cliques), c: '#64748b' },
                     ].map(m => (
-                      <div key={m.l} style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{m.l}</div>
-                        <div style={{ fontSize: 13, fontWeight: 700, color: m.c, fontFamily: "'JetBrains Mono', monospace", marginTop: 2 }}>{m.v}</div>
+                      <div key={m.l} style={{
+                        minWidth: 90, flexShrink: 0, textAlign: 'center',
+                        padding: '12px 8px',
+                        borderRight: '1px solid rgba(15,23,42,0.04)',
+                        scrollSnapAlign: 'start',
+                      }}>
+                        <div style={{ fontSize: 9, color: '#94a3b8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{m.l}</div>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: m.c, fontFamily: "'JetBrains Mono', monospace" }}>{m.v}</div>
                       </div>
                     ))}
                   </div>
+                  <style>{`div::-webkit-scrollbar { display: none; }`}</style>
                 </div>
               ))}
             </div>

@@ -49,6 +49,7 @@ export default function CreativeVision() {
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     sessionStorage.setItem(SESSION_KEY_KEY, apiKey);
@@ -64,6 +65,7 @@ export default function CreativeVision() {
     setResult(null);
     setFrames([]);
     setError(null);
+    setVideoError(false);
     setPreview(URL.createObjectURL(f));
     if (f.type.startsWith('video/')) setCreativeType('video');
     else setCreativeType('image');
@@ -207,13 +209,26 @@ export default function CreativeVision() {
         >
           {preview ? (
             creativeType === 'video' ? (
-              <video
-                ref={videoRef}
-                src={preview}
-                controls
-                preload="auto"
-                style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }}
-              />
+              videoError ? (
+                <div style={{ padding: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                  <Film size={32} style={{ color: '#94a3b8' }} />
+                  <p style={{ fontSize: 14, fontWeight: 500, color: '#64748b', margin: 0 }}>
+                    Preview indisponível para este formato
+                  </p>
+                  <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>
+                    A análise será feita via extração de frames
+                  </p>
+                </div>
+              ) : (
+                <video
+                  ref={videoRef}
+                  src={preview}
+                  controls
+                  preload="auto"
+                  onError={() => setVideoError(true)}
+                  style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }}
+                />
+              )
             ) : (
               <img src={preview} alt="Preview" style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }} />
             )
