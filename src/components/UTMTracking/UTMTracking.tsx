@@ -217,7 +217,8 @@ const S = {
     borderRadius: 22,
     overflow: 'hidden' as const,
     boxShadow: '12px 12px 30px rgba(15,23,42,0.08), -8px -8px 24px rgba(255,255,255,0.90), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(255,255,255,0.15)',
-    transition: 'transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s cubic-bezier(.4,0,.2,1)',
+    transformStyle: 'preserve-3d' as const,
+    transition: 'transform 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.5s cubic-bezier(.4,0,.2,1)',
   },
   // Reflexo interno — camada superior de brilho tipo vidro real
   cardReflection: {
@@ -478,8 +479,8 @@ export default function UTMTracking() {
         }} />
       <div
         style={S.card}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '16px 16px 40px rgba(15,23,42,0.10), -10px -10px 30px rgba(255,255,255,0.95), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(255,255,255,0.2)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '12px 12px 30px rgba(15,23,42,0.08), -8px -8px 24px rgba(255,255,255,0.90), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(255,255,255,0.15)'; }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'perspective(800px) rotateX(2deg) rotateY(-3deg) translateY(-4px)'; e.currentTarget.style.boxShadow = '18px 18px 44px rgba(15,23,42,0.12), -10px -10px 30px rgba(255,255,255,0.95), inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(255,255,255,0.2)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)'; e.currentTarget.style.boxShadow = '12px 12px 30px rgba(15,23,42,0.08), -8px -8px 24px rgba(255,255,255,0.90), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(255,255,255,0.15)'; }}
       >
         <div style={S.cardReflection} />
         <div style={S.cardSheen} />

@@ -63,17 +63,17 @@ export default function TopNav() {
             src="/logo-everest.png"
             alt="Ads.Everest"
             style={{
-              width: 48,
-              height: 48,
-              borderRadius: 14,
+              width: 67,
+              height: 67,
+              borderRadius: 18,
               objectFit: 'cover',
-              filter: 'drop-shadow(0 6px 18px rgba(15,23,42,0.2))',
+              filter: 'drop-shadow(0 8px 22px rgba(15,23,42,0.22))',
               animation: 'logoFloat 4s ease-in-out infinite',
             }}
           />
           <style>{`@keyframes logoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }`}</style>
           {!isMobile && (
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em' }}>
+            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>
               <span style={{ color: '#0f172a' }}>Ads</span>
               <span style={{ color: '#b8854c' }}>.Everest</span>
             </span>
