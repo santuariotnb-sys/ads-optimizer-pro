@@ -5,13 +5,15 @@ import { useState } from 'react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+  border: '1px solid rgba(255,255,255,.55)',
   borderRadius: 20,
   padding: 24,
   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
   cursor: 'default',
-  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 function SaturationGauge({ percent }: { percent: number }) {
@@ -23,7 +25,7 @@ function SaturationGauge({ percent }: { percent: number }) {
 
   return (
     <svg width={72} height={72} style={{ display: 'block' }}>
-      <circle cx={36} cy={36} r={radius} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={stroke} />
+      <circle cx={36} cy={36} r={radius} fill="none" stroke="rgba(15,23,42,0.1)" strokeWidth={stroke} />
       <circle
         cx={36} cy={36} r={radius} fill="none" stroke={color} strokeWidth={stroke}
         strokeDasharray={circumference} strokeDashoffset={offset}
@@ -63,7 +65,7 @@ function OverlapBar({ percent }: { percent: number }) {
   const color = percent > 30 ? '#f87171' : percent > 15 ? '#6366f1' : '#4ade80';
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <div style={{ flex: 1, height: 6, borderRadius: 3, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
+      <div style={{ flex: 1, height: 6, borderRadius: 3, background: 'rgba(15,23,42,0.08)', overflow: 'hidden' }}>
         <div style={{
           width: `${percent}%`, height: '100%', borderRadius: 3, background: color,
           transition: 'width 0.4s ease', boxShadow: `0 0 8px ${color}60`,
@@ -104,10 +106,10 @@ export default function Audiences() {
             <Users size={20} color="#fff" />
           </div>
           <div>
-            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
               Audiencias
             </h2>
-            <span style={{ fontSize: 13, color: '#a3a3a3' }}>
+            <span style={{ fontSize: 13, color: '#64748b' }}>
               {mockAudiences.length} audiencias ativas
             </span>
           </div>
@@ -134,7 +136,7 @@ export default function Audiences() {
               Overlap Alto Detectado
             </div>
             {overlappingPairs.map((pair, i) => (
-              <div key={i} style={{ fontSize: 12, color: '#f5f5f5', opacity: 0.8 }}>
+              <div key={i} style={{ fontSize: 12, color: '#0f172a', opacity: 0.8 }}>
                 <strong>{pair.a}</strong> e <strong>{pair.b}</strong> com ~{pair.percent}% de overlap.
                 Considere consolidar para evitar competicao no leilao.
               </div>
@@ -156,8 +158,8 @@ export default function Audiences() {
             style={{
               ...glassCard,
               padding: isMobile ? 16 : 24,
-              borderColor: hoveredCard === aud.id ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.06)',
-              boxShadow: hoveredCard === aud.id ? '0 0 30px rgba(99,102,241,0.08), 0 8px 32px rgba(0,0,0,0.3)' : '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+              borderColor: hoveredCard === aud.id ? 'rgba(15,23,42,0.12)' : 'rgba(255,255,255,.55)',
+              boxShadow: hoveredCard === aud.id ? '0 0 30px rgba(99,102,241,0.08), 0 8px 32px rgba(15,23,42,0.1)' : '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
               transform: hoveredCard === aud.id ? 'translateY(-2px)' : 'translateY(0)',
             }}
             onMouseEnter={() => setHoveredCard(aud.id)}
@@ -166,10 +168,10 @@ export default function Audiences() {
             {/* Card Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#f5f5f5', marginBottom: 4, fontFamily: "'Outfit', sans-serif" }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#0f172a', marginBottom: 4, fontFamily: "'Outfit', sans-serif" }}>
                   {aud.name}
                 </div>
-                <div style={{ fontSize: 12, color: '#a3a3a3' }}>
+                <div style={{ fontSize: 12, color: '#64748b' }}>
                   {formatNumber(aud.size)} pessoas
                 </div>
               </div>
@@ -182,19 +184,19 @@ export default function Audiences() {
               gap: 12, marginBottom: 16,
             }}>
               <div>
-                <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>CPA</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
+                <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>CPA</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
                   {formatCurrency(aud.cpa)}
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>ROAS</div>
-                <div style={{ fontSize: 16, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
+                <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>ROAS</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
                   {aud.roas.toFixed(1)}x
                 </div>
               </div>
               <div>
-                <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Freq.</div>
+                <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Freq.</div>
                 <div style={{
                   fontSize: 16, fontWeight: 700, fontFamily: "'Outfit', sans-serif",
                   color: aud.frequency > 2.5 ? '#f87171' : '#f5f5f5',
@@ -206,7 +208,7 @@ export default function Audiences() {
 
             {/* Overlap */}
             <div style={{ marginBottom: 12 }}>
-              <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+              <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
                 Overlap
               </div>
               <OverlapBar percent={aud.overlap_percent} />
@@ -216,7 +218,7 @@ export default function Audiences() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
               <SaturationGauge percent={aud.saturation_percent} />
               <div>
-                <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
+                <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
                   Saturacao
                 </div>
                 <div style={{ fontSize: 12, color: '#94a3b8' }}>
@@ -232,7 +234,7 @@ export default function Audiences() {
         ))}
         {mockAudiences.length === 0 && (
           <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhuma audiencia encontrada</div>
+            <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma audiencia encontrada</div>
           </div>
         )}
       </div>

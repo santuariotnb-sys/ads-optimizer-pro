@@ -140,7 +140,7 @@ Implemente DeepEngagement (scroll 75% + 2min na LP) e HighIntentVisitor (3 visit
 
 function parseMarkdown(text: string): string {
   return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#f5f5f5;font-weight:600">$1</strong>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#0f172a;font-weight:600">$1</strong>')
     .replace(/\n/g, '<br/>');
 }
 
@@ -149,16 +149,19 @@ const containerStyle: React.CSSProperties = {
   flexDirection: 'column',
   height: '100%',
   maxHeight: 'calc(100vh - 120px)',
-  background: 'rgba(10,10,10,0.6)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
   borderRadius: 20,
-  border: '1px solid rgba(99,102,241,0.15)',
+  border: '1px solid rgba(255,255,255,.55)',
   overflow: 'hidden',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), 0 10px 30px -18px rgba(255,255,255,.82), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 const headerStyle: React.CSSProperties = {
   padding: '20px 24px 16px',
-  borderBottom: '1px solid rgba(255,255,255,0.06)',
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
+  borderBottom: '1px solid rgba(15,23,42,0.08)',
+  background: 'rgba(255,255,255,.2)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
 };
@@ -175,8 +178,8 @@ const messagesContainerStyle: React.CSSProperties = {
 
 const inputContainerStyle: React.CSSProperties = {
   padding: '16px 24px 20px',
-  borderTop: '1px solid rgba(255,255,255,0.06)',
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
+  borderTop: '1px solid rgba(15,23,42,0.08)',
+  background: 'rgba(255,255,255,.2)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
 };
@@ -185,8 +188,8 @@ const inputWrapperStyle: React.CSSProperties = {
   display: 'flex',
   gap: 12,
   alignItems: 'center',
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'rgba(15,23,42,0.03)',
+  border: '1px solid rgba(15,23,42,0.1)',
   borderRadius: 12,
   padding: '10px 12px 10px 16px',
   backdropFilter: 'blur(12px)',
@@ -199,7 +202,7 @@ const inputStyle: React.CSSProperties = {
   background: 'transparent',
   border: 'none',
   outline: 'none',
-  color: '#f5f5f5',
+  color: '#0f172a',
   fontSize: 14,
   fontFamily: 'inherit',
   resize: 'none',
@@ -263,9 +266,9 @@ const assistantMessageStyle: React.CSSProperties = {
 const assistantBubbleStyle: React.CSSProperties = {
   padding: '14px 18px',
   borderRadius: '16px 16px 16px 4px',
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255,255,255,0.06)',
-  color: '#cbd5e1',
+  background: 'rgba(255,255,255,.34)',
+  border: '1px solid rgba(255,255,255,.55)',
+  color: '#334155',
   fontSize: 14,
   lineHeight: 1.7,
   backdropFilter: 'blur(12px)',
@@ -289,8 +292,8 @@ const typingDotsContainerStyle: React.CSSProperties = {
   gap: 4,
   padding: '14px 18px',
   borderRadius: '16px 16px 16px 4px',
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255,255,255,0.06)',
+  background: 'rgba(255,255,255,.34)',
+  border: '1px solid rgba(255,255,255,.55)',
 };
 
 const typingKeyframes = `
@@ -403,13 +406,13 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
                 margin: 0,
                 fontSize: 16,
                 fontWeight: 600,
-                color: '#f5f5f5',
+                color: '#0f172a',
                 letterSpacing: '-0.01em',
               }}
             >
               Consultor de Ads IA
             </h2>
-            <p style={{ margin: 0, fontSize: 12, color: '#a3a3a3' }}>
+            <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>
               Análise inteligente das suas campanhas Meta Ads
             </p>
           </div>
@@ -530,7 +533,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
             ...inputWrapperStyle,
             borderColor: inputFocused
               ? 'rgba(99,102,241,0.4)'
-              : 'rgba(255,255,255,0.08)',
+              : 'rgba(15,23,42,0.1)',
             boxShadow: inputFocused ? '0 0 0 3px rgba(99,102,241,0.1)' : 'none',
           }}
         >

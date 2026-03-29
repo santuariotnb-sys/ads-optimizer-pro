@@ -89,9 +89,12 @@ const animationKeyframes = `
 
 const containerStyle: React.CSSProperties = {
   padding: '32px 24px',
-  background: 'rgba(10,10,10,0.6)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
   borderRadius: 20,
-  border: '1px solid rgba(99,102,241,0.15)',
+  border: '1px solid rgba(255,255,255,.55)',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), 0 10px 30px -18px rgba(255,255,255,.82), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 const titleSectionStyle: React.CSSProperties = {
@@ -111,8 +114,10 @@ function getCardStyle(color: string, isHovered: boolean, isExpanded: boolean): R
     flex: 1,
     padding: '28px 24px',
     borderRadius: 20,
-    background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-    border: `1px solid ${isHovered || isExpanded ? color + '55' : 'rgba(255,255,255,0.06)'}`,
+    background: 'rgba(255,255,255,.34)',
+    backdropFilter: 'blur(28px) saturate(1.6)',
+    WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+    border: `1px solid ${isHovered || isExpanded ? color + '55' : 'rgba(255,255,255,.55)'}`,
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     position: 'relative',
@@ -120,7 +125,7 @@ function getCardStyle(color: string, isHovered: boolean, isExpanded: boolean): R
     transform: isHovered ? 'translateY(-4px)' : 'none',
     boxShadow: isHovered || isExpanded
       ? `0 8px 32px ${color}22, 0 0 60px ${color}11, inset 0 1px 0 ${color}15`
-      : '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+      : '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
   };
 }
 
@@ -189,8 +194,8 @@ function getFlowDotStyle(delay: number, color: string): React.CSSProperties {
 const metricBoxStyle: React.CSSProperties = {
   padding: '8px 12px',
   borderRadius: 8,
-  background: 'rgba(255,255,255,0.03)',
-  border: '1px solid rgba(255,255,255,0.05)',
+  background: 'rgba(15,23,42,0.03)',
+  border: '1px solid rgba(15,23,42,0.08)',
   textAlign: 'center',
 };
 
@@ -224,13 +229,13 @@ export default function Pipeline() {
             margin: 0,
             fontSize: 22,
             fontWeight: 700,
-            color: '#f5f5f5',
+            color: '#0f172a',
             letterSpacing: '-0.02em',
           }}
         >
           Pipeline de Entrega de Anúncios
         </h2>
-        <p style={{ margin: '8px 0 0', fontSize: 14, color: '#a3a3a3' }}>
+        <p style={{ margin: '8px 0 0', fontSize: 14, color: '#64748b' }}>
           Como o Meta processa seus anúncios: do Andromeda ao Leilão
         </p>
       </div>
@@ -303,7 +308,7 @@ export default function Pipeline() {
                     margin: 0,
                     fontSize: 18,
                     fontWeight: 700,
-                    color: '#f5f5f5',
+                    color: '#0f172a',
                     letterSpacing: '-0.01em',
                   }}
                 >
@@ -357,7 +362,7 @@ export default function Pipeline() {
                       >
                         {m.value}
                       </div>
-                      <div style={{ fontSize: 10, color: '#a3a3a3', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                         {m.label}
                       </div>
                     </div>
@@ -372,7 +377,7 @@ export default function Pipeline() {
                     justifyContent: 'center',
                     marginTop: 14,
                     gap: 6,
-                    color: '#a3a3a3',
+                    color: '#64748b',
                     fontSize: 12,
                   }}
                 >
@@ -439,7 +444,7 @@ export default function Pipeline() {
                 isMobile ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 40, position: 'relative', justifyContent: 'center' }}>
                     <div style={{ width: 2, height: '100%', background: 'linear-gradient(180deg, rgba(99,102,241,0.3), rgba(139,92,246,0.3))' }} />
-                    <ChevronDown size={20} color="rgba(99,102,241,0.5)" style={{ position: 'absolute', zIndex: 1 }} />
+                    <ChevronDown size={20} color="rgba(99,102,241,0.6)" style={{ position: 'absolute', zIndex: 1 }} />
                   </div>
                 ) : (
                   <div style={connectorStyle}>
@@ -455,7 +460,7 @@ export default function Pipeline() {
                     ))}
                     <ChevronRight
                       size={20}
-                      color="rgba(99,102,241,0.5)"
+                      color="rgba(99,102,241,0.6)"
                       style={{ position: 'relative', zIndex: 1 }}
                     />
                   </div>
@@ -484,7 +489,7 @@ export default function Pipeline() {
               alignItems: 'center',
               gap: 8,
               fontSize: 12,
-              color: '#a3a3a3',
+              color: '#64748b',
             }}
           >
             <div

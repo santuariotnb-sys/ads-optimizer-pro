@@ -59,7 +59,7 @@ function PillarCard({ pillar, isExpanded, onToggle }: { pillar: SignalAuditPilla
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ width: 8, height: 8, borderRadius: '50%', background: zone.color, boxShadow: `0 0 8px ${zone.color}40` }} />
-          <span style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0' }}>{pillar.name}</span>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#0f172a' }}>{pillar.name}</span>
         </div>
         {isExpanded ? <ChevronUp size={16} color="#64748b" /> : <ChevronDown size={16} color="#64748b" />}
       </div>

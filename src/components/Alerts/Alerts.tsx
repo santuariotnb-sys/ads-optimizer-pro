@@ -8,11 +8,13 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 type TabKey = 'all' | 'critical' | 'warning' | 'info' | 'success';
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+  border: '1px solid rgba(255,255,255,.55)',
   borderRadius: 20,
   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), 0 10px 30px -18px rgba(255,255,255,.82), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 const tabs: { key: TabKey; label: string }[] = [
@@ -69,10 +71,10 @@ export default function Alerts() {
           <Bell size={20} color="#fff" />
         </div>
         <div>
-          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
+          <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
             Central de Alertas
           </h2>
-          <span style={{ fontSize: 13, color: '#a3a3a3' }}>
+          <span style={{ fontSize: 13, color: '#64748b' }}>
             {counts.all} alertas pendentes
           </span>
         </div>
@@ -93,15 +95,15 @@ export default function Alerts() {
                 padding: '8px 16px', borderRadius: 12, border: 'none', cursor: 'pointer', outline: 'none',
                 fontSize: 13, fontWeight: 600, fontFamily: "'Outfit', sans-serif",
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
-                background: isActive ? `${severityColor}20` : 'rgba(255,255,255,0.04)',
-                color: isActive ? severityColor : '#a3a3a3',
+                background: isActive ? `${severityColor}20` : 'rgba(15,23,42,0.04)',
+                color: isActive ? severityColor : '#64748b',
                 transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
               {tab.label}
               {count > 0 && (
                 <span style={{
-                  background: severityColor, color: 'rgba(22, 22, 32, 0.85)',
+                  background: severityColor, color: '#fff',
                   fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 10,
                   minWidth: 18, textAlign: 'center',
                 }}>
@@ -141,7 +143,7 @@ export default function Alerts() {
               {/* Content */}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif" }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
                     {alert.title}
                   </span>
                   {alert.campaign_id && (
@@ -157,7 +159,7 @@ export default function Alerts() {
                 <p style={{ margin: '0 0 8px', fontSize: 13, color: '#94a3b8', lineHeight: 1.5 }}>
                   {alert.message}
                 </p>
-                <span style={{ fontSize: 11, color: '#a3a3a3' }}>
+                <span style={{ fontSize: 11, color: '#64748b' }}>
                   {formatDate(alert.timestamp)}
                 </span>
               </div>
@@ -168,14 +170,14 @@ export default function Alerts() {
                   onClick={() => handleDismiss(alert.id)}
                   aria-label="Dispensar alerta"
                   style={{
-                    background: 'rgba(255,255,255,0.04)', border: 'none', cursor: 'pointer',
+                    background: 'rgba(15,23,42,0.04)', border: 'none', cursor: 'pointer',
                     borderRadius: 8, padding: 6, flexShrink: 0,
-                    color: '#a3a3a3', transition: 'all 0.2s ease',
+                    color: '#64748b', transition: 'all 0.2s ease',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     minWidth: isMobile ? 44 : undefined, minHeight: isMobile ? 44 : undefined,
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.color = '#f5f5f5'; e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.color = '#a3a3a3'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = '#0f172a'; e.currentTarget.style.background = 'rgba(15,23,42,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = '#64748b'; e.currentTarget.style.background = 'rgba(15,23,42,0.04)'; }}
                 >
                   <X size={16} />
                 </button>
@@ -187,7 +189,7 @@ export default function Alerts() {
         {filtered.length === 0 && (
           <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
             <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 12, opacity: 0.5 }} />
-            <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhum alerta nesta categoria</div>
+            <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum alerta nesta categoria</div>
           </div>
         )}
       </div>

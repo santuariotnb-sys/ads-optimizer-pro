@@ -343,10 +343,10 @@ export default function Overview() {
 
   /* ── Quick Actions ── */
   const actions = [
-    { label: 'Criar Campanha', icon: <Plus size={14} />, module: 'create-campaign', num: 1 },
-    { label: 'Gerar Relatório', icon: <FileText size={14} />, module: 'pipeline', num: 2 },
-    { label: 'Signal Audit', icon: <Shield size={14} />, module: 'signal-audit', num: 3 },
-    { label: 'Escalar Winners', icon: <Zap size={14} />, module: 'auto-scale', num: 4 },
+    { label: 'Criar Campanha', icon: <Plus size={14} />, module: 'create', num: 1 },
+    { label: 'Gerar Relatório', icon: <FileText size={14} />, module: 'opt-financial', num: 2 },
+    { label: 'Signal Audit', icon: <Shield size={14} />, module: 'opt-audit', num: 3 },
+    { label: 'Escalar Winners', icon: <Zap size={14} />, module: 'opt-scale', num: 4 },
   ];
 
   const navigate = useCallback((mod: string) => setCurrentModule(mod), [setCurrentModule]);
@@ -512,7 +512,7 @@ export default function Overview() {
               <p style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', margin: '2px 0 0' }}>Top Performers</p>
             </div>
             <button
-              onClick={() => navigate('campaigns')}
+              onClick={() => navigate('opt-campaigns')}
               style={{
                 background: 'none',
                 border: 'none',

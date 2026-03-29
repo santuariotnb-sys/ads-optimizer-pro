@@ -44,10 +44,12 @@ const categoryIcons: Record<string, React.ReactNode> = {
 const categories: Category[] = ['Todos', 'Criativos', 'CAPI', 'Campanhas', 'Algoritmo'];
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+  border: '1px solid rgba(255,255,255,.55)',
   borderRadius: 20,
-  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 export default function Playbook() {
@@ -76,14 +78,14 @@ export default function Playbook() {
 
   return (
     <div style={{
-      color: '#f5f5f5',
+      color: '#0f172a',
     }}>
       <div style={{ maxWidth: isMobile ? '100%' : 900, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
           <BookOpen size={28} color="#6366f1" />
           <h1 style={{
             fontSize: 28, fontWeight: 700, margin: 0,
-            background: 'linear-gradient(135deg, #f5f5f5, #6366f1)',
+            background: 'linear-gradient(135deg, #0f172a, #6366f1)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           }}>Playbook</h1>
         </div>
@@ -100,9 +102,9 @@ export default function Playbook() {
               <button key={cat} onClick={() => setActiveCategory(cat)} style={{
                 display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, whiteSpace: 'nowrap',
                 padding: isMobile ? '8px 14px' : '10px 18px',
-                background: isActive ? `${color}20` : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${isActive ? `${color}40` : 'rgba(255,255,255,0.08)'}`,
-                borderRadius: 10, color: isActive ? color : '#a3a3a3',
+                background: isActive ? `${color}20` : 'rgba(15,23,42,0.04)',
+                border: `1px solid ${isActive ? `${color}40` : 'rgba(15,23,42,0.08)'}`,
+                borderRadius: 10, color: isActive ? color : '#64748b',
                 cursor: 'pointer', fontSize: 14, fontWeight: isActive ? 600 : 400,
                 transition: 'all 0.2s',
               }}>
@@ -110,7 +112,7 @@ export default function Playbook() {
                 {cat}
                 <span style={{
                   fontSize: 12, fontWeight: 700, padding: '2px 8px', borderRadius: 10,
-                  background: isActive ? `${color}30` : 'rgba(255,255,255,0.06)',
+                  background: isActive ? `${color}30` : 'rgba(15,23,42,0.06)',
                   color: isActive ? color : '#475569',
                 }}>{getCategoryCount(cat)}</span>
               </button>
@@ -136,7 +138,7 @@ export default function Playbook() {
                 style={{
                   ...glassCard,
                   borderLeft: `3px solid ${color}`,
-                  borderColor: hoveredEntry === entry.id ? 'rgba(255,255,255,0.14)' : 'rgba(255,255,255,0.06)',
+                  borderColor: hoveredEntry === entry.id ? 'rgba(15,23,42,0.12)' : 'rgba(255,255,255,.55)',
                   padding: isMobile ? '14px 16px' : '20px 24px',
                   cursor: 'pointer',
                   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -154,8 +156,8 @@ export default function Playbook() {
                     }}>{entry.category}</span>
                   </div>
                   {isExpanded
-                    ? <ChevronUp size={18} color="#a3a3a3" />
-                    : <ChevronDown size={18} color="#a3a3a3" />
+                    ? <ChevronUp size={18} color="#64748b" />
+                    : <ChevronDown size={18} color="#64748b" />
                   }
                 </div>
 
@@ -170,7 +172,7 @@ export default function Playbook() {
                 {/* Expanded Details */}
                 {isExpanded && (
                   <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#a3a3a3' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#64748b' }}>
                       <ExternalLink size={14} />
                       <span style={{ fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace" }}>
                         {entry.source}
@@ -193,7 +195,7 @@ export default function Playbook() {
             <div style={{
               ...glassCard, padding: 40, textAlign: 'center',
             }}>
-              <div style={{ fontSize: 14, color: '#a3a3a3' }}>Nenhum item nesta categoria</div>
+              <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum item nesta categoria</div>
             </div>
           )}
         </div>

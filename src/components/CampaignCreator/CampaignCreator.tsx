@@ -3,23 +3,25 @@ import { ChevronRight, ChevronLeft, Check, Upload, Sparkles, Info } from 'lucide
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+  border: '1px solid rgba(255,255,255,.55)',
   borderRadius: 20,
   padding: 32,
   maxWidth: 800,
   margin: '0 auto',
-  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 const inputBase: React.CSSProperties = {
   width: '100%',
   boxSizing: 'border-box' as const,
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'rgba(15,23,42,0.03)',
+  border: '1px solid rgba(15,23,42,0.1)',
   borderRadius: 12,
   padding: '12px 16px',
-  color: '#f5f5f5',
+  color: '#0f172a',
   fontSize: 14,
   outline: 'none',
   transition: 'border-color 0.2s',
@@ -29,7 +31,7 @@ const selectBase: React.CSSProperties = {
   ...inputBase,
   appearance: 'none' as const,
   cursor: 'pointer',
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a8a29e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'right 12px center',
   paddingRight: 36,
@@ -126,13 +128,13 @@ export default function CampaignCreator() {
 
   const getInputStyle = (field: string): React.CSSProperties => ({
     ...inputBase,
-    borderColor: focusedField === field ? '#6366f1' : 'rgba(255,255,255,0.08)',
+    borderColor: focusedField === field ? '#6366f1' : 'rgba(15,23,42,0.1)',
     boxShadow: focusedField === field ? '0 0 12px rgba(99,102,241,0.15)' : 'none',
   });
 
   const getSelectStyle = (field: string): React.CSSProperties => ({
     ...selectBase,
-    borderColor: focusedField === field ? '#6366f1' : 'rgba(255,255,255,0.08)',
+    borderColor: focusedField === field ? '#6366f1' : 'rgba(15,23,42,0.1)',
     boxShadow: focusedField === field ? '0 0 12px rgba(99,102,241,0.15)' : 'none',
   });
 
@@ -151,8 +153,8 @@ export default function CampaignCreator() {
                 fontSize: 14, fontWeight: 700,
                 background: isCompleted ? '#4ade80'
                   : isActive ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
-                  : 'rgba(255,255,255,0.06)',
-                color: isUpcoming ? '#475569' : '#fff',
+                  : 'rgba(15,23,42,0.06)',
+                color: isUpcoming ? '#94a3b8' : '#fff',
                 border: isActive ? '2px solid #6366f1' : 'none',
                 boxShadow: isActive ? '0 0 20px rgba(99,102,241,0.3)' : isCompleted ? '0 0 12px rgba(74,222,128,0.3)' : 'none',
                 transition: 'all 0.3s',
@@ -162,7 +164,7 @@ export default function CampaignCreator() {
               <span style={{
                 fontSize: 12,
                 fontWeight: isActive ? 600 : 400,
-                color: isActive ? '#f5f5f5' : '#475569',
+                color: isActive ? '#0f172a' : '#94a3b8',
                 whiteSpace: 'nowrap',
               }}>
                 {label}
@@ -171,7 +173,7 @@ export default function CampaignCreator() {
             {i < stepLabels.length - 1 && (
               <div style={{
                 width: isMobile ? 40 : 80, height: 2,
-                background: i < step ? '#4ade80' : 'rgba(255,255,255,0.08)',
+                background: i < step ? '#4ade80' : 'rgba(15,23,42,0.08)',
                 margin: '0 12px', marginBottom: 28,
                 borderRadius: 1, transition: 'background 0.3s',
               }} />
@@ -250,14 +252,14 @@ export default function CampaignCreator() {
               <label key={cat} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '8px 14px',
-                background: isChecked ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${isChecked ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.08)'}`,
+                background: isChecked ? 'rgba(99,102,241,0.15)' : 'rgba(15,23,42,0.03)',
+                border: `1px solid ${isChecked ? 'rgba(99,102,241,0.4)' : 'rgba(15,23,42,0.08)'}`,
                 borderRadius: 8, cursor: 'pointer', fontSize: 13, transition: 'all 0.2s',
               }}>
                 <input type="checkbox" checked={isChecked} onChange={() => toggleSpecialCategory(cat)} style={{ display: 'none' }} />
                 <div style={{
                   width: 18, height: 18, borderRadius: 4,
-                  border: `2px solid ${isChecked ? '#6366f1' : 'rgba(255,255,255,0.2)'}`,
+                  border: `2px solid ${isChecked ? '#6366f1' : 'rgba(15,23,42,0.2)'}`,
                   background: isChecked ? '#6366f1' : 'transparent',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s',
                 }}>
@@ -340,15 +342,15 @@ export default function CampaignCreator() {
             <label key={opt.value} style={{
               flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
               padding: '10px 16px',
-              background: form.gender === opt.value ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${form.gender === opt.value ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.08)'}`,
+              background: form.gender === opt.value ? 'rgba(99,102,241,0.15)' : 'rgba(15,23,42,0.03)',
+              border: `1px solid ${form.gender === opt.value ? 'rgba(99,102,241,0.4)' : 'rgba(15,23,42,0.08)'}`,
               borderRadius: 10, cursor: 'pointer', fontSize: 14, transition: 'all 0.2s',
             }}>
               <input type="radio" name="gender" value={opt.value} checked={form.gender === opt.value}
                 onChange={e => updateForm('gender', e.target.value)} style={{ display: 'none' }} />
               <div style={{
                 width: 16, height: 16, borderRadius: '50%',
-                border: `2px solid ${form.gender === opt.value ? '#6366f1' : 'rgba(255,255,255,0.2)'}`,
+                border: `2px solid ${form.gender === opt.value ? '#6366f1' : 'rgba(15,23,42,0.2)'}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {form.gender === opt.value && (
@@ -385,8 +387,8 @@ export default function CampaignCreator() {
             <label key={opt.value} style={{
               flex: 1, display: 'flex', alignItems: 'center', gap: 8,
               padding: '12px 16px',
-              background: form.attributionWindow === opt.value ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
-              border: `1px solid ${form.attributionWindow === opt.value ? 'rgba(99,102,241,0.4)' : 'rgba(255,255,255,0.08)'}`,
+              background: form.attributionWindow === opt.value ? 'rgba(99,102,241,0.15)' : 'rgba(15,23,42,0.03)',
+              border: `1px solid ${form.attributionWindow === opt.value ? 'rgba(99,102,241,0.4)' : 'rgba(15,23,42,0.08)'}`,
               borderRadius: 10, cursor: 'pointer', fontSize: 14, transition: 'all 0.2s',
             }}>
               <input type="radio" name="attribution" value={opt.value}
@@ -394,7 +396,7 @@ export default function CampaignCreator() {
                 onChange={e => updateForm('attributionWindow', e.target.value)} style={{ display: 'none' }} />
               <div style={{
                 width: 16, height: 16, borderRadius: '50%',
-                border: `2px solid ${form.attributionWindow === opt.value ? '#6366f1' : 'rgba(255,255,255,0.2)'}`,
+                border: `2px solid ${form.attributionWindow === opt.value ? '#6366f1' : 'rgba(15,23,42,0.2)'}`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
                 {form.attributionWindow === opt.value && (
@@ -427,7 +429,7 @@ export default function CampaignCreator() {
             }}>
               <div style={{
                 width: 48, height: 26, borderRadius: 13,
-                background: form.advantagePlacements ? '#6366f1' : 'rgba(255,255,255,0.1)',
+                background: form.advantagePlacements ? '#6366f1' : 'rgba(15,23,42,0.1)',
                 position: 'relative', transition: 'background 0.2s',
                 boxShadow: form.advantagePlacements ? '0 0 12px rgba(99,102,241,0.4)' : 'none',
               }}>
@@ -484,9 +486,9 @@ export default function CampaignCreator() {
             input.click();
           }}
           style={{
-            border: `2px dashed ${dragOver ? '#6366f1' : 'rgba(255,255,255,0.12)'}`,
+            border: `2px dashed ${dragOver ? '#6366f1' : 'rgba(15,23,42,0.12)'}`,
             borderRadius: 14, padding: 48, textAlign: 'center',
-            background: dragOver ? 'rgba(99,102,241,0.06)' : 'rgba(255,255,255,0.02)',
+            background: dragOver ? 'rgba(99,102,241,0.06)' : 'rgba(15,23,42,0.02)',
             transition: 'all 0.2s', cursor: 'pointer',
           }}
         >
@@ -508,7 +510,7 @@ export default function CampaignCreator() {
 
       {/* Preview Area */}
       <div style={{
-        background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)',
+        background: 'rgba(15,23,42,0.03)', border: '1px solid rgba(15,23,42,0.06)',
         borderRadius: 14, padding: 40, textAlign: 'center',
       }}>
         <div style={{ fontSize: 48, marginBottom: 12, opacity: 0.3 }}>🖼</div>
@@ -546,12 +548,12 @@ export default function CampaignCreator() {
   return (
     <div style={{
       padding: isMobile ? 0 : 8,
-      color: '#f5f5f5',
+      color: '#0f172a',
     }}>
       <div style={{ ...glassCard, maxWidth: isMobile ? '100%' : 800, padding: isMobile ? 16 : 32 }}>
         <h1 style={{
           fontSize: 28, fontWeight: 700, marginBottom: 8, marginTop: 0,
-          background: 'linear-gradient(135deg, #f5f5f5, #6366f1)',
+          background: 'linear-gradient(135deg, #0f172a, #6366f1)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>
           Criar Nova Campanha
@@ -571,17 +573,17 @@ export default function CampaignCreator() {
         {/* Bottom Bar */}
         <div style={{
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)',
+          marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(15,23,42,0.08)',
         }}>
           <button
             onClick={() => setStep(s => Math.max(0, s - 1))}
             disabled={step === 0}
-            onMouseEnter={(e) => { if (step > 0) { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+            onMouseEnter={(e) => { if (step > 0) { e.currentTarget.style.background = 'rgba(15,23,42,0.06)'; e.currentTarget.style.borderColor = 'rgba(15,23,42,0.12)'; }}}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(15,23,42,0.04)'; e.currentTarget.style.borderColor = 'rgba(15,23,42,0.08)'; }}
             style={{
               display: 'flex', alignItems: 'center', gap: 8,
-              padding: '10px 20px', background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
+              padding: '10px 20px', background: 'rgba(15,23,42,0.04)',
+              border: '1px solid rgba(15,23,42,0.08)', borderRadius: 12,
               color: '#94a3b8', cursor: step > 0 ? 'pointer' : 'default',
               fontSize: 14, opacity: step > 0 ? 1 : 0.4, transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
               minHeight: 44,
@@ -592,11 +594,11 @@ export default function CampaignCreator() {
 
           <button onClick={fillDefaults}
             onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99,102,241,0.12)'; e.currentTarget.style.borderColor = 'rgba(99,102,241,0.3)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(15,23,42,0.04)'; e.currentTarget.style.borderColor = 'rgba(15,23,42,0.08)'; }}
             style={{
             display: 'flex', alignItems: 'center', gap: 8,
-            padding: '10px 20px', background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
+            padding: '10px 20px', background: 'rgba(15,23,42,0.04)',
+            border: '1px solid rgba(15,23,42,0.08)', borderRadius: 12,
             color: '#6366f1', cursor: 'pointer', fontSize: 13, fontWeight: 600,
             transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', minHeight: 44,
           }}>

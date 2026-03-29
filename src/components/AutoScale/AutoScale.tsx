@@ -49,10 +49,12 @@ const logBgColors: Record<string, string> = {
 };
 
 const glassCard: React.CSSProperties = {
-  background: 'linear-gradient(145deg, rgba(22, 22, 32, 0.85) 0%, rgba(16, 16, 26, 0.9) 100%)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+  border: '1px solid rgba(255,255,255,.55)',
   borderRadius: 20,
-  boxShadow: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), 0 10px 30px -18px rgba(255,255,255,.82), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 export default function AutoScale() {
@@ -74,12 +76,12 @@ export default function AutoScale() {
 
   return (
     <div style={{
-      color: '#f5f5f5',
+      color: '#0f172a',
     }}>
       <div style={{ maxWidth: 1100, margin: '0 auto' }}>
         <h1 style={{
           fontSize: 28, fontWeight: 700, marginBottom: 8, marginTop: 0,
-          background: 'linear-gradient(135deg, #f5f5f5, #6366f1)',
+          background: 'linear-gradient(135deg, #0f172a, #6366f1)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
         }}>Auto-Scale</h1>
         <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>
@@ -97,7 +99,7 @@ export default function AutoScale() {
               }}>{stat.icon}</div>
               <div>
                 <div style={{ fontSize: 24, fontWeight: 700, fontFamily: "'Outfit', sans-serif" }}>{stat.value}</div>
-                <div style={{ fontSize: 13, color: '#a3a3a3' }}>{stat.label}</div>
+                <div style={{ fontSize: 13, color: '#64748b' }}>{stat.label}</div>
               </div>
             </div>
           ))}
@@ -117,11 +119,11 @@ export default function AutoScale() {
                 onMouseLeave={() => setHoveredRule(null)}
                 style={{
                 ...glassCard,
-                border: `1px solid ${hoveredRule === rule.id ? 'rgba(255,255,255,0.14)' : isOn ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.06)'}`,
+                border: `1px solid ${hoveredRule === rule.id ? 'rgba(15,23,42,0.14)' : isOn ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,.55)'}`,
                 padding: isMobile ? 14 : 20, opacity: isOn ? 1 : 0.6,
                 transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 transform: hoveredRule === rule.id ? 'translateY(-1px)' : 'translateY(0)',
-                boxShadow: hoveredRule === rule.id ? '0 0 30px rgba(99,102,241,0.06)' : '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 -1px 0 0 rgba(0,0,0,0.2) inset, 0 4px 16px rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.25)',
+                boxShadow: hoveredRule === rule.id ? '0 0 30px rgba(99,102,241,0.06)' : '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                   <span style={{ fontSize: 15, fontWeight: 700 }}>{rule.name}</span>
@@ -130,7 +132,7 @@ export default function AutoScale() {
                   }}>
                     <div style={{
                       width: 44, height: 24, borderRadius: 12,
-                      background: isOn ? '#6366f1' : 'rgba(255,255,255,0.1)',
+                      background: isOn ? '#6366f1' : 'rgba(15,23,42,0.1)',
                       position: 'relative', transition: 'background 0.2s',
                       boxShadow: isOn ? '0 0 12px rgba(99,102,241,0.4)' : 'none',
                     }}>
@@ -144,8 +146,8 @@ export default function AutoScale() {
                 </div>
                 <div style={{
                   fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace",
-                  fontSize: 12, color: '#a3a3a3', marginBottom: 12,
-                  padding: '6px 10px', background: 'rgba(255,255,255,0.03)', borderRadius: 6,
+                  fontSize: 12, color: '#64748b', marginBottom: 12,
+                  padding: '6px 10px', background: 'rgba(15,23,42,0.03)', borderRadius: 6,
                 }}>{rule.condition}</div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span style={{
@@ -159,7 +161,7 @@ export default function AutoScale() {
                     </span>
                     <span style={{
                       fontSize: 11, color: '#475569', padding: '2px 8px',
-                      background: 'rgba(255,255,255,0.04)', borderRadius: 4,
+                      background: 'rgba(15,23,42,0.04)', borderRadius: 4,
                     }}>Cooldown: {rule.cooldown}</span>
                   </div>
                 </div>
@@ -188,7 +190,7 @@ export default function AutoScale() {
                 }}>
                   <span style={{ fontSize: 14 }}>🔒</span>
                 </div>
-                <span style={{ fontSize: 14, color: '#f5f5f5' }}>{rule}</span>
+                <span style={{ fontSize: 14, color: '#0f172a' }}>{rule}</span>
               </div>
             ))}
           </div>
@@ -213,7 +215,7 @@ export default function AutoScale() {
               }} />
               <span style={{
                 fontSize: 12, fontFamily: "'JetBrains Mono', 'JetBrains Mono', monospace",
-                color: '#a3a3a3', minWidth: 120, flexShrink: 0,
+                color: '#64748b', minWidth: 120, flexShrink: 0,
               }}>{entry.time}</span>
               <span style={{ fontSize: 14, color: logColors[entry.type] }}>{entry.action}</span>
             </div>

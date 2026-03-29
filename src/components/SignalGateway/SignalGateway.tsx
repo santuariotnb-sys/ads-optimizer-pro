@@ -18,11 +18,13 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 type Tab = 'dashboard' | 'funnel' | 'script';
 
 const glassCard: React.CSSProperties = {
-  background: 'rgba(22, 22, 32, 0.85)',
-  backdropFilter: 'blur(16px)',
-  border: '1px solid rgba(255, 255, 255, 0.06)',
+  background: 'rgba(255,255,255,.34)',
+  backdropFilter: 'blur(28px) saturate(1.6)',
+  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+  border: '1px solid rgba(255,255,255,.55)',
   borderRadius: 16,
   padding: 24,
+  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 const emqItems = [
@@ -138,7 +140,7 @@ export default function SignalGateway() {
             <Zap size={22} color="#fff" />
           </div>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 700, color: '#f5f5f5', fontFamily: "'Outfit', sans-serif", margin: 0, letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif", margin: 0, letterSpacing: '-0.02em' }}>
               Signal Gateway
             </h1>
             <p style={{ fontSize: 13, color: '#64748b', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
@@ -150,8 +152,8 @@ export default function SignalGateway() {
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
           padding: '6px 14px', borderRadius: 20,
-          background: stats && stats.eventsTotal > 0 ? 'rgba(74, 222, 128, 0.08)' : 'rgba(255,255,255,0.04)',
-          border: `1px solid ${stats && stats.eventsTotal > 0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(255,255,255,0.06)'}`,
+          background: stats && stats.eventsTotal > 0 ? 'rgba(74, 222, 128, 0.08)' : 'rgba(15,23,42,0.04)',
+          border: `1px solid ${stats && stats.eventsTotal > 0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(15,23,42,0.08)'}`,
         }}>
           <span style={{
             width: 8, height: 8, borderRadius: '50%',
@@ -165,7 +167,7 @@ export default function SignalGateway() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: 4, padding: 4, background: 'rgba(255,255,255,0.03)', borderRadius: 12 }}>
+      <div style={{ display: 'flex', gap: 4, padding: 4, background: 'rgba(15,23,42,0.04)', borderRadius: 12 }}>
         {tabs.map(t => {
           const Icon = t.icon;
           const active = tab === t.id;
@@ -241,7 +243,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
       {funnel.funnel_name && (
         <div style={{ ...glassCard, padding: 16, display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 24, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, color: '#64748b', fontWeight: 500 }}>FUNIL:</span>
-          <span style={{ fontSize: 14, color: '#e2e8f0', fontWeight: 600 }}>{funnel.funnel_name}</span>
+          <span style={{ fontSize: 14, color: '#0f172a', fontWeight: 600 }}>{funnel.funnel_name}</span>
           <span style={{ fontSize: 12, color: '#64748b' }}>Front: {formatCurrency(Number(funnel.front_price || 0))}</span>
           <span style={{ fontSize: 12, color: '#64748b' }}>EPV: {formatCurrency(epv)}</span>
         </div>
@@ -251,7 +253,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
         {/* Pipeline */}
         <div style={glassCard}>
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Pipeline Hoje</h3>
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Pipeline Hoje</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {pipelineStages.map((stage, i) => {
               const count = pipeline?.[stage.field] || 0;
@@ -260,7 +262,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
               return (
                 <div key={stage.key} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span style={{ fontSize: 12, color: '#64748b', width: 90, fontFamily: "'JetBrains Mono', monospace" }}>{stage.label}</span>
-                  <div style={{ flex: 1, height: 8, background: 'rgba(255,255,255,0.04)', borderRadius: 4, overflow: 'hidden' }}>
+                  <div style={{ flex: 1, height: 8, background: 'rgba(15,23,42,0.08)', borderRadius: 4, overflow: 'hidden' }}>
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
@@ -268,7 +270,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
                       style={{ height: '100%', background: `linear-gradient(90deg, #6366f1, #8b5cf6)`, borderRadius: 4 }}
                     />
                   </div>
-                  <span style={{ fontSize: 13, color: '#e2e8f0', fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", width: 50, textAlign: 'right' }}>{formatNumber(count)}</span>
+                  <span style={{ fontSize: 13, color: '#0f172a', fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif", width: 50, textAlign: 'right' }}>{formatNumber(count)}</span>
                   <span style={{ fontSize: 11, color: '#64748b', width: 35, textAlign: 'right' }}>{pct}%</span>
                 </div>
               );
@@ -278,7 +280,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
 
         {/* EMQ Breakdown */}
         <div style={glassCard}>
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>EMQ Breakdown</h3>
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>EMQ Breakdown</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {emqItems.map(item => {
               const count = stats?.[item.field] || 0;
@@ -289,7 +291,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
                 <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <Icon size={14} style={{ color: '#6366f1', opacity: 0.6, flexShrink: 0 }} />
                   <span style={{ fontSize: 12, color: '#94a3b8', width: 80, fontFamily: "'Outfit', sans-serif" }}>{item.label}</span>
-                  <div style={{ flex: 1, height: 6, background: 'rgba(255,255,255,0.04)', borderRadius: 3, overflow: 'hidden' }}>
+                  <div style={{ flex: 1, height: 6, background: 'rgba(15,23,42,0.08)', borderRadius: 3, overflow: 'hidden' }}>
                     <div style={{ width: `${pct}%`, height: '100%', background: pct >= 70 ? '#4ade80' : pct >= 40 ? '#facc15' : '#f87171', borderRadius: 3, transition: 'width 0.5s ease' }} />
                   </div>
                   <span style={{ fontSize: 11, color: '#a5b4fc', fontWeight: 600, width: 32, textAlign: 'right', fontFamily: "'JetBrains Mono', monospace" }}>{item.weight}</span>
@@ -304,7 +306,7 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
       {/* Delivery Status */}
       <div style={{ ...glassCard, padding: 16 }}>
         <div style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 12 : 24, flexDirection: isMobile ? 'column' : 'row' }}>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', fontFamily: "'Outfit', sans-serif" }}>DELIVERY STATUS</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>DELIVERY STATUS</span>
           <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
             <StatusBadge icon={Check} label="Enviados" value={stats?.deliverySuccess || 0} color="#4ade80" />
             <StatusBadge icon={AlertTriangle} label="Falha" value={stats?.deliveryFailed || 0} color="#f87171" />
@@ -341,8 +343,8 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
 
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px', borderRadius: 10,
-    border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.04)',
-    color: '#e2e8f0', fontSize: 14, fontFamily: "'Outfit', sans-serif",
+    border: '1px solid rgba(15,23,42,0.1)', background: 'rgba(15,23,42,0.03)',
+    color: '#0f172a', fontSize: 14, fontFamily: "'Outfit', sans-serif",
     outline: 'none', transition: 'border-color 0.2s',
   };
 
@@ -355,7 +357,7 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Basic Info */}
       <div style={glassCard}>
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Informações do Funil</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Informações do Funil</h3>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
           <div>
             <label style={labelStyle}>Nome do Funil</label>
@@ -372,7 +374,7 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
 
       {/* Funnel Values */}
       <div style={glassCard}>
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Valores do Funil</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Valores do Funil</h3>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 16 }}>
           <div>
             <label style={labelStyle}>Front-end (R$)</label>
@@ -428,7 +430,7 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
 
       {/* Connection */}
       <div style={glassCard}>
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Conexão</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>Conexão</h3>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 16 }}>
           <div>
             <label style={labelStyle}>Pixel ID</label>
@@ -489,7 +491,7 @@ function ScriptTab({ funnel, copied, onCopy }: {
       {/* Script Preview */}
       <div style={glassCard}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', fontFamily: "'Outfit', sans-serif", margin: 0 }}>
+          <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', fontFamily: "'Outfit', sans-serif", margin: 0 }}>
             Script de Tracking
           </h3>
           <button
@@ -508,10 +510,10 @@ function ScriptTab({ funnel, copied, onCopy }: {
           </button>
         </div>
         <pre style={{
-          background: 'rgba(0,0,0,0.3)', borderRadius: 12, padding: 16,
+          background: 'rgba(15,23,42,0.04)', borderRadius: 12, padding: 16,
           overflow: 'auto', maxHeight: 300, fontSize: 11, lineHeight: 1.5,
           color: '#94a3b8', fontFamily: "'JetBrains Mono', monospace",
-          border: '1px solid rgba(255,255,255,0.04)',
+          border: '1px solid rgba(15,23,42,0.08)',
         }}>
           {script}
         </pre>
@@ -519,7 +521,7 @@ function ScriptTab({ funnel, copied, onCopy }: {
 
       {/* Usage Examples */}
       <div style={glassCard}>
-        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#e2e8f0', marginBottom: 16, fontFamily: "'Outfit', sans-serif" }}>Como Usar na LP</h3>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 16, fontFamily: "'Outfit', sans-serif" }}>Como Usar na LP</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <CodeExample title="Capturar Lead" code='AdsEdge.lead("email@ex.com", "11999998888", "Maria Santos");' />
           <CodeExample title="Iniciar Checkout" code='AdsEdge.initiateCheckout(37.00, "Produto X");' />
@@ -536,7 +538,7 @@ function CodeExample({ title, code }: { title: string; code: string }) {
     <div>
       <span style={{ fontSize: 12, color: '#a5b4fc', fontWeight: 500, marginBottom: 4, display: 'block' }}>{title}</span>
       <pre style={{
-        background: 'rgba(0,0,0,0.2)', borderRadius: 8, padding: 12,
+        background: 'rgba(15,23,42,0.04)', borderRadius: 8, padding: 12,
         fontSize: 12, color: '#94a3b8', fontFamily: "'JetBrains Mono', monospace",
         margin: 0, overflow: 'auto',
       }}>{code}</pre>
