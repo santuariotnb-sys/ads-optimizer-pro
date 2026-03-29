@@ -154,10 +154,11 @@ const S = {
   },
   select: {
     padding: '8px 14px',
-    borderRadius: 10,
-    border: '1px solid rgba(15,23,42,0.08)',
-    background: 'rgba(255,255,255,0.6)',
-    backdropFilter: 'blur(8px)',
+    borderRadius: 12,
+    border: '1px solid rgba(255,255,255,0.45)',
+    background: 'rgba(255,255,255,0.22)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
     color: '#334155',
     fontSize: 13,
     fontWeight: 500,
@@ -170,13 +171,16 @@ const S = {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'right 10px center',
     paddingRight: 30,
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
+    transition: 'all 0.15s',
   },
   btnOutline: {
     padding: '8px 18px',
-    borderRadius: 10,
-    border: '1px solid rgba(15,23,42,0.10)',
-    background: 'rgba(255,255,255,0.5)',
-    backdropFilter: 'blur(8px)',
+    borderRadius: 12,
+    border: '1px solid rgba(255,255,255,0.45)',
+    background: 'rgba(255,255,255,0.18)',
+    backdropFilter: 'blur(24px)',
+    WebkitBackdropFilter: 'blur(24px)',
     color: '#475569',
     fontSize: 13,
     fontWeight: 600,
@@ -186,12 +190,13 @@ const S = {
     gap: 6,
     fontFamily: 'Outfit, sans-serif',
     transition: 'all 0.15s',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.6)',
   },
   btnPrimary: {
     padding: '8px 20px',
-    borderRadius: 10,
-    border: 'none',
-    background: '#3b82f6',
+    borderRadius: 12,
+    border: '1px solid rgba(59,130,246,0.3)',
+    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
     color: '#fff',
     fontSize: 13,
     fontWeight: 600,
@@ -201,50 +206,75 @@ const S = {
     gap: 6,
     fontFamily: 'Outfit, sans-serif',
     transition: 'all 0.15s',
+    boxShadow: '0 2px 8px rgba(59,130,246,0.25), inset 0 1px 0 rgba(255,255,255,0.2)',
   },
   card: {
-    background: 'rgba(255,255,255,0.34)',
-    backdropFilter: 'blur(16px)',
-    border: '1px solid rgba(15,23,42,0.06)',
-    borderRadius: 16,
+    position: 'relative' as const,
+    background: 'rgba(255,255,255,0.18)',
+    backdropFilter: 'blur(40px) saturate(1.4)',
+    WebkitBackdropFilter: 'blur(40px) saturate(1.4)',
+    border: '1px solid rgba(255,255,255,0.35)',
+    borderRadius: 18,
     overflow: 'hidden' as const,
+    boxShadow: '0 4px 24px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.7), inset 0 -1px 0 rgba(255,255,255,0.1)',
+  },
+  // Reflexo interno no topo do card — simula brilho de vidro
+  cardReflection: {
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 48,
+    background: 'linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 100%)',
+    pointerEvents: 'none' as const,
+    zIndex: 1,
+    borderRadius: '18px 18px 0 0',
   },
   tableWrap: {
+    position: 'relative' as const,
     overflowX: 'auto' as const,
     WebkitOverflowScrolling: 'touch' as const,
   },
   table: {
     width: '100%',
-    borderCollapse: 'collapse' as const,
+    borderCollapse: 'separate' as const,
+    borderSpacing: 0,
     minWidth: 1100,
   },
   th: {
-    padding: '12px 14px',
+    padding: '10px 14px',
     fontSize: 10,
-    fontWeight: 600,
-    color: '#64748b',
+    fontWeight: 700,
+    color: '#475569',
     textTransform: 'uppercase' as const,
-    letterSpacing: '0.05em',
+    letterSpacing: '0.06em',
     textAlign: 'left' as const,
-    background: 'rgba(15,23,42,0.04)',
+    background: 'rgba(255,255,255,0.35)',
+    backdropFilter: 'blur(20px)',
     whiteSpace: 'nowrap' as const,
-    borderBottom: '1px solid rgba(15,23,42,0.06)',
+    borderBottom: '1px solid rgba(255,255,255,0.5)',
+    borderRight: '1px solid rgba(255,255,255,0.2)',
     fontFamily: 'Outfit, sans-serif',
+    position: 'sticky' as const,
+    top: 0,
+    zIndex: 2,
   },
   thRight: {
     textAlign: 'right' as const,
   },
   td: {
-    padding: '11px 14px',
+    padding: '9px 14px',
     fontSize: 13,
-    color: '#334155',
-    borderBottom: '1px solid rgba(15,23,42,0.06)',
+    color: '#1e293b',
+    borderBottom: '1px solid rgba(15,23,42,0.05)',
+    borderRight: '1px solid rgba(15,23,42,0.03)',
     whiteSpace: 'nowrap' as const,
     fontFamily: 'Outfit, sans-serif',
   },
   tdMono: {
     fontFamily: 'JetBrains Mono, monospace',
     fontSize: 12,
+    color: '#0f172a',
     textAlign: 'right' as const,
   },
   tdRight: {
@@ -347,7 +377,11 @@ export default function UTMTracking() {
     ? { ...S.select, width: '100%' }
     : S.select;
 
-  const rowHoverBg = 'rgba(15,23,42,0.02)';
+  const rowHoverBg = 'rgba(59,130,246,0.06)';
+  const rowStripeBg = 'rgba(255,255,255,0.3)';
+
+  const highlightTh: React.CSSProperties = { background: 'rgba(59,130,246,0.10)', color: '#1e40af', borderBottom: '1px solid rgba(59,130,246,0.20)', boxShadow: 'inset 0 -2px 0 rgba(59,130,246,0.15)' };
+  const highlightTd: React.CSSProperties = { background: 'rgba(59,130,246,0.04)', borderRight: '1px solid rgba(59,130,246,0.08)', borderLeft: '1px solid rgba(59,130,246,0.08)' };
 
   return (
     <div style={S.wrapper}>
@@ -393,13 +427,14 @@ export default function UTMTracking() {
 
       {/* Table Card */}
       <div style={S.card}>
+        <div style={S.cardReflection} />
         <div style={S.tableWrap}>
           {activeView === 'utm-campanhas' && (
             <table style={S.table}>
               <thead>
                 <tr>
                   {['STATUS', 'CAMPANHA', 'ORCAMENTO', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI', 'CTR', 'CPM', 'IMPRESSOES', 'CLIQUES'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i >= 2 ? S.thRight : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...(i >= 2 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -407,14 +442,14 @@ export default function UTMTracking() {
                 {CAMPANHAS_DATA.map((r, idx) => (
                   <tr
                     key={idx}
-                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : 'transparent' }}
+                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : idx % 2 === 1 ? rowStripeBg : 'transparent' }}
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
                     <td style={S.td}>
                       <span style={statusBadge(r.status)}>{STATUS_LABEL[r.status]}</span>
                     </td>
-                    <td style={{ ...S.td, fontWeight: 600, maxWidth: 280 }}>{r.campanha}</td>
+                    <td style={{ ...S.td, ...highlightTd, fontWeight: 600, maxWidth: 280 }}>{r.campanha}</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.orcamento)}/dia</td>
                     <td style={{ ...S.td, ...S.tdMono, fontWeight: 700 }}>{r.vendas}</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpa)}</td>
@@ -439,7 +474,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['UTM_CAMPAIGN', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI', 'CPI', 'CPC', 'CTR', 'CPM', 'IMPRESSOES', 'CLIQUES'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i >= 1 ? S.thRight : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...(i >= 1 ? S.thRight : {}), ...(i === 0 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -447,11 +482,11 @@ export default function UTMTracking() {
                 {UTM_DATA.map((r, idx) => (
                   <tr
                     key={idx}
-                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : 'transparent' }}
+                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : idx % 2 === 1 ? rowStripeBg : 'transparent' }}
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td style={{ ...S.td, fontWeight: 600, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_campaign}</td>
+                    <td style={{ ...S.td, ...highlightTd, fontWeight: 600, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_campaign}</td>
                     <td style={{ ...S.td, ...S.tdMono, fontWeight: 700 }}>{r.vendas}</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpa)}</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.gastos)}</td>
@@ -477,7 +512,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['DATA', 'PRODUTO', 'CLIENTE', 'VALOR', 'STATUS', 'PLATAFORMA', 'UTM_SOURCE', 'UTM_CAMPAIGN'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i === 3 ? S.thRight : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...(i === 3 ? S.thRight : {}), ...(i === 1 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -485,12 +520,12 @@ export default function UTMTracking() {
                 {VENDAS_DATA.map((r, idx) => (
                   <tr
                     key={idx}
-                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : 'transparent' }}
+                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : idx % 2 === 1 ? rowStripeBg : 'transparent' }}
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
                     <td style={{ ...S.td, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.data}</td>
-                    <td style={{ ...S.td, fontWeight: 600 }}>{r.produto}</td>
+                    <td style={{ ...S.td, ...highlightTd, fontWeight: 600 }}>{r.produto}</td>
                     <td style={S.td}>{r.cliente}</td>
                     <td style={{ ...S.td, ...S.tdMono, fontWeight: 600 }}>{formatCurrency(r.valor)}</td>
                     <td style={S.td}>
@@ -510,7 +545,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['DATA', 'DIA', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i >= 2 ? S.thRight : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...(i >= 2 ? S.thRight : {}), ...(i === 6 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -518,7 +553,7 @@ export default function UTMTracking() {
                 {RELATORIO_DATA.map((r, idx) => (
                   <tr
                     key={idx}
-                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : 'transparent' }}
+                    style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : idx % 2 === 1 ? rowStripeBg : 'transparent' }}
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
@@ -528,7 +563,7 @@ export default function UTMTracking() {
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpa)}</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.gastos)}</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.faturamento)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...highlightTd, color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
                     <td style={{ ...S.td, ...S.tdMono, color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{r.margem.toFixed(1)}%</td>
                     <td style={{ ...S.td, ...S.tdMono }}>{r.roi}%</td>

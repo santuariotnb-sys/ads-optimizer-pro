@@ -75,31 +75,43 @@ export default function CreativeVision() {
     if (f) handleFile(f);
   }, [handleFile]);
 
+  const [progress, setProgress] = useState<string | null>(null);
+
   const handleAnalyze = async () => {
     if (!file || !apiKey) return;
     setAnalyzing(true);
     setError(null);
     setResult(null);
+    setProgress(null);
 
     try {
       let extractedFrames: FrameData[];
 
-      if (creativeType === 'video' && videoRef.current) {
-        extractedFrames = await extractVideoFrames(videoRef.current, 6);
+      if (creativeType === 'video') {
+        // Tenta FFmpeg com o File direto, fallback para Canvas
+        extractedFrames = await extractVideoFrames(file, 6, setProgress);
+        // Se FFmpeg falhou e retornou vazio, tenta Canvas
+        if (extractedFrames.length === 0 && videoRef.current) {
+          extractedFrames = await extractVideoFrames(videoRef.current, 6, setProgress);
+        }
       } else {
+        setProgress('Processando imagem...');
         const frame = await imageToFrame(file);
         extractedFrames = [frame];
       }
 
       setFrames(extractedFrames);
+      setProgress('Enviando para análise IA...');
 
       const analysisResult = provider === 'claude'
         ? await analyzeCreative(extractedFrames, apiKey, creativeType)
         : await analyzeCreativeOpenAI(extractedFrames, apiKey, creativeType);
 
       setResult(analysisResult);
+      setProgress(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido na análise');
+      setProgress(null);
     } finally {
       setAnalyzing(false);
     }
@@ -267,7 +279,7 @@ export default function CreativeVision() {
           }}
         >
           {analyzing ? <Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Sparkles size={16} />}
-          {analyzing ? 'Analisando...' : 'Analisar Criativo'}
+          {analyzing ? (progress || 'Analisando...') : 'Analisar Criativo'}
         </button>
       </div>
 
