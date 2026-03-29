@@ -4,6 +4,7 @@ import { formatCurrency, getStatusColor, getScoreColor } from '../../utils/forma
 import type { AdSet } from '../../types/meta';
 import { ChevronDown, ChevronUp, Pause, TrendingUp, Copy, AlertTriangle } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { showToast } from '../ui/toastStore';
 
 const statusLabel: Record<string, string> = {
   ACTIVE: 'Ativo',
@@ -66,7 +67,7 @@ const Campaigns: React.FC = () => {
             Campanhas
           </h1>
           <p style={{ fontSize: 13, color: '#64748b', margin: '4px 0 0' }}>
-            Gerencie e otimize suas campanhas
+            Gerencie e monitore todas as suas campanhas ativas
           </p>
         </div>
 
@@ -358,7 +359,7 @@ const Campaigns: React.FC = () => {
                   ].map((btn) => (
                     <button
                       key={btn.label}
-                      onClick={(e) => { e.stopPropagation(); alert(`${btn.label}: disponível no modo Live. Conecte sua conta Meta nas Configurações.`); }}
+                      onClick={(e) => { e.stopPropagation(); showToast('info', `${btn.label}: disponível no modo Live. Conecte sua conta Meta nas Configurações.`); }}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',

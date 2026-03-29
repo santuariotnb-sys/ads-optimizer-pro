@@ -12,6 +12,7 @@ import {
   Zap,
 } from 'lucide-react';
 import AlpineCard from '../Layout/AlpineCard';
+import Tooltip from '../ui/Tooltip';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { formatCurrency, formatNumber, getStatusColor } from '../../utils/formatters';
@@ -105,7 +106,7 @@ function ProgressBar({ percent, delay = 0 }: { percent: number; delay?: number }
 /* ────────────────────── KPI Card ────────────────────── */
 
 interface KPIProps {
-  label: string;
+  label: React.ReactNode;
   value: string;
   delta: number;
   barPercent: number;
@@ -362,7 +363,7 @@ export default function Overview() {
       {/* ── ROW 1: KPI Grid ── */}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 16 }}>
         <KPICard
-          label="Custo por Aquisição"
+          label={<Tooltip text="Quanto você paga por cada conversão">Custo por Aquisição</Tooltip>}
           value={formatCurrency(animatedCPA)}
           delta={-12.4}
           barPercent={78}
@@ -371,7 +372,7 @@ export default function Overview() {
           delay={0}
         />
         <KPICard
-          label="Retorno sobre Gasto"
+          label={<Tooltip text="Receita ÷ Gasto com anúncios">Retorno sobre Gasto</Tooltip>}
           value={`${animatedROAS.toFixed(1)}x`}
           delta={18.6}
           barPercent={84}
@@ -452,12 +453,14 @@ export default function Overview() {
             >
               <p style={{ ...labelStyle, marginBottom: 12 }}>Métricas Principais</p>
               {[
-                { label: 'Score EMQ', value: emq.toFixed(1) },
-                { label: 'Taxa de Match', value: '89%' },
-                { label: 'Recuperação', value: '+34%' },
+                { label: 'Score EMQ', value: emq.toFixed(1), tip: 'Event Match Quality — qualidade do sinal enviado ao Meta (0-10)' },
+                { label: 'Taxa de Match', value: '89%', tip: '% de eventos com identidade do usuário reconhecida pelo Meta' },
+                { label: 'Recuperação', value: '+34%', tip: 'Eventos capturados pelo Gateway que o Pixel perdeu' },
               ].map((m) => (
                 <div key={m.label} style={{ marginBottom: 10 }}>
-                  <p style={{ fontSize: 10, color: '#94a3b8', margin: 0 }}>{m.label}</p>
+                  <p style={{ fontSize: 10, color: '#94a3b8', margin: 0 }}>
+                    <Tooltip text={m.tip}>{m.label}</Tooltip>
+                  </p>
                   <p style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', margin: '2px 0 0', fontFamily: "'Space Grotesk'" }}>
                     {m.value}
                   </p>
@@ -469,7 +472,9 @@ export default function Overview() {
 
         {/* Account Score Gauge */}
         <AlpineCard delay={300} padding={24}>
-          <p style={{ ...labelStyle, marginBottom: 4 }}>Pontuação da Conta</p>
+          <p style={{ ...labelStyle, marginBottom: 4 }}>
+            <Tooltip text="Saúde geral da sua conta baseada em métricas chave">Pontuação da Conta</Tooltip>
+          </p>
           <AccountGauge score={accountScore} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 16 }}>
             {[

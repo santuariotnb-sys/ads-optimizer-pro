@@ -2,6 +2,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import TopNav from './TopNav';
 import CommandBar from './CommandBar';
 import EverestBg from './EverestBg';
+import { ToastContainer } from '../ui/Toast';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
@@ -18,6 +19,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     >
       <EverestBg />
       <TopNav />
+      <ToastContainer />
 
       <main
         style={{

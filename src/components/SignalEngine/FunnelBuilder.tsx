@@ -4,6 +4,7 @@ import { calculatePredictedLTV, calculateEPV } from '../../services/capi/enrichm
 import { Settings, Package, Briefcase, Monitor, Users, Wrench, Save, Wifi, Eye, ChevronDown, ChevronUp, X, CheckCircle, AlertTriangle } from 'lucide-react';
 import { COLORS } from '../../utils/constants';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { showToast } from '../ui/toastStore';
 
 const FUNNEL_TEMPLATES: { type: FunnelType; label: string; icon: typeof Package; desc: string }[] = [
   { type: 'infoproduto', label: 'Infoproduto', icon: Package, desc: 'VSL → Checkout → Bumps → Upsell' },
@@ -54,6 +55,7 @@ export default function FunnelBuilder({ config, onSave, onBack }: Props) {
       updated_at: new Date().toISOString(),
     };
     onSave(updated);
+    showToast('success', 'Funil salvo com sucesso!');
     setSaveMsg('Funil salvo com sucesso!');
     setTimeout(() => setSaveMsg(null), 3000);
   };

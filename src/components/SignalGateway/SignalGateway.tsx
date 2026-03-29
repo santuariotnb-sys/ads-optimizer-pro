@@ -214,6 +214,20 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
     { label: 'Recovery', value: `+${recoveryRate}%`, sub: 'vs pixel', color: '#4ade80', icon: TrendingUp },
   ];
 
+  if (!stats || stats.eventsTotal === 0) {
+    return (
+      <div style={{ ...glassCard, padding: 48, textAlign: 'center' as const, display: 'flex', flexDirection: 'column' as const, alignItems: 'center', gap: 16 }}>
+        <Radio size={40} style={{ color: '#94a3b8', opacity: 0.5 }} />
+        <p style={{ fontSize: 16, fontWeight: 600, color: '#0f172a', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
+          Nenhum evento recebido ainda
+        </p>
+        <p style={{ fontSize: 13, color: '#64748b', margin: 0, maxWidth: 400, lineHeight: 1.5 }}>
+          Configure o funil e cole o tracking script na sua landing page para começar a receber eventos.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       {/* Metric Cards */}
