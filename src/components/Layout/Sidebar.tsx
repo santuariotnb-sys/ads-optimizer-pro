@@ -4,7 +4,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import {
   LayoutDashboard, Megaphone, Image, Radio, Users, Bell, Bot,
   GitBranch, PlusCircle, Zap, BookOpen, ChevronLeft, ChevronRight,
-  Activity, X, ShieldCheck, DollarSign, Link, Settings,
+  Activity, X, ShieldCheck, DollarSign, Link, Settings, Satellite,
 } from 'lucide-react';
 
 const navItems = [
@@ -14,6 +14,7 @@ const navItems = [
   { id: 'financial', label: 'Financeiro', icon: DollarSign },
   { id: 'utm', label: 'UTM Tracking', icon: Link },
   { id: 'signal', label: 'Signal Engine', icon: Radio },
+  { id: 'gateway', label: 'Signal Gateway', icon: Satellite },
   { id: 'audiences', label: 'Públicos', icon: Users },
   { id: 'alerts', label: 'Alertas', icon: Bell, badge: true },
   { id: 'agent', label: 'Agente IA', icon: Bot },

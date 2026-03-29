@@ -3,7 +3,7 @@
 -- ============================================
 
 -- Extensões
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" SCHEMA extensions;
 
 -- ============================================
 -- PROFILES (extends auth.users)
@@ -55,7 +55,7 @@ CREATE TABLE integrations (
   ad_account_id TEXT,
   pixel_id TEXT,
   token_expires_at TIMESTAMPTZ,
-  webhook_secret TEXT DEFAULT encode(gen_random_bytes(32), 'hex'),
+  webhook_secret TEXT DEFAULT encode(extensions.gen_random_bytes(32), 'hex'),
   is_active BOOLEAN DEFAULT true,
   metadata JSONB DEFAULT '{}',
   last_sync_at TIMESTAMPTZ,

@@ -19,6 +19,7 @@ import SignalAudit from './components/SignalAudit/SignalAudit';
 import Financial from './components/Financial/Financial';
 import UTMTracking from './components/UTMTracking/UTMTracking';
 import Settings from './components/Settings/Settings';
+import SignalGateway from './components/SignalGateway/SignalGateway';
 import {
   mockCampaigns,
   mockAdSetsData,
@@ -66,6 +67,8 @@ function ModuleRouter() {
       return <Financial />;
     case 'utm':
       return <UTMTracking />;
+    case 'gateway':
+      return <SignalGateway />;
     case 'settings':
       return <Settings />;
     default:
