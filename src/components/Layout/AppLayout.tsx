@@ -1,80 +1,41 @@
-import { useEffect } from 'react';
-import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
-import Sidebar from './Sidebar';
-import Header from './Header';
-import { Menu } from 'lucide-react';
-
-const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
+import TopNav from './TopNav';
+import CommandBar from './CommandBar';
+import EverestBg from './EverestBg';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const { sidebarCollapsed, toggleSidebar, theme } = useStore();
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
 
   return (
     <div
       style={{
-        display: 'flex',
         minHeight: '100vh',
-        background: theme === 'light' ? '#fafafa' : '#000000',
-        color: theme === 'light' ? '#171717' : '#f5f5f5',
-        fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        background: '#f8f8f6',
+        color: '#0f172a',
+        fontFamily: "'Plus Jakarta Sans', 'Outfit', system-ui, sans-serif",
+        WebkitFontSmoothing: 'antialiased',
       }}
     >
-      <Sidebar />
-
-      {/* Mobile hamburger button */}
-      {isMobile && sidebarCollapsed && (
-        <button
-          onClick={toggleSidebar}
-          style={{
-            position: 'fixed',
-            top: 14,
-            left: 12,
-            zIndex: 90,
-            width: 44,
-            height: 44,
-            borderRadius: 8,
-            border: '1px solid rgba(255, 255, 255, 0.05)',
-            background: '#111111',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#737373',
-            outline: 'none',
-          }}
-        >
-          <Menu size={20} />
-        </button>
-      )}
+      <EverestBg />
+      <TopNav />
 
       <main
         style={{
-          flex: 1,
-          marginLeft: isMobile ? 0 : (sidebarCollapsed ? 64 : 240),
-          transition: `margin-left 0.3s ${easing}`,
-          display: 'flex',
-          flexDirection: 'column',
+          position: 'relative',
+          zIndex: 10,
+          paddingTop: 80,
+          paddingBottom: 100,
+          paddingLeft: isMobile ? 12 : 28,
+          paddingRight: isMobile ? 12 : 28,
+          maxWidth: 1480,
+          margin: '0 auto',
           minHeight: '100vh',
         }}
       >
-        <Header />
-
-        <div
-          style={{
-            flex: 1,
-            padding: isMobile ? 16 : 28,
-            overflowY: 'auto',
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </main>
+
+      <CommandBar />
     </div>
   );
 }
