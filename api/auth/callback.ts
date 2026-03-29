@@ -39,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Redirect to frontend with token in hash (not query param for security)
     const redirectUrl = `${FRONTEND_URL}#access_token=${longLivedData.access_token}&expires_in=${longLivedData.expires_in || 5184000}`;
     return res.redirect(redirectUrl);
-  } catch (err) {
+  } catch {
     return res.redirect(`${FRONTEND_URL}?error=${encodeURIComponent('Falha na autenticação')}`);
   }
 }

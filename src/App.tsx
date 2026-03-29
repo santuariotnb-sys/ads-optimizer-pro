@@ -125,14 +125,15 @@ export default function App() {
         const [campaignsRes, audiencesRes] = await Promise.all([
           api.fetchCampaigns(),
           api.fetchAudiences(),
-        ]) as [any, any];
+        ]) as [Record<string, unknown>, Record<string, unknown>];
 
         if (campaignsRes?.data) {
           // Map API response to our Campaign type
-          const campaigns = campaignsRes.data.map((c: any) => ({
+          interface MetaCampaign { id: string; name: string; status?: string; objective?: string; daily_budget?: number; lifetime_budget?: number; created_time?: string }
+          const campaigns = (campaignsRes.data as MetaCampaign[]).map((c) => ({
             id: c.id,
             name: c.name,
-            status: c.status || 'ACTIVE',
+            status: (c.status || 'ACTIVE') as import('./types/meta').CampaignStatus,
             objective: c.objective || '',
             daily_budget: (c.daily_budget || 0) / 100,
             lifetime_budget: (c.lifetime_budget || 0) / 100,
@@ -150,20 +151,23 @@ export default function App() {
                 campaign.id,
                 'spend,impressions,clicks,cpc,cpm,ctr,actions,action_values',
                 'last_7d'
-              ) as any;
-              if (insights?.data?.[0]) {
-                const d = insights.data[0];
-                const conversions = d.actions?.find((a: any) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || 0;
-                const revenue = d.action_values?.find((a: any) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || 0;
-                const spend = parseFloat(d.spend || '0');
+              ) as Record<string, unknown>;
+              if (insights?.data) {
+                const d = (insights.data as Record<string, unknown>[])[0];
+                const actions = (d?.actions || []) as Record<string, unknown>[];
+                const actionValues = (d?.action_values || []) as Record<string, unknown>[];
+                const conversions = String(actions.find((a) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || '0');
+                const revenue = String(actionValues.find((a) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || '0');
+                const spend = parseFloat(String(d.spend || '0'));
+                const convCount = parseInt(conversions);
                 Object.assign(campaign, {
                   spend,
-                  impressions: parseInt(d.impressions || '0'),
-                  clicks: parseInt(d.clicks || '0'),
-                  ctr: parseFloat(d.ctr || '0'),
-                  cpm: parseFloat(d.cpm || '0'),
-                  conversions: parseInt(conversions),
-                  cpa: parseInt(conversions) > 0 ? spend / parseInt(conversions) : 0,
+                  impressions: parseInt(String(d.impressions || '0')),
+                  clicks: parseInt(String(d.clicks || '0')),
+                  ctr: parseFloat(String(d.ctr || '0')),
+                  cpm: parseFloat(String(d.cpm || '0')),
+                  conversions: convCount,
+                  cpa: convCount > 0 ? spend / convCount : 0,
                   roas: spend > 0 ? parseFloat(revenue) / spend : 0,
                 });
               }
@@ -175,7 +179,8 @@ export default function App() {
         }
 
         if (audiencesRes?.data) {
-          const audiences = audiencesRes.data.map((a: any) => ({
+          interface MetaAudience { id: string; name: string; approximate_count?: number }
+          const audiences = (audiencesRes.data as MetaAudience[]).map((a) => ({
             id: a.id,
             name: a.name,
             size: a.approximate_count || 0,

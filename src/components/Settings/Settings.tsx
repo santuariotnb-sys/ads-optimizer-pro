@@ -31,35 +31,36 @@ export default function Settings() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'integrations' | 'general' | 'notifications'>('integrations');
   const [profile, setProfile] = useState({ timezone: 'America/Sao_Paulo', currency: 'BRL', default_roas_target: 3.0, default_cpa_target: 50, closing_day: 1 });
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    if (mode === 'live') loadData();
-  }, [mode]);
+    if (mode !== 'live') return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [ints, stats] = await Promise.all([getIntegrations(), getWebhookStats()]);
+        if (cancelled) return;
+        setIntegrations(ints);
+        setWebhookStats(stats);
 
-  async function loadData() {
-    try {
-      const [ints, stats] = await Promise.all([getIntegrations(), getWebhookStats()]);
-      setIntegrations(ints);
-      setWebhookStats(stats);
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (cancelled || !user) return;
         const { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-        if (profileData) {
-          const p = profileData as Record<string, unknown>;
-          setProfile({
-            timezone: (p.timezone as string) || 'America/Sao_Paulo',
-            currency: (p.currency as string) || 'BRL',
-            default_roas_target: Number(p.default_roas_target || 3),
-            default_cpa_target: Number(p.default_cpa_target || 50),
-            closing_day: Number(p.closing_day || 1),
-          });
-        }
+        if (cancelled || !profileData) return;
+        const p = profileData as Record<string, unknown>;
+        setProfile({
+          timezone: (p.timezone as string) || 'America/Sao_Paulo',
+          currency: (p.currency as string) || 'BRL',
+          default_roas_target: Number(p.default_roas_target || 3),
+          default_cpa_target: Number(p.default_cpa_target || 50),
+          closing_day: Number(p.closing_day || 1),
+        });
+      } catch {
+        // Demo mode — no Supabase
       }
-    } catch {
-      // Demo mode — no Supabase
-    }
-  }
+    })();
+    return () => { cancelled = true; };
+  }, [mode, refreshKey]);
 
   function copyToClipboard(text: string, field: string) {
     navigator.clipboard.writeText(text);
@@ -75,11 +76,11 @@ export default function Settings() {
     if (provider === 'meta') {
       const appId = import.meta.env.VITE_META_APP_ID;
       const redirectUri = import.meta.env.VITE_META_REDIRECT_URI || window.location.origin + '/auth/callback';
-      window.location.href = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=ads_read,ads_management,read_insights&response_type=token`;
+      window.location.assign(`https://www.facebook.com/v21.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=ads_read,ads_management,read_insights&response_type=token`);
       return;
     }
     await upsertIntegration(provider, {});
-    await loadData();
+    setRefreshKey(k => k + 1);
   }
 
   async function handleSaveProfile() {

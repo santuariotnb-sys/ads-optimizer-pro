@@ -17,17 +17,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.socket?.remoteAddress || '';
   const clientUa = req.headers['user-agent'] || '';
 
-  const enrichedEvents = events.map((event: any) => ({
+  const enrichedEvents = events.map((event: Record<string, unknown>) => ({
     ...event,
     user_data: {
-      ...event.user_data,
-      client_ip_address: event.user_data?.client_ip_address || clientIp,
-      client_user_agent: event.user_data?.client_user_agent || clientUa,
+      ...(event.user_data as Record<string, unknown>),
+      client_ip_address: (event.user_data as Record<string, unknown>)?.client_ip_address || clientIp,
+      client_user_agent: (event.user_data as Record<string, unknown>)?.client_user_agent || clientUa,
     },
   }));
 
   try {
-    const body: any = { data: JSON.stringify(enrichedEvents) };
+    const body: Record<string, unknown> = { data: JSON.stringify(enrichedEvents) };
     if (test_event_code) body.test_event_code = test_event_code;
 
     const url = `https://graph.facebook.com/${API_VERSION}/${pixel_id}/events?access_token=${access_token}`;

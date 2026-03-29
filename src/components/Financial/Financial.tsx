@@ -45,25 +45,27 @@ export default function Financial() {
   const [expenses, setExpenses] = useState<Expense[]>(MOCK_EXPENSES);
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [newExpense, setNewExpense] = useState({ category: 'outros', description: '', amount: '', is_recurring: false, reference_date: new Date().toISOString().split('T')[0] });
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    if (mode === 'live') {
-      loadData();
-    }
-  }, [mode, selectedPeriod]);
-
-  async function loadData() {
-    try {
-      const [salesData, expensesData] = await Promise.all([
-        getSalesSummary(selectedPeriod),
-        fetchExpenses(new Date().toISOString().slice(0, 7)),
-      ]);
-      setSummary(salesData);
-      setExpenses(expensesData);
-    } catch {
-      // fallback to mock
-    }
-  }
+    if (mode !== 'live') return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const [salesData, expensesData] = await Promise.all([
+          getSalesSummary(selectedPeriod),
+          fetchExpenses(new Date().toISOString().slice(0, 7)),
+        ]);
+        if (!cancelled) {
+          setSummary(salesData);
+          setExpenses(expensesData);
+        }
+      } catch {
+        // fallback to mock
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [mode, selectedPeriod, refreshKey]);
 
   async function handleAddExpense() {
     if (!newExpense.amount || !newExpense.category) return;
@@ -75,7 +77,7 @@ export default function Financial() {
         is_recurring: newExpense.is_recurring,
         reference_date: newExpense.reference_date,
       });
-      await loadData();
+      setRefreshKey(k => k + 1);
     } else {
       setExpenses(prev => [...prev, {
         id: crypto.randomUUID(),
@@ -94,7 +96,7 @@ export default function Financial() {
   async function handleDeleteExpense(id: string) {
     if (mode === 'live') {
       await deleteExpense(id);
-      await loadData();
+      setRefreshKey(k => k + 1);
     } else {
       setExpenses(prev => prev.filter(e => e.id !== id));
     }

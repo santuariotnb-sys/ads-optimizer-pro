@@ -18,23 +18,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const clientUa = req.headers['user-agent'] || '';
 
   // Chunk events into batches of 1000
-  const chunks: any[][] = [];
+  const chunks: Record<string, unknown>[][] = [];
   for (let i = 0; i < events.length; i += MAX_EVENTS_PER_REQUEST) {
     chunks.push(events.slice(i, i + MAX_EVENTS_PER_REQUEST));
   }
 
   const results = await Promise.allSettled(
     chunks.map(async (chunk) => {
-      const enriched = chunk.map((event: any) => ({
+      const enriched = chunk.map((event: Record<string, unknown>) => ({
         ...event,
         user_data: {
-          ...event.user_data,
-          client_ip_address: event.user_data?.client_ip_address || clientIp,
-          client_user_agent: event.user_data?.client_user_agent || clientUa,
+          ...(event.user_data as Record<string, unknown>),
+          client_ip_address: (event.user_data as Record<string, unknown>)?.client_ip_address || clientIp,
+          client_user_agent: (event.user_data as Record<string, unknown>)?.client_user_agent || clientUa,
         },
       }));
 
-      const body: any = { data: JSON.stringify(enriched) };
+      const body: Record<string, unknown> = { data: JSON.stringify(enriched) };
       if (test_event_code) body.test_event_code = test_event_code;
 
       const url = `https://graph.facebook.com/${API_VERSION}/${pixel_id}/events?access_token=${access_token}`;
