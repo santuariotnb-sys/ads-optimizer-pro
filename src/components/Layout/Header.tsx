@@ -33,7 +33,12 @@ const periods: { value: Period; label: string }[] = [
 ];
 
 export default function Header() {
-  const { currentModule, selectedPeriod, setSelectedPeriod, mode, theme, toggleTheme } = useStore();
+  const currentModule = useStore((s) => s.currentModule);
+  const selectedPeriod = useStore((s) => s.selectedPeriod);
+  const setSelectedPeriod = useStore((s) => s.setSelectedPeriod);
+  const mode = useStore((s) => s.mode);
+  const theme = useStore((s) => s.theme);
+  const toggleTheme = useStore((s) => s.toggleTheme);
   const [hoveredPeriod, setHoveredPeriod] = useState<string | null>(null);
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const isMobile = useIsMobile();

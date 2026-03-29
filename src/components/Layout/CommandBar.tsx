@@ -48,7 +48,8 @@ function LiveClock() {
 }
 
 export default function CommandBar() {
-  const { currentModule, setCurrentModule } = useStore();
+  const currentModule = useStore((s) => s.currentModule);
+  const setCurrentModule = useStore((s) => s.setCurrentModule);
   const isMobile = useIsMobile();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 

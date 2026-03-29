@@ -17,7 +17,7 @@ const statusLabel: Record<string, string> = {
 };
 
 const Dashboard: React.FC = () => {
-  const { selectedPeriod } = useStore();
+  const selectedPeriod = useStore((s) => s.selectedPeriod);
   const isMobile = useIsMobile();
 
   return (

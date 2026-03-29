@@ -29,7 +29,12 @@ const navItems = [
 const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 export default function Sidebar() {
-  const { currentModule, setCurrentModule, sidebarCollapsed, toggleSidebar, mode, alerts } = useStore();
+  const currentModule = useStore((s) => s.currentModule);
+  const setCurrentModule = useStore((s) => s.setCurrentModule);
+  const sidebarCollapsed = useStore((s) => s.sidebarCollapsed);
+  const toggleSidebar = useStore((s) => s.toggleSidebar);
+  const mode = useStore((s) => s.mode);
+  const alerts = useStore((s) => s.alerts);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const isMobile = useIsMobile();
 

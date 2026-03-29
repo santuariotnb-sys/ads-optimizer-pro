@@ -107,10 +107,10 @@ export default function Audiences() {
           </div>
           <div>
             <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
-              Audiencias
+              Audiências
             </h2>
             <span style={{ fontSize: 13, color: '#64748b' }}>
-              {mockAudiences.length} audiencias ativas
+              {mockAudiences.length} audiências ativas
             </span>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function Audiences() {
             {overlappingPairs.map((pair, i) => (
               <div key={i} style={{ fontSize: 12, color: '#0f172a', opacity: 0.8 }}>
                 <strong>{pair.a}</strong> e <strong>{pair.b}</strong> com ~{pair.percent}% de overlap.
-                Considere consolidar para evitar competicao no leilao.
+                Considere consolidar para evitar competição no leilão.
               </div>
             ))}
           </div>
@@ -199,7 +199,7 @@ export default function Audiences() {
                 <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Freq.</div>
                 <div style={{
                   fontSize: 16, fontWeight: 700, fontFamily: "'Outfit', sans-serif",
-                  color: aud.frequency > 2.5 ? '#f87171' : '#f5f5f5',
+                  color: aud.frequency > 2.5 ? '#f87171' : '#0f172a',
                 }}>
                   {aud.frequency.toFixed(1)}
                 </div>
@@ -219,14 +219,14 @@ export default function Audiences() {
               <SaturationGauge percent={aud.saturation_percent} />
               <div>
                 <div style={{ fontSize: 10, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>
-                  Saturacao
+                  Saturação
                 </div>
                 <div style={{ fontSize: 12, color: '#94a3b8' }}>
                   {aud.saturation_percent < 40
-                    ? 'Audiencia saudavel'
+                    ? 'Audiência saudável'
                     : aud.saturation_percent < 70
                     ? 'Monitorar de perto'
-                    : 'Acao necessaria'}
+                    : 'Ação necessária'}
                 </div>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function Audiences() {
         ))}
         {mockAudiences.length === 0 && (
           <div style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
-            <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma audiencia encontrada</div>
+            <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma audiência encontrada</div>
           </div>
         )}
       </div>

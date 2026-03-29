@@ -32,6 +32,7 @@ export default function Settings() {
   const [activeTab, setActiveTab] = useState<'integrations' | 'general' | 'notifications'>('integrations');
   const [profile, setProfile] = useState({ timezone: 'America/Sao_Paulo', currency: 'BRL', default_roas_target: 3.0, default_cpa_target: 50, closing_day: 1 });
   const [refreshKey, setRefreshKey] = useState(0);
+  const [notifToggles, setNotifToggles] = useState<Record<string, boolean>>({ 'In-App': true, 'Email': false, 'WhatsApp': false, 'Telegram': false });
 
   useEffect(() => {
     if (mode !== 'live') return;
@@ -305,27 +306,33 @@ export default function Settings() {
             <Bell size={16} color={c.accent} /> Canais de Notificação
           </h3>
           {[
-            { label: 'In-App', desc: 'Notificações dentro da plataforma', enabled: true },
-            { label: 'Email', desc: 'Alertas enviados para seu email', enabled: false },
-            { label: 'WhatsApp', desc: 'Notificações via WhatsApp Business API', enabled: false },
-            { label: 'Telegram', desc: 'Alertas via Telegram Bot', enabled: false },
-          ].map((channel, i) => (
-            <div key={channel.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: i < 3 ? `1px solid ${c.border}` : 'none' }}>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: c.text }}>{channel.label}</div>
-                <div style={{ fontSize: 12, color: c.textMuted }}>{channel.desc}</div>
+            { label: 'In-App', desc: 'Notificações dentro da plataforma' },
+            { label: 'Email', desc: 'Alertas enviados para seu email' },
+            { label: 'WhatsApp', desc: 'Notificações via WhatsApp Business API' },
+            { label: 'Telegram', desc: 'Alertas via Telegram Bot' },
+          ].map((channel, i) => {
+            const enabled = notifToggles[channel.label] ?? false;
+            return (
+              <div key={channel.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: i < 3 ? `1px solid ${c.border}` : 'none' }}>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: c.text }}>{channel.label}</div>
+                  <div style={{ fontSize: 12, color: c.textMuted }}>{channel.desc}</div>
+                </div>
+                <div
+                  onClick={() => setNotifToggles(prev => ({ ...prev, [channel.label]: !prev[channel.label] }))}
+                  style={{
+                    width: 44, height: 24, borderRadius: 12, cursor: 'pointer', position: 'relative',
+                    background: enabled ? c.accent : c.surface3, transition: 'background 0.2s',
+                  }}
+                >
+                  <div style={{
+                    width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3,
+                    left: enabled ? 23 : 3, transition: 'left 0.2s',
+                  }} />
+                </div>
               </div>
-              <div style={{
-                width: 44, height: 24, borderRadius: 12, cursor: 'pointer', position: 'relative',
-                background: channel.enabled ? c.accent : c.surface3, transition: 'background 0.2s',
-              }}>
-                <div style={{
-                  width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3,
-                  left: channel.enabled ? 23 : 3, transition: 'left 0.2s',
-                }} />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </motion.div>
       )}
     </div>

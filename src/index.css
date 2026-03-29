@@ -382,6 +382,10 @@ body {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
 @keyframes pulse-live {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }

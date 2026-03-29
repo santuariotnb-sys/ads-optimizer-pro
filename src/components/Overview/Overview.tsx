@@ -319,7 +319,10 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function Overview() {
   const isMobile = useIsMobile();
-  const { campaigns, metrics, emqScore, setCurrentModule } = useStore();
+  const campaigns = useStore((s) => s.campaigns);
+  const metrics = useStore((s) => s.metrics);
+  const emqScore = useStore((s) => s.emqScore);
+  const setCurrentModule = useStore((s) => s.setCurrentModule);
 
   const liveCampaigns = campaigns.length > 0 ? campaigns : mockCampaigns;
   const topCampaigns = [...liveCampaigns]

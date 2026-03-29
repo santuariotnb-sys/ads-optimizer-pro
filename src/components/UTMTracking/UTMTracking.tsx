@@ -560,16 +560,16 @@ export default function UTMTracking() {
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td style={{ ...S.td, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.data}</td>
-                    <td style={{ ...S.td, ...highlightTd, fontWeight: 600 }}>{r.produto}</td>
-                    <td style={S.td}>{r.cliente}</td>
-                    <td style={{ ...S.td, ...S.tdMono, fontWeight: 600 }}>{formatCurrency(r.valor)}</td>
-                    <td style={S.td}>
+                    <td style={{ ...S.td, ...colDepthTd(0), fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.data}</td>
+                    <td style={{ ...S.td, ...colDepthTd(1), ...highlightTd, fontWeight: 600 }}>{r.produto}</td>
+                    <td style={{ ...S.td, ...colDepthTd(2) }}>{r.cliente}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(3), fontWeight: 600 }}>{formatCurrency(r.valor)}</td>
+                    <td style={{ ...S.td, ...colDepthTd(4) }}>
                       <span style={vendaStatusStyle(r.status)}>{r.status}</span>
                     </td>
-                    <td style={S.td}>{r.plataforma}</td>
-                    <td style={{ ...S.td, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_source}</td>
-                    <td style={{ ...S.td, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_campaign}</td>
+                    <td style={{ ...S.td, ...colDepthTd(5) }}>{r.plataforma}</td>
+                    <td style={{ ...S.td, ...colDepthTd(6), fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_source}</td>
+                    <td style={{ ...S.td, ...colDepthTd(7), fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.utm_campaign}</td>
                   </tr>
                 ))}
               </tbody>
@@ -581,7 +581,7 @@ export default function UTMTracking() {
               <thead>
                 <tr>
                   {['DATA', 'DIA', 'VENDAS', 'CPA', 'GASTOS', 'FATURAMENTO', 'LUCRO', 'ROAS', 'MARGEM', 'ROI'].map((h, i) => (
-                    <th key={h} style={{ ...S.th, ...(i >= 2 ? S.thRight : {}), ...(i === 6 ? highlightTh : {}) }}>{h}</th>
+                    <th key={h} style={{ ...S.th, ...colDepthTh(i), ...(i >= 2 ? S.thRight : {}), ...(i === 6 ? highlightTh : {}) }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -593,16 +593,16 @@ export default function UTMTracking() {
                     onMouseEnter={() => setHoveredRow(idx)}
                     onMouseLeave={() => setHoveredRow(null)}
                   >
-                    <td style={{ ...S.td, fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.data}</td>
-                    <td style={{ ...S.td, fontWeight: 600 }}>{r.dia}</td>
-                    <td style={{ ...S.td, ...S.tdMono, fontWeight: 700 }}>{r.vendas}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.cpa)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.gastos)}</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{formatCurrency(r.faturamento)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, ...highlightTd, color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
-                    <td style={{ ...S.td, ...S.tdMono, color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.margem.toFixed(1)}%</td>
-                    <td style={{ ...S.td, ...S.tdMono }}>{r.roi}%</td>
+                    <td style={{ ...S.td, ...colDepthTd(0), fontFamily: 'JetBrains Mono, monospace', fontSize: 12 }}>{r.data}</td>
+                    <td style={{ ...S.td, ...colDepthTd(1), fontWeight: 600 }}>{r.dia}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(2), fontWeight: 700 }}>{r.vendas}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(3) }}>{formatCurrency(r.cpa)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(4) }}>{formatCurrency(r.gastos)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(5) }}>{formatCurrency(r.faturamento)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(6), ...highlightTd, color: lucroColor(r.lucro), fontWeight: 600 }}>{formatCurrency(r.lucro)}</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(7), color: roasColor(r.roas), fontWeight: 700 }}>{r.roas.toFixed(2)}x</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(8) }}>{r.margem.toFixed(1)}%</td>
+                    <td style={{ ...S.td, ...S.tdMono, ...colDepthTd(9) }}>{r.roi}%</td>
                   </tr>
                 ))}
               </tbody>

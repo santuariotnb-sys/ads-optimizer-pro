@@ -25,9 +25,9 @@ type Filter = 'all' | 'winner' | 'testing' | 'loser';
 type SortKey = 'score' | 'cpa' | 'hook_rate';
 
 const statusConfig: Record<CreativeStatus, { label: string; color: string; icon: typeof Trophy; bgAlpha: string }> = {
-  winner: { label: 'Winner', color: COLORS.success, icon: Trophy, bgAlpha: 'rgba(74, 222, 128, 0.1)' },
-  testing: { label: 'Testing', color: COLORS.info, icon: FlaskConical, bgAlpha: 'rgba(96, 165, 250, 0.1)' },
-  loser: { label: 'Loser', color: COLORS.danger, icon: XCircle, bgAlpha: 'rgba(248, 113, 113, 0.1)' },
+  winner: { label: 'Vencedor', color: COLORS.success, icon: Trophy, bgAlpha: 'rgba(74, 222, 128, 0.1)' },
+  testing: { label: 'Testando', color: COLORS.info, icon: FlaskConical, bgAlpha: 'rgba(96, 165, 250, 0.1)' },
+  loser: { label: 'Perdedor', color: COLORS.danger, icon: XCircle, bgAlpha: 'rgba(248, 113, 113, 0.1)' },
 };
 
 const formatIcons: Record<string, string> = {
@@ -266,9 +266,9 @@ export default function Creatives() {
 
   const filters: { key: Filter; label: string; count: number }[] = [
     { key: 'all', label: 'Todos', count: mockCreativesData.length },
-    { key: 'winner', label: 'Winners', count: mockCreativesData.filter(c => c.status === 'winner').length },
-    { key: 'testing', label: 'Testing', count: mockCreativesData.filter(c => c.status === 'testing').length },
-    { key: 'loser', label: 'Losers', count: mockCreativesData.filter(c => c.status === 'loser').length },
+    { key: 'winner', label: 'Vencedores', count: mockCreativesData.filter(c => c.status === 'winner').length },
+    { key: 'testing', label: 'Testando', count: mockCreativesData.filter(c => c.status === 'testing').length },
+    { key: 'loser', label: 'Perdedores', count: mockCreativesData.filter(c => c.status === 'loser').length },
   ];
 
   const sorts: { key: SortKey; label: string }[] = [

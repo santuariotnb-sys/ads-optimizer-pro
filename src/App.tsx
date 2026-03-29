@@ -133,6 +133,7 @@ function ModuleRouter() {
     case 'agent': return <Agent />;
     case 'pipeline': return <Pipeline />;
     case 'create': return <CampaignCreator />;
+    case 'opt-scale':
     case 'autoscale': return <AutoScale />;
     case 'playbook': return <Playbook />;
 
@@ -142,11 +143,22 @@ function ModuleRouter() {
 }
 
 export default function App() {
-  const {
-    setCampaigns, setAdSets, setAds, setCreatives, setAudiences,
-    setAlerts, setMetrics, setEMQScore, setSignalAudit, setIsLoading,
-    setAccessToken, setCurrentModule, mode, accessToken, adAccountId, currentModule,
-  } = useStore();
+  const setCampaigns = useStore((s) => s.setCampaigns);
+  const setAdSets = useStore((s) => s.setAdSets);
+  const setAds = useStore((s) => s.setAds);
+  const setCreatives = useStore((s) => s.setCreatives);
+  const setAudiences = useStore((s) => s.setAudiences);
+  const setAlerts = useStore((s) => s.setAlerts);
+  const setMetrics = useStore((s) => s.setMetrics);
+  const setEMQScore = useStore((s) => s.setEMQScore);
+  const setSignalAudit = useStore((s) => s.setSignalAudit);
+  const setIsLoading = useStore((s) => s.setIsLoading);
+  const setAccessToken = useStore((s) => s.setAccessToken);
+  const setCurrentModule = useStore((s) => s.setCurrentModule);
+  const mode = useStore((s) => s.mode);
+  const accessToken = useStore((s) => s.accessToken);
+  const adAccountId = useStore((s) => s.adAccountId);
+  const currentModule = useStore((s) => s.currentModule);
 
   // Set default module on first load
   useEffect(() => {

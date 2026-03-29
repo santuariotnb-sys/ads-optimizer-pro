@@ -26,7 +26,8 @@ function getActiveTab(currentModule: string): TabId {
 }
 
 export default function TopNav() {
-  const { currentModule, setCurrentModule } = useStore();
+  const currentModule = useStore((s) => s.currentModule);
+  const setCurrentModule = useStore((s) => s.setCurrentModule);
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
@@ -54,17 +55,31 @@ export default function TopNav() {
         }}
       >
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 'auto' : 180 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 'auto' : 200 }}>
           <img
             src="/logo-everest.png"
             alt="Ads.Everest"
-            style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover' }}
+            onClick={() => setCurrentModule('opt-overview')}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 13,
+              objectFit: 'cover',
+              filter: 'drop-shadow(0 4px 14px rgba(15,23,42,0.15))',
+              animation: 'logoFloat 3s ease-in-out infinite',
+              cursor: 'pointer',
+            }}
           />
           {!isMobile && (
-            <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 18, fontWeight: 600 }}>
-              <span style={{ color: '#0f172a' }}>Ads</span>
-              <span style={{ color: '#b8854c' }}>.Everest</span>
-            </span>
+            <img
+              src="/logo-text-everest.png"
+              alt="Ads.Everest"
+              style={{
+                height: 26,
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 1px 2px rgba(15,23,42,0.06))',
+              }}
+            />
           )}
         </div>
 
@@ -145,6 +160,7 @@ export default function TopNav() {
         <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12, minWidth: isMobile ? 'auto' : 180, justifyContent: 'flex-end' }}>
           {/* Bell */}
           <button
+            onClick={() => alert('Nenhuma notificação nova')}
             style={{
               position: 'relative',
               display: 'flex',
@@ -176,6 +192,7 @@ export default function TopNav() {
 
           {/* User avatar */}
           <button
+            onClick={() => setCurrentModule('opt-settings')}
             style={{
               display: 'flex',
               alignItems: 'center',

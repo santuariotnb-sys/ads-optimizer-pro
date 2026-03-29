@@ -20,10 +20,10 @@ function StatCards() {
   const isMobile = useIsMobile();
   const stats = mockCAPIState.stats;
   const cards = [
-    { label: 'EMQ', value: stats.avg_emq.toFixed(1), sub: '/10', color: stats.avg_emq >= 8 ? COLORS.success : COLORS.warning },
-    { label: 'Events', value: stats.events_24h.toLocaleString('pt-BR'), sub: '/24h', color: COLORS.accent },
-    { label: 'Synth.', value: stats.synthetic_24h.toLocaleString('pt-BR'), sub: '/24h', color: COLORS.warning },
-    { label: 'Match', value: `${stats.match_rate}%`, sub: 'rate', color: COLORS.info },
+    { label: 'EMQ (Qualidade)', value: stats.avg_emq.toFixed(1), sub: '/10', color: stats.avg_emq >= 8 ? COLORS.success : COLORS.warning },
+    { label: 'Eventos', value: stats.events_24h.toLocaleString('pt-BR'), sub: '/24h', color: COLORS.accent },
+    { label: 'Sintéticos', value: stats.synthetic_24h.toLocaleString('pt-BR'), sub: '/24h', color: COLORS.warning },
+    { label: 'Correspondência', value: `${stats.match_rate}%`, sub: 'taxa', color: COLORS.info },
   ];
 
   return (
@@ -284,11 +284,11 @@ function FunnelFlow() {
 
   const stages = [
     { name: 'PageView', count: 1847, color: COLORS.textMuted },
-    { name: 'Deep Eng.', count: 342, color: COLORS.warning },
+    { name: 'Eng. Prof.', count: 342, color: COLORS.warning },
     { name: 'ViewContent', count: 289, color: COLORS.info },
     { name: 'Lead', count: 156, color: COLORS.accent },
     { name: 'Checkout', count: 89, color: COLORS.accentLight },
-    { name: 'Purchase', count: 26, color: COLORS.success },
+    { name: 'Compra', count: 26, color: COLORS.success },
   ];
 
   const maxCount = stages[0].count;
@@ -416,7 +416,7 @@ export default function SignalEngine() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <h1 style={{ color: COLORS.text, fontSize: 24, fontWeight: 700, margin: 0 }}>Signal Engine</h1>
+            <h1 style={{ color: COLORS.text, fontSize: 24, fontWeight: 700, margin: 0 }}>Rastreamento de Sinal</h1>
             <span style={{
               background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))',
               border: '1px solid rgba(99,102,241,0.3)',

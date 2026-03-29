@@ -13,7 +13,8 @@ interface SubNavProps {
 }
 
 export default function SubNav({ items }: SubNavProps) {
-  const { currentModule, setCurrentModule } = useStore();
+  const currentModule = useStore((s) => s.currentModule);
+  const setCurrentModule = useStore((s) => s.setCurrentModule);
   const isMobile = useIsMobile();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
