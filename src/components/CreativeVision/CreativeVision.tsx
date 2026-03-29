@@ -96,7 +96,9 @@ export default function CreativeVision() {
       let extractedFrames: FrameData[];
 
       if (creativeType === 'video') {
-        extractedFrames = await extractVideoFrames(file, 6, setProgress);
+        // Usar o videoRef do DOM se disponível (necessário para Safari)
+        const source = videoRef.current && videoRef.current.readyState >= 1 ? videoRef.current : file;
+        extractedFrames = await extractVideoFrames(source, 6, setProgress);
         if (extractedFrames.length === 0) {
           throw new Error('Não foi possível extrair frames do vídeo. Tente outro formato (MP4 H.264).');
         }

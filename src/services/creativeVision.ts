@@ -27,86 +27,104 @@ function formatTimestamp(seconds: number): string {
   return `${mins}:${secs}`;
 }
 
-// Extrai frames via Canvas — único método, sem dependências externas
-async function extractFramesCanvas(file: File, count: number, onProgress?: (msg: string) => void): Promise<FrameData[]> {
-  return new Promise<FrameData[]>((resolve, reject) => {
-    const video = document.createElement('video');
-    const url = URL.createObjectURL(file);
+// Extrai frames usando um <video> que já está no DOM (funciona em Safari)
+async function extractFromDomVideo(
+  video: HTMLVideoElement,
+  count: number,
+  onProgress?: (msg: string) => void,
+): Promise<FrameData[]> {
+  // Garantir que o vídeo tem dados suficientes
+  if (video.readyState < 2) {
+    onProgress?.('Aguardando vídeo carregar...');
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Timeout ao carregar vídeo')), 30000);
+      const done = () => { clearTimeout(timer); resolve(); };
+      video.addEventListener('canplay', done, { once: true });
+      video.addEventListener('loadeddata', done, { once: true });
+      video.addEventListener('error', () => {
+        clearTimeout(timer);
+        reject(new Error(`Erro ao carregar vídeo (code=${video.error?.code})`));
+      }, { once: true });
+    });
+  }
 
-    video.muted = true;
-    video.playsInline = true;
-    video.preload = 'auto';
-    video.src = url;
+  const duration = video.duration;
+  if (!duration || !isFinite(duration) || duration <= 0) {
+    throw new Error(`Duração inválida: ${duration}`);
+  }
 
-    const cleanup = () => { try { URL.revokeObjectURL(url); } catch {} };
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas 2D indisponível');
 
-    const timer = setTimeout(() => {
-      cleanup();
-      reject(new Error('Timeout ao carregar vídeo (30s)'));
-    }, 30000);
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 360;
 
-    video.addEventListener('error', () => {
-      clearTimeout(timer);
-      cleanup();
-      reject(new Error(`Vídeo não suportado pelo navegador (code=${video.error?.code})`));
-    }, { once: true });
+  // Pausar o vídeo para fazer seek sem interferência
+  const wasPlaying = !video.paused;
+  video.pause();
 
-    video.addEventListener('canplaythrough', async () => {
-      clearTimeout(timer);
-      onProgress?.('Vídeo carregado, extraindo frames...');
+  const frames: FrameData[] = [];
+  for (let i = 0; i < count; i++) {
+    const ts = duration * 0.05 + (duration * 0.9) * (i / Math.max(count - 1, 1));
+    onProgress?.(`Extraindo frame ${i + 1}/${count}...`);
 
-      const duration = video.duration;
-      if (!duration || !isFinite(duration) || duration <= 0) {
-        cleanup();
-        reject(new Error(`Duração inválida: ${duration}`));
-        return;
-      }
+    await new Promise<void>((resolve) => {
+      const onSeeked = () => {
+        video.removeEventListener('seeked', onSeeked);
+        resolve();
+      };
+      video.addEventListener('seeked', onSeeked);
+      video.currentTime = ts;
+    });
 
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) { cleanup(); reject(new Error('Canvas 2D indisponível')); return; }
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    frames.push({
+      timestamp: formatTimestamp(ts),
+      dataUrl: canvas.toDataURL('image/jpeg', 0.85),
+      isHook: i === 0,
+    });
+  }
 
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 360;
+  // Voltar ao início
+  video.currentTime = 0;
+  if (wasPlaying) video.play();
 
-      const frames: FrameData[] = [];
-      for (let i = 0; i < count; i++) {
-        const ts = duration * 0.05 + (duration * 0.9) * (i / Math.max(count - 1, 1));
-        onProgress?.(`Extraindo frame ${i + 1}/${count}...`);
-
-        await new Promise<void>((seekDone) => {
-          const onSeeked = () => {
-            video.removeEventListener('seeked', onSeeked);
-            seekDone();
-          };
-          video.addEventListener('seeked', onSeeked);
-          video.currentTime = ts;
-        });
-
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        frames.push({
-          timestamp: formatTimestamp(ts),
-          dataUrl: canvas.toDataURL('image/jpeg', 0.85),
-          isHook: i === 0,
-        });
-      }
-
-      cleanup();
-      resolve(frames);
-    }, { once: true });
-
-    video.load();
-  });
+  return frames;
 }
 
 // Função principal de extração de frames
 export async function extractVideoFrames(
-  file: File,
+  fileOrVideo: File | HTMLVideoElement,
   count = 6,
   onProgress?: (msg: string) => void,
 ): Promise<FrameData[]> {
+  // Se recebeu um HTMLVideoElement (do DOM), usar diretamente
+  if (fileOrVideo instanceof HTMLVideoElement) {
+    onProgress?.('Extraindo frames do vídeo...');
+    return extractFromDomVideo(fileOrVideo, count, onProgress);
+  }
+
+  // Se recebeu File, criar video no DOM (hidden) para Safari
   onProgress?.('Carregando vídeo...');
-  return extractFramesCanvas(file, count, onProgress);
+  const video = document.createElement('video');
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = 'auto';
+  video.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
+  document.body.appendChild(video);
+
+  const url = URL.createObjectURL(fileOrVideo);
+  video.src = url;
+  video.load();
+
+  try {
+    const frames = await extractFromDomVideo(video, count, onProgress);
+    return frames;
+  } finally {
+    document.body.removeChild(video);
+    URL.revokeObjectURL(url);
+  }
 }
 
 export async function imageToFrame(file: File): Promise<FrameData> {

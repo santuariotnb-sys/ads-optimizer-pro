@@ -3,14 +3,33 @@
   "short_name": "Ads.Everest",
   "description": "Escale suas campanhas Meta Ads ao topo",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f8f8f6",
   "theme_color": "#f8f8f6",
   "orientation": "portrait-primary",
+  "categories": ["business", "productivity"],
+  "lang": "pt-BR",
+  "dir": "ltr",
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/logo-everest.png", "sizes": "256x256", "type": "image/png" },
     { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
     { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "UTM Studio",
+      "short_name": "UTMs",
+      "url": "/?module=utm-campanhas",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Criativos",
+      "short_name": "Criativos",
+      "url": "/?module=cre-dashboard",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
   ]
 }
