@@ -80,8 +80,13 @@ export default function Settings() {
   async function handleConnect(provider: string) {
     if (provider === 'meta') {
       const appId = import.meta.env.VITE_META_APP_ID;
+      if (!appId) { alert('Configure VITE_META_APP_ID no .env para conectar o Meta Ads.'); return; }
       const redirectUri = import.meta.env.VITE_META_REDIRECT_URI || window.location.origin + '/auth/callback';
       window.location.assign(`https://www.facebook.com/v21.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=ads_read,ads_management,read_insights&response_type=token`);
+      return;
+    }
+    if (mode !== 'live') {
+      alert(`Conecte sua conta Meta primeiro para ativar a integração com ${provider}.`);
       return;
     }
     await upsertIntegration(provider, {});
@@ -235,7 +240,7 @@ export default function Settings() {
                       <span style={{ fontSize: 12, color: c.textMuted }}>Última sincronização</span>
                       <span style={{ fontSize: 12, color: c.text }}>{integration?.last_sync_at ? new Date(integration.last_sync_at).toLocaleString('pt-BR') : '—'}</span>
                     </div>
-                    <button style={{ marginTop: 4, padding: '8px 12px', borderRadius: 8, border: `1px solid ${c.border}`, background: 'transparent', color: c.accent, fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <button onClick={() => handleConnect('meta')} style={{ marginTop: 4, padding: '8px 12px', borderRadius: 8, border: `1px solid ${c.border}`, background: 'transparent', color: c.accent, fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
                       <RefreshCw size={14} /> Reconectar
                     </button>
                   </div>

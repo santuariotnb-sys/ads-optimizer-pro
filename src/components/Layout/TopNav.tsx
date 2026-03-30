@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { supabase } from '../../lib/supabase';
 import { LayoutDashboard, Link, Sparkles, Bell, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -15,7 +16,7 @@ interface TabDef {
 
 const tabs: TabDef[] = [
   { id: 'cmd', label: 'COMANDO', icon: LayoutDashboard, defaultModule: 'cmd-overview' },
-  { id: 'trace', label: 'TRACE ENGINE', icon: Link, defaultModule: 'trace-dashboard' },
+  { id: 'trace', label: 'XTRACKER', icon: Link, defaultModule: 'trace-dashboard' },
   { id: 'cre', label: 'CRIATIVOS', icon: Sparkles, defaultModule: 'cre-dashboard' },
 ];
 
@@ -32,6 +33,15 @@ export default function TopNav() {
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+
+  const [userName, setUserName] = useState('Usuário');
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.user_metadata?.full_name) setUserName(data.user.user_metadata.full_name);
+      else if (data.user?.email) setUserName(data.user.email.split('@')[0]);
+    }).catch(() => {});
+  }, []);
+  const userInitials = userName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
   const activeTab = getActiveTab(currentModule);
 
@@ -64,9 +74,9 @@ export default function TopNav() {
             src="/logo-everest.png"
             alt="Ads.Everest"
             style={{
-              width: isMobile ? 36 : 67,
-              height: isMobile ? 36 : 67,
-              borderRadius: isMobile ? 10 : 18,
+              width: isMobile ? 43 : 80,
+              height: isMobile ? 43 : 80,
+              borderRadius: isMobile ? 12 : 20,
               objectFit: 'cover',
               filter: 'drop-shadow(0 8px 22px rgba(15,23,42,0.22))',
               animation: 'logoFloat 4s ease-in-out infinite',
@@ -217,7 +227,7 @@ export default function TopNav() {
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
               }}
             >
-              GH
+              {userInitials}
             </div>
             {!isMobile && (
               <span
@@ -229,7 +239,7 @@ export default function TopNav() {
                   paddingRight: 8,
                 }}
               >
-                Guilherme
+                {userName}
               </span>
             )}
           </button>

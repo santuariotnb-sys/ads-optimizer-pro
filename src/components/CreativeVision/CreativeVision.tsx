@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import {
   Upload, Eye, Sparkles, Film, Image as ImageIcon, Palette,
-  Target, Zap, CheckCircle, AlertTriangle, XCircle, Loader, MessageSquare, Download,
+  Target, Zap, CheckCircle, AlertTriangle, XCircle, Loader, MessageSquare, Download, Clock,
 } from 'lucide-react';
 import AlpineCard from '../Layout/AlpineCard';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -56,6 +56,12 @@ export default function CreativeVision() {
   const [dragOver, setDragOver] = useState(false);
   const [actionPlan, setActionPlan] = useState<string | null>(null);
   const [generatingPlan, setGeneratingPlan] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareA, setCompareA] = useState<CreativeAnalysisResult | null>(null);
+  const [compareB, setCompareB] = useState<CreativeAnalysisResult | null>(null);
+  const [compareNameA, setCompareNameA] = useState('');
+  const [compareNameB, setCompareNameB] = useState('');
   const setCreativeAnalysisContext = useStore((s) => s.setCreativeAnalysisContext);
   const setCurrentModule = useStore((s) => s.setCurrentModule);
 
@@ -63,6 +69,38 @@ export default function CreativeVision() {
     sessionStorage.setItem(SESSION_KEY_KEY, apiKey);
     sessionStorage.setItem(SESSION_PROVIDER_KEY, provider);
   }, [apiKey, provider]);
+
+  // Histórico de análises (localStorage)
+  interface HistoryEntry { id: string; fileName: string; score: number; hookScore: number; ctaScore: number; drScore?: number; date: string; result: CreativeAnalysisResult; }
+  const HISTORY_KEY = 'ads_everest_analysis_history';
+
+  const getHistory = useCallback((): HistoryEntry[] => {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+  }, []);
+
+  const saveToHistory = useCallback((fileName: string, analysisResult: CreativeAnalysisResult) => {
+    const history = getHistory();
+    const entry: HistoryEntry = {
+      id: `${Date.now()}`,
+      fileName,
+      score: analysisResult.score,
+      hookScore: analysisResult.hookScore,
+      ctaScore: analysisResult.ctaScore,
+      drScore: analysisResult.directResponseScore,
+      date: new Date().toLocaleString('pt-BR'),
+      result: analysisResult,
+    };
+    const updated = [entry, ...history].slice(0, 20); // max 20 entries
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(updated));
+  }, [getHistory]);
+
+  const loadFromHistory = useCallback((entry: HistoryEntry) => {
+    setResult(entry.result);
+    setFrames([]);
+    setShowHistory(false);
+    setError(null);
+    setActionPlan(null);
+  }, []);
 
   const handleFile = useCallback((f: File) => {
     if (f.size > 500 * 1024 * 1024) {
@@ -129,6 +167,7 @@ export default function CreativeVision() {
       }
 
       setResult(analysisResult);
+      saveToHistory(file?.name || 'criativo', analysisResult);
       setProgress(null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Erro desconhecido na análise';
@@ -300,17 +339,145 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
       style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
     >
       {/* Header */}
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-          <Eye size={22} style={{ color: '#6366f1' }} />
-          <h1 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', fontFamily: "'Plus Jakarta Sans', sans-serif", margin: 0 }}>
-            Análise de Criativos com IA
-          </h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: isMobile ? 'flex-start' : 'center' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+            <Eye size={22} style={{ color: '#6366f1' }} />
+            <h1 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', fontFamily: "'Plus Jakarta Sans', sans-serif", margin: 0 }}>
+              Análise de Criativos com IA
+            </h1>
+          </div>
+          <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>
+            Envie uma imagem ou vídeo para análise visual automática
+          </p>
         </div>
-        <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>
-          Envie uma imagem ou vídeo para análise visual automática
-        </p>
+        <button
+          onClick={() => setShowHistory(!showHistory)}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            padding: '8px 14px', borderRadius: 10,
+            border: '1px solid rgba(15,23,42,0.1)',
+            background: showHistory ? 'rgba(99,102,241,0.06)' : 'transparent',
+            color: showHistory ? '#6366f1' : '#64748b',
+            fontSize: 12, fontWeight: 600, cursor: 'pointer',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+          }}
+        >
+          <Clock size={14} />
+          Histórico
+        </button>
       </div>
+
+      {/* History Panel */}
+      {showHistory && (
+        <AlpineCard padding={16}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <p style={{ ...labelStyle, margin: 0 }}>Análises Anteriores</p>
+            {getHistory().length >= 2 && (
+              <button
+                onClick={() => { setCompareMode(!compareMode); setCompareA(null); setCompareB(null); }}
+                style={{
+                  fontSize: 11, fontWeight: 600, padding: '4px 12px', borderRadius: 8, border: 'none', cursor: 'pointer',
+                  background: compareMode ? '#6366f1' : 'rgba(99,102,241,0.08)',
+                  color: compareMode ? '#fff' : '#6366f1',
+                }}
+              >
+                {compareMode ? 'Cancelar' : 'Comparar'}
+              </button>
+            )}
+          </div>
+          {getHistory().length === 0 ? (
+            <p style={{ fontSize: 13, color: '#94a3b8', margin: 0 }}>Nenhuma análise salva ainda.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 240, overflowY: 'auto' }}>
+              {getHistory().map((entry) => {
+                const scoreColor = entry.score >= 70 ? '#10b981' : entry.score >= 40 ? '#f59e0b' : '#ef4444';
+                const isSelectedA = compareA && compareNameA === entry.fileName && compareA.score === entry.score;
+                const isSelectedB = compareB && compareNameB === entry.fileName && compareB.score === entry.score;
+                return (
+                  <div
+                    key={entry.id}
+                    onClick={() => {
+                      if (compareMode) {
+                        if (!compareA) { setCompareA(entry.result); setCompareNameA(entry.fileName); }
+                        else if (!compareB) { setCompareB(entry.result); setCompareNameB(entry.fileName); }
+                      } else {
+                        loadFromHistory(entry);
+                      }
+                    }}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '10px 14px', borderRadius: 10, cursor: 'pointer',
+                      border: isSelectedA ? '2px solid #6366f1' : isSelectedB ? '2px solid #f59e0b' : '1px solid rgba(15,23,42,0.06)',
+                      background: isSelectedA ? 'rgba(99,102,241,0.06)' : isSelectedB ? 'rgba(245,158,11,0.06)' : 'rgba(15,23,42,0.02)',
+                      transition: 'background .15s',
+                    }}
+                    onMouseEnter={e => { if (!isSelectedA && !isSelectedB) e.currentTarget.style.background = 'rgba(99,102,241,0.04)'; }}
+                    onMouseLeave={e => { if (!isSelectedA && !isSelectedB) e.currentTarget.style.background = 'rgba(15,23,42,0.02)'; }}
+                  >
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{entry.fileName}</p>
+                      <p style={{ fontSize: 11, color: '#94a3b8', margin: '2px 0 0' }}>{entry.date}</p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                      {compareMode && (isSelectedA ? <span style={{ fontSize: 10, fontWeight: 700, color: '#6366f1' }}>A</span> : isSelectedB ? <span style={{ fontSize: 10, fontWeight: 700, color: '#f59e0b' }}>B</span> : null)}
+                      <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor, fontFamily: "'JetBrains Mono', monospace" }}>{entry.score}</span>
+                      {entry.drScore !== undefined && (
+                        <span style={{ fontSize: 11, color: '#64748b', fontFamily: "'JetBrains Mono', monospace" }}>DR:{entry.drScore}</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </AlpineCard>
+      )}
+
+      {/* Comparison View */}
+      {compareA && compareB && (
+        <AlpineCard padding={20}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+            <p style={{ ...labelStyle, margin: 0 }}>Comparação de Criativos</p>
+            <button onClick={() => { setCompareA(null); setCompareB(null); setCompareMode(false); }} style={{ fontSize: 11, color: '#64748b', background: 'none', border: 'none', cursor: 'pointer' }}>Fechar</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px 1fr', gap: 0 }}>
+            {/* Header */}
+            <div style={{ textAlign: 'center', padding: '8px', fontWeight: 600, fontSize: 12, color: '#6366f1' }}>{compareNameA}</div>
+            <div style={{ textAlign: 'center', padding: '8px', fontWeight: 600, fontSize: 10, color: '#94a3b8' }}>VS</div>
+            <div style={{ textAlign: 'center', padding: '8px', fontWeight: 600, fontSize: 12, color: '#f59e0b' }}>{compareNameB}</div>
+            {/* Metrics rows */}
+            {[
+              { label: 'Score', a: compareA.score, b: compareB.score, suffix: '/100' },
+              { label: 'Hook', a: compareA.hookScore, b: compareB.hookScore, suffix: '/10' },
+              { label: 'CTA', a: compareA.ctaScore, b: compareB.ctaScore, suffix: '/10' },
+              { label: 'DR Score', a: compareA.directResponseScore ?? 0, b: compareB.directResponseScore ?? 0, suffix: '/10' },
+            ].map((row) => {
+              const aWins = row.a > row.b;
+              const bWins = row.b > row.a;
+              return [
+                <div key={`${row.label}-a`} style={{ textAlign: 'center', padding: '6px 8px', fontSize: 18, fontWeight: 800, fontFamily: "'JetBrains Mono', monospace", color: aWins ? '#10b981' : '#334155' }}>
+                  {row.a}<span style={{ fontSize: 10, color: '#94a3b8' }}>{row.suffix}</span>
+                  {aWins && <span style={{ fontSize: 10, color: '#10b981', marginLeft: 4 }}>▲</span>}
+                </div>,
+                <div key={`${row.label}-l`} style={{ textAlign: 'center', padding: '6px 8px', fontSize: 10, color: '#94a3b8', alignSelf: 'center' }}>{row.label}</div>,
+                <div key={`${row.label}-b`} style={{ textAlign: 'center', padding: '6px 8px', fontSize: 18, fontWeight: 800, fontFamily: "'JetBrains Mono', monospace", color: bWins ? '#10b981' : '#334155' }}>
+                  {row.b}<span style={{ fontSize: 10, color: '#94a3b8' }}>{row.suffix}</span>
+                  {bWins && <span style={{ fontSize: 10, color: '#10b981', marginLeft: 4 }}>▲</span>}
+                </div>,
+              ];
+            })}
+            {/* Tone */}
+            <div style={{ textAlign: 'center', padding: '6px 8px', fontSize: 12, color: '#334155' }}>{compareA.tone}</div>
+            <div style={{ textAlign: 'center', padding: '6px 8px', fontSize: 10, color: '#94a3b8', alignSelf: 'center' }}>Tom</div>
+            <div style={{ textAlign: 'center', padding: '6px 8px', fontSize: 12, color: '#334155' }}>{compareB.tone}</div>
+            {/* Hook Type */}
+            <div style={{ textAlign: 'center', padding: '6px 8px', fontSize: 12, color: '#6366f1' }}>{compareA.hookType}</div>
+            <div style={{ textAlign: 'center', padding: '6px 8px', fontSize: 10, color: '#94a3b8', alignSelf: 'center' }}>Hook</div>
+            <div style={{ textAlign: 'center', padding: '6px 8px', fontSize: 12, color: '#f59e0b' }}>{compareB.hookType}</div>
+          </div>
+        </AlpineCard>
+      )}
 
       {/* API Config */}
       <AlpineCard padding={20}>

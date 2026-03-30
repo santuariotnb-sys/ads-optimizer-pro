@@ -13,7 +13,7 @@ interface QuickAction {
 
 const actions: QuickAction[] = [
   { id: 'cmd-overview', label: 'Comando', icon: LayoutDashboard, module: 'cmd-overview' },
-  { id: 'trace-dashboard', label: 'Trace', icon: Target, module: 'trace-dashboard' },
+  { id: 'trace-dashboard', label: 'XTracker', icon: Target, module: 'trace-dashboard' },
   { id: 'trace-utms', label: 'UTMs', icon: Link, module: 'trace-utms' },
   { id: 'cre-dashboard', label: 'Criativos', icon: Palette, module: 'cre-dashboard' },
 ];
@@ -76,17 +76,21 @@ export default function CommandBar() {
         boxShadow: '0 8px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04)',
       }}
     >
-      {/* Logo + Separator — hidden on mobile for compactness */}
-      {!isMobile && (
-        <>
-          <img
-            src="/logo-everest.png"
-            alt="Ads.Everest"
-            style={{ width: 32, height: 32, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}
-          />
-          <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />
-        </>
-      )}
+      {/* Logo + Separator */}
+      <img
+        src="/logo-everest.png"
+        alt="Ads.Everest"
+        style={{
+          width: isMobile ? 32 : 38,
+          height: isMobile ? 32 : 38,
+          borderRadius: 10,
+          objectFit: 'cover',
+          flexShrink: 0,
+          animation: 'logoFloat 4s ease-in-out infinite',
+        }}
+      />
+      <style>{`@keyframes logoFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }`}</style>
+      {!isMobile && <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,.10)', flexShrink: 0 }} />}
 
       {/* Quick actions */}
       {actions.map((action) => {

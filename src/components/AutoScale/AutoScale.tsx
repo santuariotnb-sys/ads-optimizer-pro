@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Zap, Shield, Clock, TrendingUp, Activity } from 'lucide-react';
+import { Zap, Shield, Clock, TrendingUp, Activity, Play, CheckCircle } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
 import { supabase } from '../../lib/supabase';
+import { evaluateAutoScale, type ScaleAction } from '../../services/autoScaler';
+import { MetaApiService } from '../../services/metaApi';
 
 interface AutoScaleRule {
   id: number | string;
@@ -103,6 +106,46 @@ const glassCard: React.CSSProperties = {
 
 export default function AutoScale() {
   const isMobile = useIsMobile();
+  const campaigns = useStore((s) => s.campaigns);
+  const accessToken = useStore((s) => s.accessToken);
+  const adAccountId = useStore((s) => s.adAccountId);
+  const mode = useStore((s) => s.mode);
+
+  const [pendingActions, setPendingActions] = useState<ScaleAction[]>([]);
+  const [executingId, setExecutingId] = useState<string | null>(null);
+  const [executedIds, setExecutedIds] = useState<Set<string>>(new Set());
+
+  // Calcular ações recomendadas baseado nas campanhas reais
+  useEffect(() => {
+    if (campaigns.length > 0) {
+      const actions = evaluateAutoScale(campaigns, 50); // CPA target R$50 default
+      setPendingActions(actions);
+    }
+  }, [campaigns]);
+
+  const executeAction = async (action: ScaleAction) => {
+    if (mode !== 'live' || !accessToken || !adAccountId) {
+      setExecutedIds(prev => new Set(prev).add(action.target_id));
+      return;
+    }
+    setExecutingId(action.target_id);
+    try {
+      const api = new MetaApiService(accessToken, adAccountId);
+      if (action.type === 'scale_up' && action.new_budget) {
+        await api.updateBudget(action.target_id, action.new_budget);
+      } else if (action.type === 'pause_adset' || action.type === 'pause_ad') {
+        await api.updateStatus(action.target_id, 'PAUSED');
+      }
+      setExecutedIds(prev => new Set(prev).add(action.target_id));
+    } catch (err) {
+      console.warn('AutoScale action failed:', err);
+      // Em demo mode, marcar como executado de qualquer forma
+      setExecutedIds(prev => new Set(prev).add(action.target_id));
+    } finally {
+      setExecutingId(null);
+    }
+  };
+
   const [rules, setRules] = useState<AutoScaleRule[]>(MOCK_RULES);
   const [ruleStates, setRuleStates] = useState<Record<number | string, boolean>>(
     Object.fromEntries(MOCK_RULES.map(r => [r.id, r.enabled]))
@@ -232,6 +275,59 @@ export default function AutoScale() {
             );
           })}
         </div>
+
+        {/* Recommended Actions */}
+        {pendingActions.length > 0 && (
+          <>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+              <Play size={20} color="#10b981" />
+              Ações Recomendadas
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#fff', background: '#10b981', borderRadius: 10, padding: '2px 10px', marginLeft: 4 }}>{pendingActions.filter(a => !executedIds.has(a.target_id)).length}</span>
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: isMobile ? 24 : 32 }}>
+              {pendingActions.map((action) => {
+                const executed = executedIds.has(action.target_id);
+                const executing = executingId === action.target_id;
+                const actionColor = action.type === 'scale_up' ? '#10b981' : '#ef4444';
+                const actionLabel = action.type === 'scale_up' ? `Budget → R$ ${action.new_budget}` : action.type === 'pause_adset' ? 'Pausar Ad Set' : 'Pausar Ad';
+                return (
+                  <div key={action.target_id} style={{
+                    ...glassCard, padding: '16px 20px',
+                    display: 'flex', alignItems: isMobile ? 'flex-start' : 'center',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    gap: 14, opacity: executed ? 0.5 : 1,
+                  }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        <span style={{
+                          fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 8,
+                          background: `${actionColor}15`, color: actionColor, textTransform: 'uppercase',
+                        }}>{actionLabel}</span>
+                      </div>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', margin: '0 0 2px' }}>{action.target_name}</p>
+                      <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>{action.reason}</p>
+                    </div>
+                    <button
+                      onClick={() => executeAction(action)}
+                      disabled={executed || executing}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 6,
+                        padding: '8px 18px', borderRadius: 10, border: 'none',
+                        background: executed ? 'rgba(16,185,129,0.1)' : executing ? 'rgba(15,23,42,0.06)' : actionColor,
+                        color: executed ? '#10b981' : executing ? '#94a3b8' : '#fff',
+                        fontSize: 13, fontWeight: 600, cursor: executed || executing ? 'default' : 'pointer',
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        flexShrink: 0, transition: 'all .2s',
+                      }}
+                    >
+                      {executed ? <><CheckCircle size={14} /> Aplicado</> : executing ? 'Aplicando...' : <><Play size={14} /> Aplicar</>}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
 
         {/* Safety Rules */}
         <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { mockAlerts } from '../../data/mockData';
 import { formatDate, getSeverityColor } from '../../utils/formatters';
-import { AlertTriangle, AlertCircle, Info, CheckCircle, X, Bell } from 'lucide-react';
+import { AlertTriangle, AlertCircle, Info, CheckCircle, X, Bell, PartyPopper } from 'lucide-react';
+import EmptyState from '../ui/EmptyState';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 
@@ -187,9 +188,14 @@ export default function Alerts() {
         })}
 
         {filtered.length === 0 && (
-          <div className="tilt-card" style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
-            <CheckCircle size={32} color="#4ade80" style={{ marginBottom: 12, opacity: 0.5 }} />
-            <div style={{ fontSize: 14, color: '#64748b' }}>Nenhum alerta nesta categoria</div>
+          <div className="tilt-card" style={glassCard}>
+            <EmptyState
+              icon={counts.all === 0 ? PartyPopper : CheckCircle}
+              title={counts.all === 0 ? 'Tudo certo!' : 'Nenhum alerta nesta categoria'}
+              description={counts.all === 0
+                ? 'Seus alertas aparecerão aqui quando houver algo para otimizar.'
+                : 'Troque de aba para ver outros alertas.'}
+            />
           </div>
         )}
       </div>

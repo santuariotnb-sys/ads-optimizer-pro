@@ -27,6 +27,7 @@ const CreativeVision = lazy(() => import('./components/CreativeVision/CreativeVi
 const PlatformAds = lazy(() => import('./components/PlatformAds/PlatformAds'));
 const SignalGateway = lazy(() => import('./components/SignalGateway/SignalGateway'));
 const SignalAudit = lazy(() => import('./components/SignalAudit/SignalAudit'));
+const TraceSummary = lazy(() => import('./components/TraceSummary/TraceSummary'));
 const OnboardingWizard = lazy(() => import('./components/Onboarding/OnboardingWizard'));
 
 import { parseCallbackToken } from './services/metaAuth';
@@ -57,7 +58,7 @@ const comandoNav = [
 ];
 
 const traceNav = [
-  { id: 'trace-dashboard', label: 'Painel', icon: LayoutDashboard },
+  { id: 'trace-dashboard', label: 'Resumo', icon: LayoutDashboard },
   { id: 'trace-utms', label: 'UTMs', icon: Link2 },
   { id: 'trace-vendas', label: 'Vendas', icon: ShoppingCart },
   { id: 'trace-reports', label: 'Relatórios', icon: BarChart3 },
@@ -139,9 +140,11 @@ function ModuleRouter() {
     case 'settings':
       return <Settings />;
 
-    // TRACE ENGINE tab
+    // XTRACKER tab — Resumo (summary dashboard)
     case 'trace-dashboard':
-    case 'utm-campanhas': // backward compat
+      return <TraceSummary />;
+    // backward compat routes → UTMTracking
+    case 'utm-campanhas':
     case 'utm-dashboard':
     case 'utm':
       return <UTMTracking />;

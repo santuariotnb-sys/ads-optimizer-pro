@@ -1,0 +1,18 @@
+export const GLOSSARY: Record<string, string> = {
+  'CPA': 'Custo por Aquisição: quanto você paga por cada conversão',
+  'ROAS': 'Retorno sobre Gasto com Anúncios: receita ÷ gasto',
+  'ROI': 'Retorno sobre Investimento: (lucro ÷ investimento) × 100',
+  'CTR': 'Taxa de Cliques: % de pessoas que clicaram no anúncio',
+  'CPM': 'Custo por Mil Impressões',
+  'CPC': 'Custo por Clique',
+  'EMQ': 'Event Match Quality: qualidade do sinal enviado ao Meta (0-10)',
+  'CAPI': 'Conversions API: envio de eventos pelo servidor ao Meta',
+  'LTV': 'Lifetime Value: valor total do cliente ao longo do tempo',
+  'EPV': 'Earnings Per Visitor: receita esperada por visitante',
+  'Entity ID': 'Identidade visual que o Meta atribui a cada criativo',
+  'ThumbStop': '% de pessoas que pararam de scrollar ao ver seu anúncio',
+  'Hook Rate': '% que assistiu mais de 3 segundos do vídeo',
+  'Hold Rate': '% que assistiu mais de 15 segundos do vídeo',
+  'Frequency': 'Número médio de vezes que uma pessoa viu seu anúncio',
+  'Learning': 'Fase onde o Meta aprende a otimizar sua campanha (~50 conversões/semana)',
+};

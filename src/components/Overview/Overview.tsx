@@ -322,10 +322,12 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function Overview() {
   const isMobile = useIsMobile();
+  const theme = useStore((s) => s.theme);
   const campaigns = useStore((s) => s.campaigns);
   const metrics = useStore((s) => s.metrics);
   const emqScore = useStore((s) => s.emqScore);
   const setCurrentModule = useStore((s) => s.setCurrentModule);
+  void theme; // tema disponível para uso futuro
 
   const liveCampaigns = campaigns.length > 0 ? campaigns : mockCampaigns;
   const topCampaigns = [...liveCampaigns]
@@ -347,15 +349,76 @@ export default function Overview() {
 
   const activeCampaigns = liveCampaigns.filter((c) => c.status === 'ACTIVE').length;
 
+  // Relatório semanal IA
+  const [weeklyReport, setWeeklyReport] = useState<string | null>(null);
+  const [generatingReport, setGeneratingReport] = useState(false);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleGenerateReport = useCallback(async () => {
+    setGeneratingReport(true);
+    setWeeklyReport(null);
+    const apiKey = sessionStorage.getItem('ao_anthropic_key') || sessionStorage.getItem('ads_everest_vision_key') || import.meta.env.VITE_ANTHROPIC_API_KEY || '';
+    if (!apiKey) {
+      setWeeklyReport('Configure uma API key do Claude ou OpenAI em Criativos → Análise IA para gerar relatórios.');
+      setGeneratingReport(false);
+      return;
+    }
+
+    const campaignsSummary = liveCampaigns.slice(0, 10).map(c =>
+      `${c.name}: status=${c.status}, CPA=R$${c.cpa.toFixed(2)}, ROAS=${c.roas.toFixed(2)}x, spend=R$${c.spend.toFixed(0)}, conv=${c.conversions}`
+    ).join('\n');
+
+    const prompt = `Gere um relatório semanal de performance para esta conta de Meta Ads.
+
+DADOS DA CONTA:
+- CPA: R$ ${cpa.toFixed(2)}
+- ROAS: ${roas.toFixed(1)}x
+- Investimento: R$ ${spend.toLocaleString('pt-BR')}
+- Conversões: ${conversions}
+- Score da conta: ${accountScore}/100
+- EMQ: ${emq}/10
+- Campanhas ativas: ${activeCampaigns}
+
+TOP CAMPANHAS:
+${campaignsSummary}
+
+Gere em português-BR com estas seções:
+1. RESUMO EXECUTIVO (3 linhas)
+2. DESTAQUES DA SEMANA (o que foi bem)
+3. PONTOS DE ATENÇÃO (o que precisa melhorar)
+4. TOP 3 AÇÕES RECOMENDADAS (ações práticas e específicas)
+5. PREVISÃO PARA PRÓXIMA SEMANA
+
+Seja direto, use dados concretos, sem enrolação.`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2048, messages: [{ role: 'user', content: prompt }] }),
+      });
+      if (!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      setWeeklyReport(data.content?.[0]?.text || 'Sem resposta');
+    } catch (err) {
+      setWeeklyReport(`Erro: ${err instanceof Error ? err.message : 'Falha na conexão'}`);
+    } finally {
+      setGeneratingReport(false);
+    }
+  }, [liveCampaigns, cpa, roas, spend, conversions, accountScore, emq, activeCampaigns]);
+
   /* ── Quick Actions ── */
   const actions = [
     { label: 'Criar Campanha', icon: <Plus size={14} />, module: 'create', num: 1 },
-    { label: 'Gerar Relatório', icon: <FileText size={14} />, module: 'opt-financial', num: 2 },
+    { label: generatingReport ? 'Gerando...' : 'Relatório Semanal IA', icon: <FileText size={14} />, module: '__report__', num: 2 },
     { label: 'Auditoria de Sinal', icon: <Shield size={14} />, module: 'opt-audit', num: 3 },
     { label: 'Escalar Vencedoras', icon: <Zap size={14} />, module: 'opt-scale', num: 4 },
   ];
 
-  const navigate = useCallback((mod: string) => setCurrentModule(mod), [setCurrentModule]);
+  const navigate = useCallback((mod: string) => {
+    if (mod === '__report__') { handleGenerateReport(); return; }
+    setCurrentModule(mod);
+  }, [setCurrentModule, handleGenerateReport]);
 
   /* ════════════════════════ RENDER ════════════════════════ */
 
@@ -655,13 +718,35 @@ export default function Overview() {
         </AlpineCard>
       </div>
 
-      {/* Pulse animation keyframes (injected once) */}
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: .4; }
-        }
-      `}</style>
+      {/* Weekly Report */}
+      {weeklyReport && (
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+          <AlpineCard delay={0} padding={24}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <FileText size={18} style={{ color: '#6366f1' }} />
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', margin: 0 }}>Relatório Semanal IA</h3>
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  onClick={() => {
+                    const blob = new Blob([weeklyReport], { type: 'text/plain;charset=utf-8' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url; a.download = `relatorio-semanal-${new Date().toISOString().slice(0, 10)}.txt`;
+                    a.click(); URL.revokeObjectURL(url);
+                  }}
+                  style={{ fontSize: 11, fontWeight: 600, padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(15,23,42,0.1)', background: 'transparent', color: '#64748b', cursor: 'pointer' }}
+                >Exportar</button>
+                <button onClick={() => setWeeklyReport(null)} style={{ fontSize: 11, fontWeight: 600, padding: '6px 12px', borderRadius: 8, border: 'none', background: 'rgba(15,23,42,0.04)', color: '#94a3b8', cursor: 'pointer' }}>Fechar</button>
+              </div>
+            </div>
+            <div style={{ fontSize: 14, color: '#334155', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{weeklyReport}</div>
+          </AlpineCard>
+        </motion.div>
+      )}
+
+      <style>{`@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }`}</style>
     </div>
   );
 }
