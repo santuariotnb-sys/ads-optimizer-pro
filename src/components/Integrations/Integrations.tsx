@@ -193,7 +193,7 @@ export default function Integrations() {
                           const clientId = import.meta.env.VITE_META_APP_ID;
                           if (!clientId) { alert('Configure VITE_META_APP_ID no .env para conectar Meta Ads'); return; }
                           const redirect = import.meta.env.VITE_META_REDIRECT_URI || `${window.location.origin}/auth/callback`;
-                          window.location.href = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirect)}&scope=ads_read,ads_management`;
+                          window.location.href = `https://www.facebook.com/v25.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirect)}&scope=ads_read,ads_management`;
                         } else {
                           alert(`Integração com ${p.name} será disponibilizada em breve`);
                         }

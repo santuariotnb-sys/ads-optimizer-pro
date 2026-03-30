@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
 import { mockCreativesData } from '../../data/mockData';
 import { formatCurrency, getScoreColor } from '../../utils/formatters';
 import { Trophy, FlaskConical, XCircle, TrendingUp, TrendingDown, Clock, AlertTriangle, Layers } from 'lucide-react';
@@ -251,11 +252,13 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
 
 export default function Creatives() {
   const isMobile = useIsMobile();
+  const storeCreatives = useStore((s) => s.creatives);
+  const baseCreatives = storeCreatives.length > 0 ? storeCreatives : mockCreativesData;
   const [filter, setFilter] = useState<Filter>('all');
   const [sortBy, setSortBy] = useState<SortKey>('score');
 
   const filtered = useMemo(() => {
-    let result = [...mockCreativesData];
+    let result = [...baseCreatives];
     if (filter !== 'all') result = result.filter(c => c.status === filter);
     result.sort((a, b) => {
       if (sortBy === 'score') return b.score - a.score;
@@ -263,13 +266,13 @@ export default function Creatives() {
       return b.hook_rate - a.hook_rate;
     });
     return result;
-  }, [filter, sortBy]);
+  }, [filter, sortBy, baseCreatives]);
 
   const filters: { key: Filter; label: string; count: number }[] = [
-    { key: 'all', label: 'Todos', count: mockCreativesData.length },
-    { key: 'winner', label: 'Vencedores', count: mockCreativesData.filter(c => c.status === 'winner').length },
-    { key: 'testing', label: 'Testando', count: mockCreativesData.filter(c => c.status === 'testing').length },
-    { key: 'loser', label: 'Perdedores', count: mockCreativesData.filter(c => c.status === 'loser').length },
+    { key: 'all', label: 'Todos', count: baseCreatives.length },
+    { key: 'winner', label: 'Vencedores', count: baseCreatives.filter(c => c.status === 'winner').length },
+    { key: 'testing', label: 'Testando', count: baseCreatives.filter(c => c.status === 'testing').length },
+    { key: 'loser', label: 'Perdedores', count: baseCreatives.filter(c => c.status === 'loser').length },
   ];
 
   const sorts: { key: SortKey; label: string }[] = [
