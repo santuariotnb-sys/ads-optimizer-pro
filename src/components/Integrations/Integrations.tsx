@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Plug, Globe, Search, Zap, Music, Radio, Code2, MessageCircle, TestTube,
   ChevronRight, Plus, RefreshCw, Copy, Check, Download, X, MoreVertical,
+  Link2, Trash2, Mail, Phone, Camera,
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -68,6 +69,15 @@ export default function Integrations() {
   // UTMs
   const [utmModal, setUtmModal] = useState<string | null>(null);
 
+  // UTM Generator
+  const [utmUrl, setUtmUrl] = useState('');
+  const [utmSource, setUtmSource] = useState('');
+  const [utmMedium, setUtmMedium] = useState('');
+  const [utmCampaign, setUtmCampaign] = useState('');
+  const [utmContent, setUtmContent] = useState('');
+  const [utmTerm, setUtmTerm] = useState('');
+  const [utmErrors, setUtmErrors] = useState<{ source?: boolean; medium?: boolean }>({});
+
   // Pixel
   const [pixels, setPixels] = useState<Pixel[]>([{ id: 'px-1', name: 'Pixel Principal', pixelId: '123456789', type: 'Meta', product: 'Qualquer', active: false }]);
   const [showPixelDrawer, setShowPixelDrawer] = useState(false);
@@ -86,6 +96,52 @@ export default function Integrations() {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
     setTimeout(() => setCopiedField(null), 2000);
+  }
+
+  const UTM_PRESETS = [
+    { label: 'Meta Ads', source: 'facebook', medium: 'cpc', icon: Globe, color: '#1877F2' },
+    { label: 'Google Ads', source: 'google', medium: 'cpc', icon: Search, color: '#4285F4' },
+    { label: 'TikTok Ads', source: 'tiktok', medium: 'cpc', icon: Music, color: '#010101' },
+    { label: 'Kwai Ads', source: 'kwai', medium: 'cpc', icon: Zap, color: '#FF6600' },
+    { label: 'Email', source: 'email', medium: 'email', icon: Mail, color: '#EA4335' },
+    { label: 'WhatsApp', source: 'whatsapp', medium: 'social', icon: Phone, color: '#25D366' },
+    { label: 'Orgânico IG', source: 'instagram', medium: 'organic', icon: Camera, color: '#E4405F' },
+  ];
+
+  function sanitizeUtm(val: string) {
+    return val.toLowerCase().replace(/\s+/g, '_');
+  }
+
+  function buildUtmUrl() {
+    const base = utmUrl.trim();
+    if (!base) return '';
+    const params = [
+      utmSource && `utm_source=${encodeURIComponent(sanitizeUtm(utmSource))}`,
+      utmMedium && `utm_medium=${encodeURIComponent(sanitizeUtm(utmMedium))}`,
+      utmCampaign && `utm_campaign=${encodeURIComponent(sanitizeUtm(utmCampaign))}`,
+      utmContent && `utm_content=${encodeURIComponent(sanitizeUtm(utmContent))}`,
+      utmTerm && `utm_term=${encodeURIComponent(sanitizeUtm(utmTerm))}`,
+    ].filter(Boolean).join('&');
+    if (!params) return base;
+    return `${base}${base.includes('?') ? '&' : '?'}${params}`;
+  }
+
+  function handleCopyUtmLink() {
+    const errors: { source?: boolean; medium?: boolean } = {};
+    if (!utmSource.trim()) errors.source = true;
+    if (!utmMedium.trim()) errors.medium = true;
+    if (errors.source || errors.medium) { setUtmErrors(errors); return; }
+    setUtmErrors({});
+    const link = buildUtmUrl();
+    if (link) handleCopy(link, 'utm-link');
+  }
+
+  function clearUtmGenerator() {
+    setUtmUrl(''); setUtmSource(''); setUtmMedium(''); setUtmCampaign(''); setUtmContent(''); setUtmTerm(''); setUtmErrors({});
+  }
+
+  function applyUtmPreset(source: string, medium: string) {
+    setUtmSource(source); setUtmMedium(medium); setUtmErrors({});
   }
 
   const card: React.CSSProperties = { padding: 20, borderRadius: 16, background: c.surface2, border: `1px solid ${c.border}` };
@@ -132,7 +188,16 @@ export default function Integrations() {
                     style={{ overflow: 'hidden' }}>
                     <div style={{ padding: '0 20px 20px', borderTop: `1px solid ${c.border}`, paddingTop: 16 }}>
                       <p style={{ fontSize: 13, color: c.textMuted, marginBottom: 12 }}>Conecte seus perfis por aqui:</p>
-                      <button style={btn}><Plus size={14} /> Adicionar perfil</button>
+                      <button style={btn} onClick={() => {
+                        if (p.id === 'meta') {
+                          const clientId = import.meta.env.VITE_META_APP_ID;
+                          if (!clientId) { alert('Configure VITE_META_APP_ID no .env para conectar Meta Ads'); return; }
+                          const redirect = import.meta.env.VITE_META_REDIRECT_URI || `${window.location.origin}/auth/callback`;
+                          window.location.href = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirect)}&scope=ads_read,ads_management`;
+                        } else {
+                          alert(`Integração com ${p.name} será disponibilizada em breve`);
+                        }
+                      }}><Plus size={14} /> Adicionar perfil</button>
                     </div>
                   </motion.div>
                 )}
@@ -171,7 +236,15 @@ export default function Integrations() {
                 </div>
               ))}
             </div>
-            <button style={btn} onClick={() => setWebhooks(prev => [...prev, { id: uid(), name: `Webhook ${prev.length + 1}`, platform: 'Custom', active: false }])}>
+            <button style={btn} onClick={() => {
+              const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+              const webhookUrl = supabaseUrl ? `${supabaseUrl}/functions/v1/webhook-sales` : 'https://seu-projeto.supabase.co/functions/v1/webhook-sales';
+              setWebhooks(prev => [...prev, { id: uid(), name: `Webhook ${prev.length + 1}`, platform: 'Custom', active: false }]);
+              navigator.clipboard.writeText(webhookUrl);
+              setCopiedField('new-webhook');
+              setTimeout(() => setCopiedField(null), 2000);
+              alert(`Webhook criado! URL copiada para a área de transferência:\n\n${webhookUrl}`);
+            }}>
               <Plus size={16} /> Adicionar Webhook
             </button>
           </motion.div>
@@ -228,9 +301,75 @@ export default function Integrations() {
 
   // --- UTMs ---
   function renderUTMs() {
+    const generatedUrl = buildUtmUrl();
     return (
       <>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
+          {/* UTM Link Generator */}
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="glass-card" style={card}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+              <Link2 size={18} color={c.accent} />
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: c.text, fontFamily: 'Space Grotesk' }}>Gerador de Links UTM</h3>
+            </div>
+            <p style={{ fontSize: 13, color: c.textMuted, marginBottom: 16 }}>Crie links rastreáveis com parâmetros UTM para suas campanhas.</p>
+
+            <div style={{ marginBottom: 14 }}>
+              <label style={label}>URL da página</label>
+              <input value={utmUrl} onChange={e => setUtmUrl(e.target.value)} placeholder="https://seusite.com/oferta" style={input} />
+            </div>
+
+            <div style={{ marginBottom: 14 }}>
+              <label style={label}>Templates</label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {UTM_PRESETS.map(p => (
+                  <button key={p.label} onClick={() => applyUtmPreset(p.source, p.medium)}
+                    style={{ padding: '6px 12px', borderRadius: 8, border: `1px solid ${utmSource === p.source && utmMedium === p.medium ? p.color : c.border}`, background: utmSource === p.source && utmMedium === p.medium ? `${p.color}22` : c.surface3, color: utmSource === p.source && utmMedium === p.medium ? p.color : c.textMuted, fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, transition: 'all 0.2s' }}>
+                    <p.icon size={12} /> {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
+              <div>
+                <label style={label}>utm_source *</label>
+                <input value={utmSource} onChange={e => { setUtmSource(e.target.value); setUtmErrors(prev => ({ ...prev, source: false })); }} placeholder="facebook" style={{ ...input, borderColor: utmErrors.source ? '#f87171' : c.border }} />
+              </div>
+              <div>
+                <label style={label}>utm_medium *</label>
+                <input value={utmMedium} onChange={e => { setUtmMedium(e.target.value); setUtmErrors(prev => ({ ...prev, medium: false })); }} placeholder="cpc" style={{ ...input, borderColor: utmErrors.medium ? '#f87171' : c.border }} />
+              </div>
+              <div>
+                <label style={label}>utm_campaign</label>
+                <input value={utmCampaign} onChange={e => setUtmCampaign(e.target.value)} placeholder="black_friday" style={input} />
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 10, marginBottom: 14 }}>
+              <div>
+                <label style={label}>utm_content</label>
+                <input value={utmContent} onChange={e => setUtmContent(e.target.value)} placeholder="banner_topo" style={input} />
+              </div>
+              <div>
+                <label style={label}>utm_term</label>
+                <input value={utmTerm} onChange={e => setUtmTerm(e.target.value)} placeholder="comprar_curso" style={input} />
+              </div>
+            </div>
+
+            {generatedUrl && (
+              <div style={{ marginBottom: 14, padding: 12, borderRadius: 10, background: c.surface3, border: `1px solid ${c.border}`, wordBreak: 'break-all' }}>
+                <label style={{ ...label, marginBottom: 4 }}>Link gerado</label>
+                <p style={{ fontSize: 12, color: c.accent, fontFamily: 'JetBrains Mono', margin: 0 }}>{generatedUrl}</p>
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button style={btn} onClick={handleCopyUtmLink}>
+                {copiedField === 'utm-link' ? <><Check size={14} /> Copiado!</> : <><Copy size={14} /> Copiar Link</>}
+              </button>
+              <button style={btnOut} onClick={clearUtmGenerator}><Trash2 size={14} /> Limpar</button>
+            </div>
+          </motion.div>
+
           <div>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: c.text, fontFamily: 'Space Grotesk', marginBottom: 14 }}>Codigos</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -1,9 +1,10 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Download, RefreshCw } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
 import { showToast } from '../ui/toastStore';
+import { fetchSales } from '../../services/salesService';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -477,7 +478,36 @@ export default function UTMTracking() {
 
   const campanhasData = storeCampaigns.length > 0 ? campaignsToRows(storeCampaigns) : CAMPANHAS_DATA;
 
+  // CONNECTION 1: Real sales data from Supabase with mock fallback
+  const [realSales, setRealSales] = useState<VendaRow[]>([]);
+
   const [periodo, setPeriodo] = useState('7');
+
+  // Fetch real sales from Supabase
+  useEffect(() => {
+    const periodMap: Record<string, string> = { '0': 'today', '7': '7d', '14': '14d', '30': '30d' };
+    const periodKey = periodMap[periodo] || '7d';
+    fetchSales(periodKey)
+      .then((rows) => {
+        const mapped: VendaRow[] = rows.map((r) => ({
+          data: new Date(r.sale_date).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          produto: (r as unknown as Record<string, unknown>).product_name as string || 'Produto',
+          cliente: (r as unknown as Record<string, unknown>).customer_name as string || 'Cliente',
+          valor: Number(r.amount),
+          status: r.status === 'approved' ? 'Aprovado' : r.status === 'refunded' ? 'Reembolsado' : 'Aguardando',
+          plataforma: (r as unknown as Record<string, unknown>).platform as string || 'Hotmart',
+          utm_source: r.utm_source || 'direto',
+          utm_campaign: (r as unknown as Record<string, unknown>).utm_campaign as string || '',
+        }));
+        setRealSales(mapped);
+      })
+      .catch(() => {
+        // On error, keep realSales empty → fallback to VENDAS_DATA
+      });
+  }, [periodo]);
+
+  const vendasData = realSales.length > 0 ? realSales : VENDAS_DATA;
+
   const [produto, setProduto] = useState('all');
   const [conta, setConta] = useState('all');
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
@@ -538,7 +568,7 @@ export default function UTMTracking() {
           const dataMap: Record<string, unknown[]> = {
             'utm-campanhas': campanhasData,
             'utm-utms': UTM_DATA,
-            'utm-vendas': VENDAS_DATA,
+            'utm-vendas': vendasData,
             'utm-relatorios': RELATORIO_DATA,
           };
           const rows = dataMap[activeView] || campanhasData;
@@ -749,7 +779,7 @@ export default function UTMTracking() {
                 </tr>
               </thead>
               <tbody>
-                {VENDAS_DATA.map((r, idx) => (
+                {vendasData.map((r, idx) => (
                   <tr
                     key={idx}
                     style={{ ...S.trHover, background: hoveredRow === idx ? rowHoverBg : idx % 2 === 1 ? rowStripeBg : 'transparent' }}

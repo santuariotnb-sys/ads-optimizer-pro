@@ -189,7 +189,6 @@ const containerStyle: React.CSSProperties = {
   borderRadius: 20,
   border: '1px solid rgba(255,255,255,.55)',
   overflow: 'hidden',
-  boxShadow: '0 30px 120px -45px rgba(15,23,42,.26), 0 10px 30px -18px rgba(255,255,255,.82), inset 0 1px 0 rgba(255,255,255,.92)',
 };
 
 const headerStyle: React.CSSProperties = {
@@ -279,9 +278,8 @@ const topicPillStyle: React.CSSProperties = {
   whiteSpace: 'nowrap',
 };
 
-const userMessageStyle: React.CSSProperties = {
+const userMessageStyleBase: React.CSSProperties = {
   alignSelf: 'flex-end',
-  maxWidth: '75%',
   padding: '12px 16px',
   borderRadius: '16px 16px 4px 16px',
   background: 'linear-gradient(135deg, #6366f1, #4f46e5)',
@@ -291,9 +289,8 @@ const userMessageStyle: React.CSSProperties = {
   boxShadow: '0 2px 16px rgba(99,102,241,0.25)',
 };
 
-const assistantMessageStyle: React.CSSProperties = {
+const assistantMessageStyleBase: React.CSSProperties = {
   alignSelf: 'flex-start',
-  maxWidth: '85%',
   display: 'flex',
   gap: 12,
   alignItems: 'flex-start',
@@ -789,7 +786,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
   };
 
   return (
-    <div className="tilt-card" style={containerStyle}>
+    <div style={containerStyle}>
       <style>{typingKeyframes}</style>
 
       {/* Header */}
@@ -876,11 +873,11 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
       <div ref={messagesContainerRef} role="log" aria-label="Mensagens do chat" style={{ ...messagesContainerStyle, padding: isMobile ? '14px 12px' : '20px 24px' }}>
         {messages.map((msg) =>
           msg.role === 'user' ? (
-            <div key={msg.id} style={{ ...userMessageStyle, maxWidth: isMobile ? '90%' : '75%' }}>
+            <div key={msg.id} style={{ ...userMessageStyleBase, maxWidth: isMobile ? '90%' : '75%' }}>
               <span>{msg.content}</span>
             </div>
           ) : (
-            <div key={msg.id} style={{ ...assistantMessageStyle, maxWidth: isMobile ? '90%' : '85%' }}>
+            <div key={msg.id} style={{ ...assistantMessageStyleBase, maxWidth: isMobile ? '90%' : '85%' }}>
               <div style={botAvatarStyle}>
                 <Bot size={16} color="#fff" />
               </div>
@@ -893,7 +890,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
 
         {/* Typing Indicator */}
         {isTyping && !hasActiveTask && (
-          <div style={assistantMessageStyle} aria-live="polite">
+          <div style={assistantMessageStyleBase} aria-live="polite">
             <div style={botAvatarStyle}>
               <Bot size={16} color="#fff" />
             </div>

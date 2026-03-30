@@ -1,7 +1,7 @@
 // Service Worker — Ads.Everest PWA
 // Cache offline + Push Notifications
 
-const CACHE_NAME = 'ads-everest-v2';
+const CACHE_NAME = 'ads-everest-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

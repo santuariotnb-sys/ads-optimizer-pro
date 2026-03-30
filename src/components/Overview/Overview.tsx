@@ -349,6 +349,19 @@ export default function Overview() {
 
   const activeCampaigns = liveCampaigns.filter((c) => c.status === 'ACTIVE').length;
 
+  // Dynamic computed values from store campaigns
+  const nonPausedCampaigns = liveCampaigns.filter((c) => c.status !== 'PAUSED');
+  const healthyRatio = nonPausedCampaigns.length > 0
+    ? nonPausedCampaigns.filter((c) => c.roas >= 1).length / nonPausedCampaigns.length
+    : 0;
+  const accountHealth = healthyRatio >= 0.7 ? 'Ótimo' : healthyRatio >= 0.4 ? 'Bom' : 'Atenção';
+  const accountHealthColor = healthyRatio >= 0.7 ? '#4ade80' : healthyRatio >= 0.4 ? '#facc15' : '#f87171';
+
+  const learningCampaigns = liveCampaigns.filter(
+    (c) => c.status === 'LEARNING' || c.status === 'LEARNING_LIMITED'
+  ).length;
+  const learningLabel = `${learningCampaigns}/${liveCampaigns.length}`;
+
   // Relatório semanal IA
   const [weeklyReport, setWeeklyReport] = useState<string | null>(null);
   const [generatingReport, setGeneratingReport] = useState(false);
@@ -546,8 +559,8 @@ Seja direto, use dados concretos, sem enrolação.`;
             {[
               { label: 'Tendência CPA', value: '-12%', color: '#4ade80' },
               { label: 'CTR Médio', value: '2.1%', color: '#60a5fa' },
-              { label: 'Saúde da Conta', value: 'Bom', color: '#facc15' },
-              { label: 'Fase de Aprendizado', value: '2/6', color: '#94a3b8' },
+              { label: 'Saúde da Conta', value: accountHealth, color: accountHealthColor },
+              { label: 'Fase de Aprendizado', value: learningLabel, color: '#94a3b8' },
             ].map((s) => (
               <div
                 key={s.label}

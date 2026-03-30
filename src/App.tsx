@@ -33,6 +33,7 @@ const OnboardingWizard = lazy(() => import('./components/Onboarding/OnboardingWi
 import { parseCallbackToken } from './services/metaAuth';
 import { MetaApiService } from './services/metaApi';
 import { evaluateAlerts } from './services/alertEngine';
+import { supabase } from './lib/supabase';
 import {
   mockCampaigns, mockAdSetsData, mockAdsData, mockCreativesData,
   mockAudiences, mockAlerts, mockDashboardMetrics, mockEMQ, mockSignalAudit,
@@ -346,6 +347,50 @@ export default function App() {
             }
           }
           setCampaigns([...campaigns]);
+
+          // CONNECTION 3: Persist campaign metrics to Supabase (fire-and-forget)
+          try {
+            const { data: authData } = await supabase.auth.getUser();
+            const userId = authData?.user?.id;
+            if (userId) {
+              const today = new Date().toISOString().split('T')[0];
+              const metricsRows = campaigns.map((c) => ({
+                user_id: userId,
+                campaign_id: c.id,
+                date: today,
+                spend: c.spend || 0,
+                impressions: c.impressions || 0,
+                reach: 0,
+                clicks: c.clicks || 0,
+                link_clicks: 0,
+                conversions: c.conversions || 0,
+                leads: 0,
+                purchases: c.conversions || 0,
+                purchase_value: c.spend > 0 ? c.spend * c.roas : 0,
+                add_to_cart: 0,
+                initiate_checkout: 0,
+                view_content: 0,
+                cpa: c.cpa || null,
+                roas: c.roas || null,
+                ctr: c.ctr || null,
+                cpc: c.clicks > 0 ? c.spend / c.clicks : null,
+                cpm: c.cpm || null,
+                frequency: c.frequency || null,
+                video_p25: 0,
+                video_p50: 0,
+                video_p75: 0,
+                video_p100: 0,
+              }));
+              supabase
+                .from('campaign_metrics')
+                .upsert(metricsRows, { onConflict: 'campaign_id,date' })
+                .then(({ error: upsertErr }) => {
+                  if (upsertErr) console.warn('Campaign metrics upsert error:', upsertErr.message);
+                });
+            }
+          } catch (e) {
+            console.warn('Campaign metrics persist skipped:', e);
+          }
         }
 
         if (audiencesRes?.data) {
@@ -359,6 +404,45 @@ export default function App() {
           }));
           setAudiences(audiences);
         }
+
+        // CONNECTION 4: Evaluate and persist alerts in live mode
+        if (campaignsRes?.data) {
+          const dynamicAlerts = evaluateAlerts(
+            (campaignsRes.data as { id: string }[]).length > 0
+              ? useStore.getState().campaigns
+              : [],
+            useStore.getState().emqScore || 8.0
+          );
+          setAlerts([...mockAlerts, ...dynamicAlerts]);
+
+          // Persist dynamic alerts to Supabase (fire-and-forget)
+          try {
+            const { data: authData } = await supabase.auth.getUser();
+            const userId = authData?.user?.id;
+            if (userId && dynamicAlerts.length > 0) {
+              const alertRows = dynamicAlerts.map((a) => ({
+                user_id: userId,
+                type: a.type,
+                severity: a.severity,
+                title: a.title,
+                message: a.message,
+                metric_name: a.metric_name || null,
+                threshold: a.threshold ?? null,
+                current_value: a.current_value ?? null,
+                campaign_id: a.campaign_id || null,
+                dismissed: a.dismissed || false,
+              }));
+              supabase
+                .from('alerts')
+                .upsert(alertRows, { onConflict: 'user_id,type,campaign_id' })
+                .then(({ error: alertErr }) => {
+                  if (alertErr) console.warn('Alerts upsert error:', alertErr.message);
+                });
+            }
+          } catch (e) {
+            console.warn('Alerts persist skipped:', e);
+          }
+        }
       } catch (err) {
         console.error('Erro ao buscar dados do Meta:', err);
       } finally {
@@ -367,7 +451,7 @@ export default function App() {
     }
 
     fetchLiveData();
-  }, [mode, accessToken, adAccountId, setCampaigns, setAudiences, setIsLoading]);
+  }, [mode, accessToken, adAccountId, setCampaigns, setAudiences, setAlerts, setIsLoading]);
 
   const activeTab = getActiveTab(currentModule);
   const subNavItems = getSubNavItems(activeTab);
