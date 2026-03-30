@@ -96,11 +96,14 @@ export default function CreativeVision() {
       let extractedFrames: FrameData[];
 
       if (creativeType === 'video') {
-        // Usar o videoRef do DOM se disponível (necessário para Safari)
         const source = videoRef.current && videoRef.current.readyState >= 1 ? videoRef.current : file;
-        extractedFrames = await extractVideoFrames(source, 6, setProgress);
+        try {
+          extractedFrames = await extractVideoFrames(source, 6, setProgress);
+        } catch (extractErr) {
+          throw new Error(`FRAMES: ${extractErr instanceof Error ? extractErr.message : extractErr}`);
+        }
         if (extractedFrames.length === 0) {
-          throw new Error('Não foi possível extrair frames do vídeo. Tente outro formato (MP4 H.264).');
+          throw new Error('FRAMES: 0 frames extraídos');
         }
       } else {
         setProgress('Processando imagem...');
@@ -109,17 +112,34 @@ export default function CreativeVision() {
       }
 
       setFrames(extractedFrames);
-      setProgress('Enviando para análise IA...');
+      setProgress(`Enviando ${extractedFrames.length} frames para ${provider}...`);
 
-      const analysisResult = provider === 'claude'
-        ? await analyzeCreative(extractedFrames, apiKey, creativeType)
-        : await analyzeCreativeOpenAI(extractedFrames, apiKey, creativeType);
+      let analysisResult: Awaited<ReturnType<typeof analyzeCreative>>;
+      try {
+        analysisResult = provider === 'claude'
+          ? await analyzeCreative(extractedFrames, apiKey, creativeType)
+          : await analyzeCreativeOpenAI(extractedFrames, apiKey, creativeType);
+      } catch (apiErr) {
+        throw new Error(`API_${provider.toUpperCase()}: ${apiErr instanceof Error ? apiErr.message : apiErr}`);
+      }
 
       setResult(analysisResult);
       setProgress(null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Erro desconhecido na análise';
-      const debug = `[DEBUG] crossOriginIsolated=${crossOriginIsolated} | type=${file?.type} | size=${file ? (file.size/1024/1024).toFixed(1)+'MB' : '?'}`;
+      const vidRef = videoRef.current;
+      const debug = [
+        `[DEBUG]`,
+        `err="${msg}"`,
+        `coIsolated=${crossOriginIsolated}`,
+        `type=${file?.type}`,
+        `size=${file ? (file.size/1024/1024).toFixed(1)+'MB' : '?'}`,
+        `videoRef=${vidRef ? 'yes' : 'null'}`,
+        `readyState=${vidRef?.readyState ?? 'N/A'}`,
+        `duration=${vidRef?.duration ?? 'N/A'}`,
+        `videoW=${vidRef?.videoWidth ?? 'N/A'}`,
+        `path=${vidRef && vidRef.readyState >= 1 ? 'DOM' : 'FILE'}`,
+      ].join(' | ');
       setError(`${msg}\n\n${debug}`);
       setProgress(null);
     } finally {

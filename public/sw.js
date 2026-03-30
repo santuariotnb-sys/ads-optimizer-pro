@@ -35,8 +35,9 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // Skip non-GET and API calls
+  // Skip non-GET, blob URLs, and API calls
   if (request.method !== 'GET') return;
+  if (request.url.startsWith('blob:')) return;
   if (request.url.includes('/functions/') || request.url.includes('supabase.co')) return;
   if (request.url.includes('api.anthropic.com') || request.url.includes('api.openai.com')) return;
   if (request.url.includes('graph.facebook.com')) return;

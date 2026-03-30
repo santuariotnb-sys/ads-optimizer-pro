@@ -30,7 +30,9 @@ export default function Settings() {
   const [webhookStats, setWebhookStats] = useState<{ total: number; processed: number; failed: number; lastReceived: string | null } | null>(null);
   const [showTokens, setShowTokens] = useState<Record<string, boolean>>({});
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'integrations' | 'general' | 'notifications'>('integrations');
+  const [activeTab, setActiveTab] = useState<'integrations' | 'webhook' | 'general' | 'notifications'>('integrations');
+  const [webhookCopied, setWebhookCopied] = useState(false);
+  const [testingWebhook, setTestingWebhook] = useState(false);
   const [profile, setProfile] = useState({ timezone: 'America/Sao_Paulo', currency: 'BRL', default_roas_target: 3.0, default_cpa_target: 50, closing_day: 1 });
   const [refreshKey, setRefreshKey] = useState(0);
   const [notifToggles, setNotifToggles] = useState<Record<string, boolean>>({ 'In-App': true, 'Email': false, 'WhatsApp': false, 'Telegram': false });
@@ -98,6 +100,7 @@ export default function Settings() {
 
   const tabs = [
     { id: 'integrations' as const, label: 'Integrações', icon: Link2 },
+    { id: 'webhook' as const, label: 'Webhook / API', icon: Globe },
     { id: 'general' as const, label: 'Geral', icon: SettingsIcon },
     { id: 'notifications' as const, label: 'Notificações', icon: Bell },
   ];
@@ -241,6 +244,154 @@ export default function Settings() {
             );
           })}
         </div>
+      )}
+
+      {/* Webhook / API */}
+      {activeTab === 'webhook' && (
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {/* URL do Webhook */}
+          <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: 14, padding: 20 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: c.text, marginBottom: 4 }}>Endpoint do Webhook</div>
+            <p style={{ fontSize: 12, color: c.textMuted, marginBottom: 14 }}>
+              Envie vendas de qualquer checkout, gateway ou página externa para este endpoint.
+            </p>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+              <code style={{
+                flex: 1, minWidth: 200, padding: '10px 14px', borderRadius: 10,
+                background: 'rgba(15,23,42,0.04)', border: `1px solid ${c.border}`,
+                fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: c.text,
+                wordBreak: 'break-all',
+              }}>
+                {`${import.meta.env.VITE_SUPABASE_URL || 'https://seu-projeto.supabase.co'}/functions/v1/webhook-sales`}
+              </code>
+              <button onClick={() => {
+                navigator.clipboard.writeText(`${import.meta.env.VITE_SUPABASE_URL || ''}/functions/v1/webhook-sales`);
+                setWebhookCopied(true);
+                setTimeout(() => setWebhookCopied(false), 2000);
+              }} style={{
+                padding: '10px 16px', borderRadius: 10, border: `1px solid ${c.border}`,
+                background: webhookCopied ? 'rgba(16,185,129,0.08)' : c.surface,
+                color: webhookCopied ? '#10b981' : c.text,
+                fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+              }}>
+                <Copy size={13} /> {webhookCopied ? 'Copiado!' : 'Copiar'}
+              </button>
+            </div>
+          </div>
+
+          {/* Secret */}
+          <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: 14, padding: 20 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: c.text, marginBottom: 4 }}>Autenticação</div>
+            <p style={{ fontSize: 12, color: c.textMuted, marginBottom: 14 }}>
+              Use o secret no header <code style={{ fontFamily: "'JetBrains Mono', monospace", background: 'rgba(15,23,42,0.04)', padding: '2px 6px', borderRadius: 4 }}>X-Webhook-Secret</code> ou como <code style={{ fontFamily: "'JetBrains Mono', monospace", background: 'rgba(15,23,42,0.04)', padding: '2px 6px', borderRadius: 4 }}>?token=</code>
+            </p>
+            <p style={{ fontSize: 12, color: c.textMuted }}>
+              O secret é gerado automaticamente na aba Integrações quando você configura um provider.
+            </p>
+          </div>
+
+          {/* Exemplo de payload */}
+          <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: 14, padding: 20 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: c.text, marginBottom: 4 }}>Exemplo de Payload</div>
+            <p style={{ fontSize: 12, color: c.textMuted, marginBottom: 14 }}>
+              Envie um POST com JSON. Campos obrigatórios: <strong>order_id</strong> e <strong>amount</strong>.
+            </p>
+            <pre style={{
+              background: 'rgba(15,23,42,0.04)', borderRadius: 10, padding: 14,
+              fontSize: 11, lineHeight: 1.6, color: '#334155',
+              fontFamily: "'JetBrains Mono', monospace", overflow: 'auto', maxHeight: 300,
+              border: `1px solid ${c.border}`,
+            }}>{JSON.stringify({
+              order_id: "ORDER-123",
+              status: "approved",
+              amount: 97.00,
+              product_name: "Curso de Tráfego",
+              customer_name: "Maria Santos",
+              customer_email: "maria@email.com",
+              customer_phone: "11999998888",
+              payment_method: "credit_card",
+              platform: "checkout_proprio",
+              utm_source: "facebook",
+              utm_campaign: "campanha_vendas",
+            }, null, 2)}</pre>
+            <button onClick={() => {
+              navigator.clipboard.writeText(JSON.stringify({
+                order_id: "ORDER-" + Date.now(),
+                status: "approved",
+                amount: 97.00,
+                product_name: "Curso de Tráfego",
+                customer_name: "Maria Santos",
+                customer_email: "maria@email.com",
+                platform: "teste",
+                utm_source: "facebook",
+              }, null, 2));
+            }} style={{
+              marginTop: 10, padding: '8px 14px', borderRadius: 8, border: `1px solid ${c.border}`,
+              background: c.surface, color: c.text, fontSize: 12, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              <Copy size={12} /> Copiar payload de exemplo
+            </button>
+          </div>
+
+          {/* Testar */}
+          <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: 14, padding: 20 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: c.text, marginBottom: 4 }}>Testar Webhook</div>
+            <p style={{ fontSize: 12, color: c.textMuted, marginBottom: 14 }}>
+              Envie uma venda de teste para verificar se tudo está funcionando.
+            </p>
+            <button onClick={async () => {
+              setTestingWebhook(true);
+              try {
+                const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/webhook-sales`;
+                const res = await fetch(url, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    order_id: 'TEST-' + Date.now(),
+                    status: 'approved',
+                    amount: 1.00,
+                    product_name: 'Teste Webhook',
+                    customer_name: 'Teste',
+                    platform: 'teste',
+                  }),
+                });
+                const data = await res.json();
+                if (data.ok) {
+                  alert('Webhook funcionando! Venda de teste recebida.');
+                } else {
+                  alert('Erro: ' + (data.error || 'Falha no teste'));
+                }
+              } catch (err) {
+                alert('Erro de conexão: ' + (err instanceof Error ? err.message : 'desconhecido'));
+              }
+              setTestingWebhook(false);
+            }} style={{
+              padding: '12px 24px', borderRadius: 12, border: 'none',
+              background: `linear-gradient(135deg, ${c.accent}, ${c.accentHover})`,
+              color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
+              opacity: testingWebhook ? 0.7 : 1, display: 'flex', alignItems: 'center', gap: 8,
+            }}>
+              <Webhook size={14} /> {testingWebhook ? 'Enviando...' : 'Enviar Venda de Teste'}
+            </button>
+          </div>
+
+          {/* Compatibilidade */}
+          <div style={{ background: c.surface, border: `1px solid ${c.border}`, borderRadius: 14, padding: 20 }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: c.text, marginBottom: 12 }}>Compatível com</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+              {['Checkout próprio', 'Hotmart', 'Kiwify', 'Monetizze', 'Eduzz', 'Stripe', 'PagSeguro', 'Mercado Pago', 'Yampi', 'Nuvemshop', 'API customizada'].map(p => (
+                <span key={p} style={{
+                  padding: '6px 12px', borderRadius: 8,
+                  background: 'rgba(15,23,42,0.04)', border: `1px solid ${c.border}`,
+                  fontSize: 12, color: c.text, fontWeight: 500,
+                }}>
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       )}
 
       {/* General */}

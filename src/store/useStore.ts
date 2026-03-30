@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Campaign, AdSet, Ad, Creative, Audience, Alert, DashboardMetrics, Period, AppMode, ChatMessage, SignalAuditResult } from '../types/meta';
+import type { CreativeAnalysisResult } from '../services/creativeVision';
 
 interface AppState {
   theme: 'dark' | 'light';
