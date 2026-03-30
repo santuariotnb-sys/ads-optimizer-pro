@@ -3,8 +3,9 @@ import { motion } from 'motion/react';
 import {
   Settings as SettingsIcon, Link2, Webhook, CheckCircle2,
   Copy, RefreshCw, Eye, EyeOff, Globe, Clock, Target, DollarSign,
-  Calendar, Bell, Shield,
+  Calendar, Bell, Shield, Crown,
 } from 'lucide-react';
+import SubscriptionTab from './SubscriptionTab';
 import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { usePushNotifications } from '../../hooks/usePushNotifications';
@@ -30,7 +31,7 @@ export default function Settings() {
   const [webhookStats, setWebhookStats] = useState<{ total: number; processed: number; failed: number; lastReceived: string | null } | null>(null);
   const [showTokens, setShowTokens] = useState<Record<string, boolean>>({});
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'integrations' | 'webhook' | 'general' | 'notifications'>('integrations');
+  const [activeTab, setActiveTab] = useState<'integrations' | 'webhook' | 'general' | 'notifications' | 'subscription'>('integrations');
   const [webhookCopied, setWebhookCopied] = useState(false);
   const [testingWebhook, setTestingWebhook] = useState(false);
   const [profile, setProfile] = useState({ timezone: 'America/Sao_Paulo', currency: 'BRL', default_roas_target: 3.0, default_cpa_target: 50, closing_day: 1 });
@@ -108,6 +109,7 @@ export default function Settings() {
     { id: 'webhook' as const, label: 'Webhook / API', icon: Globe },
     { id: 'general' as const, label: 'Geral', icon: SettingsIcon },
     { id: 'notifications' as const, label: 'Notificações', icon: Bell },
+    { id: 'subscription' as const, label: 'Assinatura', icon: Crown },
   ];
 
   return (
@@ -526,6 +528,9 @@ export default function Settings() {
           })}
         </motion.div>
       )}
+
+      {/* Subscription */}
+      {activeTab === 'subscription' && <SubscriptionTab />}
     </div>
   );
 }

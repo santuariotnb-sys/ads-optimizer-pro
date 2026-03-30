@@ -1,6 +1,8 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from './store/useStore';
+
+const Landing = lazy(() => import('./pages/Landing'));
 import { useIsMobile } from './hooks/useMediaQuery';
 import AppLayout from './components/Layout/AppLayout';
 import SubNav from './components/Layout/SubNav';
@@ -30,6 +32,7 @@ const SignalAudit = lazy(() => import('./components/SignalAudit/SignalAudit'));
 const TraceSummary = lazy(() => import('./components/TraceSummary/TraceSummary'));
 const OnboardingWizard = lazy(() => import('./components/Onboarding/OnboardingWizard'));
 
+import PlanGate from './components/ui/PlanGate';
 import { parseCallbackToken } from './services/metaAuth';
 import { MetaApiService } from './services/metaApi';
 import { evaluateAlerts } from './services/alertEngine';
@@ -115,7 +118,7 @@ function ModuleRouter() {
     case 'cmd-orbit':
     case 'opt-scale': // backward compat
     case 'autoscale':
-      return <AutoScale />;
+      return <PlanGate feature="autoScale"><AutoScale /></PlanGate>;
     case 'cmd-audiences':
     case 'opt-audiences': // backward compat
     case 'audiences':
@@ -127,7 +130,7 @@ function ModuleRouter() {
     case 'cmd-apex':
     case 'opt-agent': // backward compat
     case 'agent':
-      return <Agent />;
+      return <PlanGate feature="agentAI"><Agent /></PlanGate>;
     case 'cmd-flow':
     case 'opt-pipeline': // backward compat
     case 'pipeline':
@@ -169,7 +172,7 @@ function ModuleRouter() {
     case 'trace-pulse':
     case 'opt-gateway': // backward compat
     case 'gateway':
-      return <SignalGateway />;
+      return <PlanGate feature="signalGateway"><SignalGateway /></PlanGate>;
     case 'trace-funnel':
     case 'opt-audit': // backward compat
     case 'signalaudit':
@@ -187,7 +190,7 @@ function ModuleRouter() {
     case 'cre-entity':
       return <Creatives />;
     case 'cre-vision':
-      return <CreativeVision />;
+      return <PlanGate feature="creativeIntel"><CreativeVision /></PlanGate>;
 
     // Facebook (Meta) Ads
     case 'meta-contas':
@@ -457,6 +460,10 @@ export default function App() {
   const subNavItems = getSubNavItems(activeTab);
   const currentWorkspace = useStore((s) => s.currentWorkspace);
   const showOnboarding = mode === 'live' && !currentWorkspace && currentModule === 'cmd-onboarding';
+
+  if (window.location.pathname === '/landing') {
+    return <Suspense fallback={null}><Landing /></Suspense>;
+  }
 
   return (
     <AppLayout>
