@@ -146,7 +146,7 @@ export default function AutoScale() {
           fontSize: 28, fontWeight: 700, marginBottom: 8, marginTop: 0,
           background: 'linear-gradient(135deg, #0f172a, #6366f1)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-        }}>Auto-Scale</h1>
+        }}>Orbit Engine</h1>
         <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>
           Motor de regras automáticas para otimização contínua
         </p>

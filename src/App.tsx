@@ -1,4 +1,5 @@
 import { useEffect, lazy, Suspense } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from './store/useStore';
 import { useIsMobile } from './hooks/useMediaQuery';
 import AppLayout from './components/Layout/AppLayout';
@@ -26,6 +27,7 @@ const CreativeVision = lazy(() => import('./components/CreativeVision/CreativeVi
 const PlatformAds = lazy(() => import('./components/PlatformAds/PlatformAds'));
 const SignalGateway = lazy(() => import('./components/SignalGateway/SignalGateway'));
 const SignalAudit = lazy(() => import('./components/SignalAudit/SignalAudit'));
+const OnboardingWizard = lazy(() => import('./components/Onboarding/OnboardingWizard'));
 
 import { parseCallbackToken } from './services/metaAuth';
 import { MetaApiService } from './services/metaApi';
@@ -38,32 +40,30 @@ import {
 import {
   LayoutDashboard, Megaphone, Radio, DollarSign, Settings as SettingsIcon,
   BarChart3, Link2, ShoppingCart, Globe, Plug, Sparkles, Eye,
-  Users, Bell, Bot, GitBranch, Zap, BookOpen, Shield, Satellite,
+  Users, Bell, Bot, GitBranch, Zap, Shield, Satellite,
 } from 'lucide-react';
 
 // Sub-nav definitions for each main tab
-const optimizerNav = [
-  { id: 'opt-overview', label: 'Visão Geral', icon: LayoutDashboard },
-  { id: 'opt-campaigns', label: 'Campanhas', icon: Megaphone },
-  { id: 'opt-signal', label: 'Rastreamento', icon: Radio },
-  { id: 'opt-gateway', label: 'Signal Gateway', icon: Satellite },
-  { id: 'opt-audit', label: 'Signal Audit', icon: Shield },
-  { id: 'opt-scale', label: 'Auto-Scale', icon: Zap },
-  { id: 'opt-audiences', label: 'Públicos', icon: Users },
-  { id: 'opt-alerts', label: 'Alertas', icon: Bell },
-  { id: 'opt-agent', label: 'Agente IA', icon: Bot },
-  { id: 'opt-pipeline', label: 'Pipeline', icon: GitBranch },
-  { id: 'opt-playbook', label: 'Playbook', icon: BookOpen },
-  { id: 'opt-financial', label: 'Financeiro', icon: DollarSign },
-  { id: 'opt-settings', label: 'Configurações', icon: SettingsIcon },
+const comandoNav = [
+  { id: 'cmd-overview', label: 'Visão Geral', icon: LayoutDashboard },
+  { id: 'cmd-campaigns', label: 'Campanhas', icon: Megaphone },
+  { id: 'cmd-orbit', label: 'Orbit Engine', icon: Zap },
+  { id: 'cmd-audiences', label: 'Públicos', icon: Users },
+  { id: 'cmd-alerts', label: 'Alertas', icon: Bell },
+  { id: 'cmd-apex', label: 'Apex', icon: Bot },
+  { id: 'cmd-flow', label: 'Flow Builder', icon: GitBranch },
+  { id: 'cmd-financial', label: 'Financeiro', icon: DollarSign },
+  { id: 'cmd-settings', label: 'Configurações', icon: SettingsIcon },
 ];
 
-const utmNav = [
-  { id: 'utm-campanhas', label: 'Campanhas', icon: Megaphone },
-  { id: 'utm-utms', label: 'UTMs', icon: Link2 },
-  { id: 'utm-vendas', label: 'Vendas', icon: ShoppingCart },
-  { id: 'utm-despesas', label: 'Despesas', icon: DollarSign },
-  { id: 'utm-relatorios', label: 'Relatórios', icon: BarChart3 },
+const traceNav = [
+  { id: 'trace-dashboard', label: 'Painel', icon: LayoutDashboard },
+  { id: 'trace-utms', label: 'UTMs', icon: Link2 },
+  { id: 'trace-vendas', label: 'Vendas', icon: ShoppingCart },
+  { id: 'trace-reports', label: 'Relatórios', icon: BarChart3 },
+  { id: 'trace-events', label: 'Eventos', icon: Radio },
+  { id: 'trace-pulse', label: 'Pulse Router', icon: Satellite },
+  { id: 'trace-funnel', label: 'Funil', icon: Shield },
   { id: 'meta-campanhas', label: 'Facebook', icon: Globe },
   { id: 'google-campanhas', label: 'Google', icon: Globe },
   { id: 'tiktok-campanhas', label: 'TikTok', icon: Globe },
@@ -76,19 +76,20 @@ const creativeNav = [
   { id: 'cre-vision', label: 'Análise IA', icon: Eye },
 ];
 
-type TabId = 'opt' | 'utm' | 'cre';
+type TabId = 'cmd' | 'trace' | 'cre';
 
 function getActiveTab(module: string): TabId {
-  if (module.startsWith('utm-') || module.startsWith('meta-') || module.startsWith('google-') || module.startsWith('tiktok-') || module.startsWith('kwai-') || module.startsWith('integ-')) return 'utm';
+  if (module.startsWith('trace-') || module.startsWith('utm-') || module.startsWith('meta-') || module.startsWith('google-') || module.startsWith('tiktok-') || module.startsWith('kwai-') || module.startsWith('integ-')) return 'trace';
   if (module.startsWith('cre-')) return 'cre';
-  return 'opt';
+  if (module.startsWith('opt-')) return 'cmd'; // backward compat
+  return 'cmd';
 }
 
 function getSubNavItems(tab: TabId) {
   switch (tab) {
-    case 'utm': return utmNav;
+    case 'trace': return traceNav;
     case 'cre': return creativeNav;
-    default: return optimizerNav;
+    default: return comandoNav;
   }
 }
 
@@ -99,42 +100,76 @@ function ModuleRouter() {
   if (isLoading) return <DashboardSkeleton />;
 
   switch (currentModule) {
-    // Optimizer tab
-    case 'opt-overview':
+    // COMANDO tab
+    case 'cmd-overview':
+    case 'opt-overview': // backward compat
       return <Overview />;
     case 'dashboard':
       return <Dashboard />;
-    case 'opt-campaigns':
+    case 'cmd-campaigns':
+    case 'opt-campaigns': // backward compat
     case 'campaigns':
       return <Campaigns />;
-    case 'opt-signal':
-    case 'signal':
-      return <SignalEngine />;
-    case 'opt-gateway':
-    case 'gateway':
-      return <SignalGateway />;
-    case 'opt-audit':
-    case 'signalaudit':
-      return <SignalAudit />;
-    case 'opt-financial':
+    case 'cmd-orbit':
+    case 'opt-scale': // backward compat
+    case 'autoscale':
+      return <AutoScale />;
+    case 'cmd-audiences':
+    case 'opt-audiences': // backward compat
+    case 'audiences':
+      return <Audiences />;
+    case 'cmd-alerts':
+    case 'opt-alerts': // backward compat
+    case 'alerts':
+      return <Alerts />;
+    case 'cmd-apex':
+    case 'opt-agent': // backward compat
+    case 'agent':
+      return <Agent />;
+    case 'cmd-flow':
+    case 'opt-pipeline': // backward compat
+    case 'pipeline':
+      return <Pipeline />;
+    case 'cmd-financial':
+    case 'opt-financial': // backward compat
     case 'financial':
       return <Financial />;
-    case 'opt-settings':
+    case 'cmd-settings':
+    case 'opt-settings': // backward compat
     case 'settings':
       return <Settings />;
 
-    // UTM tab
-    case 'utm-campanhas':
-    case 'utm-utms':
-    case 'utm-vendas':
-    case 'utm-relatorios':
+    // TRACE ENGINE tab
+    case 'trace-dashboard':
+    case 'utm-campanhas': // backward compat
     case 'utm-dashboard':
-    case 'utm-sources':
-    case 'utm-links':
-    case 'utm-sales':
-    case 'utm-webhooks':
     case 'utm':
       return <UTMTracking />;
+    case 'trace-utms':
+    case 'utm-utms': // backward compat
+    case 'utm-sources':
+    case 'utm-links':
+      return <UTMTracking />;
+    case 'trace-vendas':
+    case 'utm-vendas': // backward compat
+    case 'utm-sales':
+      return <UTMTracking />;
+    case 'trace-reports':
+    case 'utm-relatorios': // backward compat
+    case 'utm-webhooks':
+      return <UTMTracking />;
+    case 'trace-events':
+    case 'opt-signal': // backward compat
+    case 'signal':
+      return <SignalEngine />;
+    case 'trace-pulse':
+    case 'opt-gateway': // backward compat
+    case 'gateway':
+      return <SignalGateway />;
+    case 'trace-funnel':
+    case 'opt-audit': // backward compat
+    case 'signalaudit':
+      return <SignalAudit />;
     case 'utm-despesas':
       return <Financial />;
 
@@ -187,23 +222,15 @@ function ModuleRouter() {
     case 'integ-testes':
       return <Integrations />;
 
-    // Optimizer sub-modules
-    case 'opt-audiences':
-    case 'audiences': return <Audiences />;
-    case 'opt-alerts':
-    case 'alerts': return <Alerts />;
-    case 'opt-agent':
-    case 'agent': return <Agent />;
-    case 'opt-pipeline':
-    case 'pipeline': return <Pipeline />;
-    case 'opt-playbook':
-    case 'playbook': return <Playbook />;
-    case 'opt-scale':
-    case 'autoscale': return <AutoScale />;
-    case 'create': return <CampaignCreator />;
+    // Legacy optimizer sub-modules
+    case 'opt-playbook': // backward compat (removed from nav but still routable)
+    case 'playbook':
+      return <Playbook />;
+    case 'create':
+      return <CampaignCreator />;
 
     default:
-      return <Dashboard />;
+      return <Overview />;
   }
 }
 
@@ -229,7 +256,7 @@ export default function App() {
   // Set default module on first load
   useEffect(() => {
     if (currentModule === 'dashboard') {
-      setCurrentModule('opt-overview');
+      setCurrentModule('cmd-overview');
     }
   }, [currentModule, setCurrentModule]);
 
@@ -341,15 +368,37 @@ export default function App() {
 
   const activeTab = getActiveTab(currentModule);
   const subNavItems = getSubNavItems(activeTab);
+  const currentWorkspace = useStore((s) => s.currentWorkspace);
+  const showOnboarding = mode === 'live' && !currentWorkspace && currentModule === 'cmd-onboarding';
 
   return (
     <AppLayout>
-      <SubNav items={subNavItems} />
-      <main style={{ flex: 1, minWidth: 0, padding: isMobile ? 12 : 24, paddingBottom: 100, overflowY: 'auto', overflowX: 'hidden', boxSizing: 'border-box' }}>
-        <Suspense fallback={<DashboardSkeleton />}>
-          <ModuleRouter />
-        </Suspense>
-      </main>
+      {showOnboarding ? (
+        <main style={{ flex: 1, minWidth: 0, padding: isMobile ? 12 : 24, paddingBottom: 100, overflowY: 'auto', overflowX: 'hidden', boxSizing: 'border-box' }}>
+          <Suspense fallback={<DashboardSkeleton />}>
+            <OnboardingWizard />
+          </Suspense>
+        </main>
+      ) : (
+        <>
+          <SubNav items={subNavItems} />
+          <main style={{ flex: 1, minWidth: 0, padding: isMobile ? 12 : 24, paddingBottom: 100, overflowY: 'auto', overflowX: 'hidden', boxSizing: 'border-box' }}>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentModule}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15, ease: 'easeOut' }}
+              >
+                <Suspense fallback={<DashboardSkeleton />}>
+                  <ModuleRouter />
+                </Suspense>
+              </motion.div>
+            </AnimatePresence>
+          </main>
+        </>
+      )}
     </AppLayout>
   );
 }

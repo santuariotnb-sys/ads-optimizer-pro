@@ -87,7 +87,7 @@ export default function Playbook() {
             fontSize: 28, fontWeight: 700, margin: 0,
             background: 'linear-gradient(135deg, #0f172a, #6366f1)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          }}>Playbook</h1>
+          }}>Command Set</h1>
         </div>
         <p style={{ fontSize: 14, color: '#94a3b8', marginBottom: 32 }}>
           Base de conhecimento com as melhores práticas para Meta Ads

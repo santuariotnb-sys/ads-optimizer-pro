@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { Campaign, AdSet, Ad, Creative, Audience, Alert, DashboardMetrics, Period, AppMode, ChatMessage, SignalAuditResult } from '../types/meta';
 import type { CreativeAnalysisResult } from '../services/creativeVision';
+import type { Workspace } from '../types/database';
 
 interface AppState {
   theme: 'dark' | 'light';
@@ -27,6 +28,10 @@ interface AppState {
   signalAudit: SignalAuditResult | null;
   creativeAnalysisContext: CreativeAnalysisResult | null;
 
+  workspaces: Workspace[];
+  currentWorkspace: Workspace | null;
+  onboardingStep: number;
+
   setAccessToken: (token: string | null) => void;
   setAdAccountId: (id: string | null) => void;
   setCampaigns: (campaigns: Campaign[]) => void;
@@ -48,6 +53,9 @@ interface AppState {
   setIsLoading: (loading: boolean) => void;
   setSignalAudit: (audit: SignalAuditResult | null) => void;
   setCreativeAnalysisContext: (ctx: CreativeAnalysisResult | null) => void;
+  setWorkspaces: (ws: Workspace[]) => void;
+  setCurrentWorkspace: (ws: Workspace | null) => void;
+  setOnboardingStep: (step: number) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -75,6 +83,10 @@ export const useStore = create<AppState>((set) => ({
   signalAudit: null,
   creativeAnalysisContext: null,
 
+  workspaces: [],
+  currentWorkspace: null,
+  onboardingStep: 0,
+
   setAccessToken: (token) => set({ accessToken: token, mode: token ? 'live' : 'demo' }),
   setAdAccountId: (id) => set({ adAccountId: id }),
   setCampaigns: (campaigns) => set({ campaigns }),
@@ -98,4 +110,7 @@ export const useStore = create<AppState>((set) => ({
   setIsLoading: (loading) => set({ isLoading: loading }),
   setSignalAudit: (audit) => set({ signalAudit: audit }),
   setCreativeAnalysisContext: (ctx) => set({ creativeAnalysisContext: ctx }),
+  setWorkspaces: (ws) => set({ workspaces: ws }),
+  setCurrentWorkspace: (ws) => set({ currentWorkspace: ws }),
+  setOnboardingStep: (step) => set({ onboardingStep: step }),
 }));

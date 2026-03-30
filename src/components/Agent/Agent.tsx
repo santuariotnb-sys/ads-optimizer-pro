@@ -410,7 +410,7 @@ export default function Agent() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `**Ola! Sou seu Consultor de Ads com IA.**
+      content: `**Ola! Sou o Apex, seu Consultor de Ads com IA.**
 
 Posso analisar suas campanhas, criativos, estrategias de lances e muito mais. Tenho acesso aos dados da sua conta e conhego profundamente o algoritmo do Meta (Andromeda + GEM).
 
@@ -431,6 +431,7 @@ Escolha um dos topicos abaixo ou digite sua pergunta:`,
   const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus | null>(null);
   const [bridgeChecked, setBridgeChecked] = useState(false);
   const activeTaskRef = useRef<TaskHandle | null>(null);
+  const [hasActiveTask, setHasActiveTask] = useState(false);
   const streamBufferRef = useRef('');
 
   // Determine connection mode
@@ -545,6 +546,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
       onDone: (result) => {
         setIsTyping(false);
         activeTaskRef.current = null;
+        setHasActiveTask(false);
         if (result.cancelled) {
           setMessages((prev) =>
             prev.map((m) =>
@@ -568,6 +570,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
       onError: (err) => {
         setIsTyping(false);
         activeTaskRef.current = null;
+        setHasActiveTask(false);
         setMessages((prev) =>
           prev.map((m) =>
             m.id === streamMsgId
@@ -579,12 +582,14 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
     });
 
     activeTaskRef.current = task;
+    setHasActiveTask(true);
   }, [campaigns, metrics, emqScore]);
 
   const handleCancelTask = useCallback(() => {
     if (activeTaskRef.current) {
       activeTaskRef.current.cancel();
       activeTaskRef.current = null;
+      setHasActiveTask(false);
     }
   }, []);
 
@@ -803,7 +808,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
                 letterSpacing: '-0.01em',
               }}
             >
-              Consultor de Ads IA
+              Apex
             </h2>
             <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>
               Analise inteligente das suas campanhas Meta Ads
@@ -887,7 +892,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
         )}
 
         {/* Typing Indicator */}
-        {isTyping && !activeTaskRef.current && (
+        {isTyping && !hasActiveTask && (
           <div style={assistantMessageStyle} aria-live="polite">
             <div style={botAvatarStyle}>
               <Bot size={16} color="#fff" />
@@ -933,7 +938,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
             rows={1}
             style={inputStyle}
           />
-          {activeTaskRef.current ? (
+          {hasActiveTask ? (
             <button
               onClick={handleCancelTask}
               aria-label="Cancelar tarefa"

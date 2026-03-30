@@ -109,7 +109,7 @@ export default function SignalAudit() {
       <div style={{ padding: isMobile ? 16 : 32, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
         <div className="tilt-card" style={{ ...glassCard, textAlign: 'center', maxWidth: 400 }}>
           <ShieldCheck size={48} color="#6366f1" style={{ margin: '0 auto 16px' }} />
-          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', marginBottom: 8 }}>Signal Audit</h3>
+          <h3 style={{ fontSize: 18, fontWeight: 600, color: '#0f172a', marginBottom: 8 }}>Shield Audit</h3>
           <p style={{ fontSize: 14, color: '#64748b' }}>Conecte sua conta Meta para executar a auditoria de sinais.</p>
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function SignalAudit() {
         <ShieldCheck size={28} color="#6366f1" />
         <div>
           <h2 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
-            META SIGNAL AUDIT
+            SHIELD AUDIT
           </h2>
           <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>
             Framework de auditoria de sinais — 8 pilares

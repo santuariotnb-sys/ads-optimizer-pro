@@ -481,7 +481,7 @@ export default function UTMTracking() {
   const [produto, setProduto] = useState('all');
   const [conta, setConta] = useState('all');
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
-  const dragScroll = useDragScroll();
+  const { ref: dragScrollRef, onMouseDown: dragMouseDown, onMouseMove: dragMouseMove, onMouseUp: dragMouseUp, onMouseLeave: dragMouseLeave } = useDragScroll();
 
   // Determine active view
   const validViews = ['utm-campanhas', 'utm-utms', 'utm-vendas', 'utm-relatorios'];
@@ -584,11 +584,11 @@ export default function UTMTracking() {
         <div style={S.cardReflection} />
         <div style={S.cardSheen} />
         <div
-          ref={dragScroll.ref}
-          onMouseDown={dragScroll.onMouseDown}
-          onMouseMove={dragScroll.onMouseMove}
-          onMouseUp={dragScroll.onMouseUp}
-          onMouseLeave={dragScroll.onMouseLeave}
+          ref={dragScrollRef}
+          onMouseDown={(e) => dragMouseDown(e)}
+          onMouseMove={(e) => dragMouseMove(e)}
+          onMouseUp={() => dragMouseUp()}
+          onMouseLeave={() => dragMouseLeave()}
           style={{ ...S.tableWrap, cursor: 'grab' }}
         >
           {activeView === 'utm-campanhas' && !isMobile && (

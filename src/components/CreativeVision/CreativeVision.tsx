@@ -103,12 +103,12 @@ export default function CreativeVision() {
       if (creativeType === 'video') {
         const source = videoRef.current && videoRef.current.readyState >= 1 ? videoRef.current : file;
         try {
-          extractedFrames = await extractVideoFrames(source, undefined, setProgress);
+          extractedFrames = await extractVideoFrames(source, setProgress);
         } catch (extractErr) {
-          throw new Error(`FRAMES: ${extractErr instanceof Error ? extractErr.message : extractErr}`);
+          throw new Error(extractErr instanceof Error ? extractErr.message : 'Erro ao extrair frames');
         }
         if (extractedFrames.length === 0) {
-          throw new Error('FRAMES: 0 frames extraídos');
+          throw new Error('Não foi possível extrair frames do vídeo. Tente outro formato (MP4 H.264).');
         }
       } else {
         setProgress('Processando imagem...');
@@ -125,27 +125,14 @@ export default function CreativeVision() {
           ? await analyzeCreative(extractedFrames, apiKey, creativeType)
           : await analyzeCreativeOpenAI(extractedFrames, apiKey, creativeType);
       } catch (apiErr) {
-        throw new Error(`API_${provider.toUpperCase()}: ${apiErr instanceof Error ? apiErr.message : apiErr}`);
+        throw new Error(apiErr instanceof Error ? apiErr.message : 'Erro ao conectar com a IA');
       }
 
       setResult(analysisResult);
       setProgress(null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Erro desconhecido na análise';
-      const vidRef = videoRef.current;
-      const debug = [
-        `[DEBUG]`,
-        `err="${msg}"`,
-        `coIsolated=${crossOriginIsolated}`,
-        `type=${file?.type}`,
-        `size=${file ? (file.size/1024/1024).toFixed(1)+'MB' : '?'}`,
-        `videoRef=${vidRef ? 'yes' : 'null'}`,
-        `readyState=${vidRef?.readyState ?? 'N/A'}`,
-        `duration=${vidRef?.duration ?? 'N/A'}`,
-        `videoW=${vidRef?.videoWidth ?? 'N/A'}`,
-        `path=${vidRef && vidRef.readyState >= 1 ? 'DOM' : 'FILE'}`,
-      ].join(' | ');
-      setError(`${msg}\n\n${debug}`);
+      setError(msg);
       setProgress(null);
     } finally {
       setAnalyzing(false);

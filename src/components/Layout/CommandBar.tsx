@@ -12,9 +12,9 @@ interface QuickAction {
 }
 
 const actions: QuickAction[] = [
-  { id: 'opt-overview', label: 'Visão Geral', icon: LayoutDashboard, module: 'opt-overview' },
-  { id: 'utm-campanhas', label: 'Campanhas', icon: Target, module: 'utm-campanhas' },
-  { id: 'utm-utms', label: 'UTMs', icon: Link, module: 'utm-utms' },
+  { id: 'cmd-overview', label: 'Comando', icon: LayoutDashboard, module: 'cmd-overview' },
+  { id: 'trace-dashboard', label: 'Trace', icon: Target, module: 'trace-dashboard' },
+  { id: 'trace-utms', label: 'UTMs', icon: Link, module: 'trace-utms' },
   { id: 'cre-dashboard', label: 'Criativos', icon: Palette, module: 'cre-dashboard' },
 ];
 

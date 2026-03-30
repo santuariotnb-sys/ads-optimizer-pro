@@ -447,7 +447,7 @@ export default function SignalEngine() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <h1 style={{ color: COLORS.text, fontSize: 24, fontWeight: 700, margin: 0 }}>Rastreamento de Sinal</h1>
+            <h1 style={{ color: COLORS.text, fontSize: 24, fontWeight: 700, margin: 0 }}>Trace Engine</h1>
             <span style={{
               background: 'linear-gradient(135deg, rgba(99,102,241,0.2), rgba(139,92,246,0.2))',
               border: '1px solid rgba(99,102,241,0.3)',

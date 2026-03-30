@@ -233,7 +233,7 @@ export default function Pipeline() {
             letterSpacing: '-0.02em',
           }}
         >
-          Pipeline de Entrega de Anúncios
+          Flow Builder
         </h2>
         <p style={{ margin: '8px 0 0', fontSize: 14, color: '#64748b' }}>
           Como o Meta processa seus anúncios: do Andromeda ao Leilão

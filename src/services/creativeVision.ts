@@ -148,7 +148,6 @@ function getFrameCount(duration: number): number {
 // Função principal de extração de frames
 export async function extractVideoFrames(
   fileOrVideo: File | HTMLVideoElement,
-  _count = 6,
   onProgress?: (msg: string) => void,
 ): Promise<FrameData[]> {
   // Se recebeu um HTMLVideoElement (do DOM), usar diretamente

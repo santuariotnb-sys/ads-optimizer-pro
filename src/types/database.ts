@@ -296,6 +296,76 @@ export interface Database {
         };
         Update: Partial<Database['public']['Tables']['webhook_logs']['Insert']>;
       };
+      workspaces: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          domain: string;
+          checkout_domain: string | null;
+          business_type: 'infoproduct' | 'ecommerce' | 'saas' | 'agency' | 'other';
+          pixel_meta_id: string | null;
+          pixel_google_id: string | null;
+          pixel_tiktok_id: string | null;
+          pixel_kwai_id: string | null;
+          capi_token_encrypted: string | null;
+          utm_source_default: string;
+          utm_medium_default: string;
+          events_config: {
+            lead: boolean;
+            purchase: boolean;
+            initiate_checkout: boolean;
+            add_to_cart: boolean;
+            view_content: boolean;
+            custom_events: string[];
+          };
+          destinations: {
+            meta_capi: boolean;
+            google_ads: boolean;
+            tiktok_events: boolean;
+            webhook_url?: string;
+          };
+          tracking_script: string | null;
+          is_active: boolean;
+          setup_completed: boolean;
+          onboarding_step: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          name: string;
+          domain: string;
+          checkout_domain?: string | null;
+          business_type?: 'infoproduct' | 'ecommerce' | 'saas' | 'agency' | 'other';
+          pixel_meta_id?: string | null;
+          pixel_google_id?: string | null;
+          pixel_tiktok_id?: string | null;
+          pixel_kwai_id?: string | null;
+          capi_token_encrypted?: string | null;
+          utm_source_default?: string;
+          utm_medium_default?: string;
+          events_config?: {
+            lead: boolean;
+            purchase: boolean;
+            initiate_checkout: boolean;
+            add_to_cart: boolean;
+            view_content: boolean;
+            custom_events: string[];
+          };
+          destinations?: {
+            meta_capi: boolean;
+            google_ads: boolean;
+            tiktok_events: boolean;
+            webhook_url?: string;
+          };
+          tracking_script?: string | null;
+          is_active?: boolean;
+          setup_completed?: boolean;
+          onboarding_step?: number;
+        };
+        Update: Partial<Database['public']['Tables']['workspaces']['Insert']>;
+      };
     };
     Views: {
       sales_summary: {
@@ -336,3 +406,8 @@ export interface Database {
     };
   };
 }
+
+// Workspace convenience types
+export type Workspace = Database['public']['Tables']['workspaces']['Row'];
+export type WorkspaceInsert = Database['public']['Tables']['workspaces']['Insert'];
+export type WorkspaceUpdate = Database['public']['Tables']['workspaces']['Update'];

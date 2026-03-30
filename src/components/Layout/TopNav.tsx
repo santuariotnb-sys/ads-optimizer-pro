@@ -4,7 +4,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import { LayoutDashboard, Link, Sparkles, Bell, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-type TabId = 'opt' | 'utm' | 'cre';
+type TabId = 'cmd' | 'trace' | 'cre';
 
 interface TabDef {
   id: TabId;
@@ -14,15 +14,16 @@ interface TabDef {
 }
 
 const tabs: TabDef[] = [
-  { id: 'opt', label: 'PAINEL', icon: LayoutDashboard, defaultModule: 'opt-overview' },
-  { id: 'utm', label: 'UTM STUDIO', icon: Link, defaultModule: 'utm-campanhas' },
+  { id: 'cmd', label: 'COMANDO', icon: LayoutDashboard, defaultModule: 'cmd-overview' },
+  { id: 'trace', label: 'TRACE ENGINE', icon: Link, defaultModule: 'trace-dashboard' },
   { id: 'cre', label: 'CRIATIVOS', icon: Sparkles, defaultModule: 'cre-dashboard' },
 ];
 
 function getActiveTab(currentModule: string): TabId {
-  if (currentModule.startsWith('utm-') || currentModule.startsWith('meta-') || currentModule.startsWith('google-') || currentModule.startsWith('tiktok-') || currentModule.startsWith('kwai-') || currentModule.startsWith('integ-')) return 'utm';
+  if (currentModule.startsWith('trace-') || currentModule.startsWith('utm-') || currentModule.startsWith('meta-') || currentModule.startsWith('google-') || currentModule.startsWith('tiktok-') || currentModule.startsWith('kwai-') || currentModule.startsWith('integ-')) return 'trace';
   if (currentModule.startsWith('cre-')) return 'cre';
-  return 'opt';
+  if (currentModule.startsWith('opt-')) return 'cmd'; // backward compat
+  return 'cmd';
 }
 
 export default function TopNav() {
@@ -56,7 +57,7 @@ export default function TopNav() {
       >
         {/* Logo */}
         <div
-          onClick={() => setCurrentModule('opt-overview')}
+          onClick={() => setCurrentModule('cmd-overview')}
           style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: isMobile ? 'auto' : 220, cursor: 'pointer' }}
         >
           <img
@@ -189,7 +190,7 @@ export default function TopNav() {
 
           {/* User avatar */}
           <button
-            onClick={() => setCurrentModule('opt-settings')}
+            onClick={() => setCurrentModule('cmd-settings')}
             style={{
               display: 'flex',
               alignItems: 'center',

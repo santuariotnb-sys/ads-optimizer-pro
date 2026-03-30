@@ -173,7 +173,7 @@ export default function SignalGateway() {
           </div>
           <div>
             <h1 style={{ fontSize: 22, fontWeight: 700, color: '#0f172a', fontFamily: "'Outfit', sans-serif", margin: 0, letterSpacing: '-0.02em' }}>
-              Gateway de Sinal
+              Pulse Router
             </h1>
             <p style={{ fontSize: 13, color: '#64748b', margin: 0, fontFamily: "'Outfit', sans-serif" }}>
               Server-side tracking + CAPI enriquecido

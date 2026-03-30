@@ -28,7 +28,6 @@ export async function sendPushNotification(
 
   // 1. Import VAPID private key
   const vapidPrivateRaw = base64UrlDecode(vapidKeys.privateKey);
-  const vapidPublicRaw = base64UrlDecode(vapidKeys.publicKey);
 
   // 2. Build VAPID JWT
   const endpoint = new URL(subscription.endpoint);
@@ -103,9 +102,6 @@ function buildPkcs8FromRaw(rawKey: Uint8Array): ArrayBuffer {
     0x01, 0x06, 0x08, 0x2a, 0x86, 0x48, 0xce, 0x3d,
     0x03, 0x01, 0x07, 0x04, 0x6d, 0x30, 0x6b, 0x02,
     0x01, 0x01, 0x04, 0x20,
-  ]);
-  const footer = new Uint8Array([
-    0xa1, 0x44, 0x03, 0x42, 0x00,
   ]);
   // We don't include the public key in PKCS8 — crypto.subtle can derive it
   const result = new Uint8Array(header.length + rawKey.length);
