@@ -3,7 +3,9 @@ export interface CreativeAnalysisResult {
   hookScore: number;
   ctaScore: number;
   hookText: string;
+  hookVisual?: string;
   ctaText: string;
+  ctaVisual?: string;
   hookType: string;
   ctaType: string;
   tone: string;
@@ -11,6 +13,14 @@ export interface CreativeAnalysisResult {
   elements: string[];
   insights: { type: 'positive' | 'warning' | 'negative'; text: string }[];
   summary: string;
+  // Análise avançada de direct response
+  painPoint?: string;
+  promise?: string;
+  mechanism?: string;
+  transformation?: string;
+  audienceMatch?: string;
+  directResponseScore?: number;
+  missingElements?: string[];
 }
 
 export interface FrameData {
@@ -25,6 +35,37 @@ function formatTimestamp(seconds: number): string {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
   return `${mins}:${secs}`;
+}
+
+// Gera timestamps estratégicos: hook (0-3s), corpo, CTA (final)
+function buildSmartTimestamps(duration: number, maxFrames: number): { time: number; label: string }[] {
+  const stamps: { time: number; label: string }[] = [];
+
+  // Hook: sempre capturar 0.5s e 2.5s
+  stamps.push({ time: Math.min(0.5, duration * 0.05), label: 'hook' });
+  if (duration > 5) {
+    stamps.push({ time: Math.min(2.5, duration * 0.3), label: 'hook' });
+  }
+
+  // CTA: últimos 3 segundos (ou último 10% para vídeos curtos)
+  const ctaTime = duration > 10 ? duration - 3 : duration * 0.9;
+  stamps.push({ time: ctaTime, label: 'cta' });
+
+  // Corpo: distribuir frames restantes entre hook e CTA
+  const bodyCount = maxFrames - stamps.length;
+  const bodyStart = stamps[stamps.length - 2]?.time ?? 3;
+  const bodyEnd = ctaTime - 1;
+
+  if (bodyCount > 0 && bodyEnd > bodyStart) {
+    for (let i = 0; i < bodyCount; i++) {
+      const t = bodyStart + ((bodyEnd - bodyStart) * (i + 1)) / (bodyCount + 1);
+      stamps.push({ time: t, label: 'body' });
+    }
+  }
+
+  // Ordenar por tempo e limitar
+  stamps.sort((a, b) => a.time - b.time);
+  return stamps.slice(0, maxFrames);
 }
 
 // Extrai frames usando um <video> que já está no DOM (funciona em Safari)
@@ -64,10 +105,13 @@ async function extractFromDomVideo(
   const wasPlaying = !video.paused;
   video.pause();
 
+  // Timestamps estratégicos: hook (0-3s), corpo distribuído, CTA (últimos 3s)
+  const timestamps = buildSmartTimestamps(duration, count);
+
   const frames: FrameData[] = [];
-  for (let i = 0; i < count; i++) {
-    const ts = duration * 0.05 + (duration * 0.9) * (i / Math.max(count - 1, 1));
-    onProgress?.(`Extraindo frame ${i + 1}/${count}...`);
+  for (let i = 0; i < timestamps.length; i++) {
+    const ts = timestamps[i].time;
+    onProgress?.(`Extraindo frame ${i + 1}/${timestamps.length}...`);
 
     await new Promise<void>((resolve) => {
       const onSeeked = () => {
@@ -82,7 +126,8 @@ async function extractFromDomVideo(
     frames.push({
       timestamp: formatTimestamp(ts),
       dataUrl: canvas.toDataURL('image/jpeg', 0.85),
-      isHook: i === 0,
+      isHook: timestamps[i].label === 'hook',
+      description: timestamps[i].label,
     });
   }
 
@@ -93,15 +138,23 @@ async function extractFromDomVideo(
   return frames;
 }
 
+// Calcula número de frames baseado na duração: ≤30s=6, ≤60s=8, >60s=10
+function getFrameCount(duration: number): number {
+  if (duration <= 30) return 6;
+  if (duration <= 60) return 8;
+  return 10;
+}
+
 // Função principal de extração de frames
 export async function extractVideoFrames(
   fileOrVideo: File | HTMLVideoElement,
-  count = 6,
+  _count = 6,
   onProgress?: (msg: string) => void,
 ): Promise<FrameData[]> {
   // Se recebeu um HTMLVideoElement (do DOM), usar diretamente
   if (fileOrVideo instanceof HTMLVideoElement) {
-    onProgress?.('Extraindo frames do vídeo...');
+    const count = getFrameCount(fileOrVideo.duration || 30);
+    onProgress?.(`Extraindo ${count} frames do vídeo...`);
     return extractFromDomVideo(fileOrVideo, count, onProgress);
   }
 
@@ -119,6 +172,12 @@ export async function extractVideoFrames(
   video.load();
 
   try {
+    // Esperar metadata para saber a duração
+    await new Promise<void>((resolve) => {
+      video.addEventListener('loadedmetadata', () => resolve(), { once: true });
+    });
+    const count = getFrameCount(video.duration || 30);
+    onProgress?.(`Extraindo ${count} frames do vídeo...`);
     const frames = await extractFromDomVideo(video, count, onProgress);
     return frames;
   } finally {
@@ -142,36 +201,57 @@ export async function imageToFrame(file: File): Promise<FrameData> {
   });
 }
 
-const SYSTEM_PROMPT = `Você é um especialista em análise de criativos para Meta Ads. Analise as imagens/frames enviados como se fosse um media buyer senior brasileiro avaliando o criativo.
+const SYSTEM_PROMPT = `Você é um media buyer senior brasileiro especialista em criativos para Meta Ads com foco em DIRECT RESPONSE (não branding). Analise os frames como se fosse avaliar se esse criativo vai CONVERTER em tráfego frio.
+
+Os frames são extraídos estrategicamente: os primeiros são do HOOK (0-3s), os do meio são o corpo, e o último é o CTA/fechamento.
 
 Responda APENAS em JSON válido com esta estrutura exata:
 {
   "score": <0-100>,
   "hookScore": <0-10>,
   "ctaScore": <0-10>,
-  "hookText": "<texto do hook identificado>",
-  "ctaText": "<texto do CTA identificado>",
-  "hookType": "<Depoimento|Pergunta|Pattern Interrupt|Oferta Direta|UGC Nativo|Curiosidade>",
-  "ctaType": "<Botão|Swipe|Comentário|Link Bio|Texto|Nenhum>",
-  "tone": "<Inspiracional|Urgente|Casual|Energético|Educativo|Emocional>",
+  "hookText": "<texto falado ou escrito no hook — transcreva literalmente. Se não houver texto, escreva 'Sem texto'>",
+  "hookVisual": "<descreva o que se VÊ no hook: expressão facial, movimento, cenário, objeto em destaque, enquadramento>",
+  "ctaText": "<texto EXATO do CTA. Se for apenas logo/branding sem comando de ação, diga 'Branding sem CTA direto'>",
+  "ctaVisual": "<descreva: tem botão? Seta? Countdown? Urgência visual? Ou é só logo/encerramento?>",
+  "hookType": "<Depoimento|Pergunta|Pattern Interrupt|Oferta Direta|UGC Nativo|Curiosidade|Storytelling|Choque|Problema/Dor>",
+  "ctaType": "<Botão|Swipe|Comentário|Link Bio|Texto Direto|Oferta|Countdown|Branding|Nenhum>",
+  "tone": "<Inspiracional|Urgente|Casual|Energético|Educativo|Emocional|Provocativo|Profissional|Agressivo>",
   "colors": ["#hex1","#hex2","#hex3","#hex4"],
-  "elements": ["elemento1","elemento2","elemento3"],
+  "elements": ["elemento1","elemento2","elemento3","elemento4","elemento5"],
+  "painPoint": "<qual DOR ou PROBLEMA o criativo aborda? Se não aborda nenhuma dor clara, diga 'Não identificada'>",
+  "promise": "<qual PROMESSA ou BENEFÍCIO o criativo faz? Seja específico>",
+  "mechanism": "<qual MECANISMO ou MÉTODO é apresentado como solução? Ex: 'curso de 8 semanas', 'método X'>",
+  "transformation": "<qual TRANSFORMAÇÃO antes/depois é mostrada ou sugerida? Se não há, diga 'Não mostrada'>",
+  "audienceMatch": "<para QUEM esse criativo parece ser? Descreva o público-alvo implícito>",
+  "directResponseScore": <0-10 — quão bom é como peça de DIRECT RESPONSE vs branding puro>,
+  "missingElements": ["<liste elementos que FALTAM para melhorar conversão: ex: 'texto no hook', 'urgência', 'prova social', 'preço', 'garantia', 'escassez', 'depoimento', 'CTA com comando'>"],
   "insights": [
     {"type":"positive","text":"..."},
     {"type":"warning","text":"..."},
     {"type":"negative","text":"..."}
   ],
-  "summary": "<resumo de 2-3 frases da análise>"
+  "summary": "<resumo de 3-4 frases: diagnóstico geral + principal risco + recomendação #1>"
 }
 
-Critérios de score:
-- Hook (30%): primeiros 3 segundos capturam atenção?
-- Retenção prevista (25%): o conteúdo mantém interesse?
-- CTA (20%): há chamada para ação clara?
-- Composição (15%): qualidade visual, cores, texto legível?
-- Originalidade (10%): se destaca no feed?
+Critérios de score (foco em CONVERSÃO, não estética):
+- Hook (30%): interrompe o scroll? Tem TEXTO ou NARRAÇÃO nos 3 primeiros segundos? Pattern interrupt verbal + visual?
+- Persuasão (25%): apresenta dor → promessa → mecanismo → transformação? Ou fica só no conceitual?
+- CTA (20%): tem COMANDO DE AÇÃO claro ("clique", "arraste", "comente")? Tem urgência/escassez? Ou é só logo?
+- Prova (15%): tem depoimento, número, resultado, social proof? Ou é só afirmação sem prova?
+- Originalidade (10%): se destaca no feed? Formato diferente?
+
+IMPORTANTE: Seja HONESTO e DIRETO. Se o criativo é bonito mas fraco em direct response, diga isso. Um criativo "inspiracional bonito" com score alto mas sem dor/promessa/CTA direto é um PROBLEMA para quem quer vender.
 
 Sempre responda em português-BR. Sem markdown, sem explicação, APENAS o JSON.`;
+
+function buildFrameContext(frames: FrameData[], creativeType: string): string {
+  const labels = frames.map((f, i) => {
+    const label = f.description === 'hook' ? 'HOOK' : f.description === 'cta' ? 'CTA' : 'CORPO';
+    return `Frame ${i + 1} (${f.timestamp}) — ${label}`;
+  }).join(', ');
+  return `Analise este criativo do tipo "${creativeType}". ${frames.length > 1 ? `São ${frames.length} frames extraídos estrategicamente: ${labels}.` : 'É uma imagem estática.'}`;
+}
 
 export async function analyzeCreative(
   frames: FrameData[],
@@ -180,10 +260,7 @@ export async function analyzeCreative(
 ): Promise<CreativeAnalysisResult> {
   const content: Array<{ type: string; source?: { type: string; media_type: string; data: string }; text?: string }> = [];
 
-  content.push({
-    type: 'text',
-    text: `Analise este criativo do tipo "${creativeType}". ${frames.length > 1 ? `São ${frames.length} frames extraídos do vídeo.` : 'É uma imagem estática.'}`,
-  });
+  content.push({ type: 'text', text: buildFrameContext(frames, creativeType) });
 
   for (const frame of frames) {
     const base64 = frame.dataUrl.replace(/^data:image\/\w+;base64,/, '');
@@ -232,10 +309,7 @@ export async function analyzeCreativeOpenAI(
 ): Promise<CreativeAnalysisResult> {
   const content: Array<{ type: string; text?: string; image_url?: { url: string; detail: string } }> = [];
 
-  content.push({
-    type: 'text',
-    text: `Analise este criativo do tipo "${creativeType}". ${frames.length > 1 ? `São ${frames.length} frames extraídos do vídeo.` : 'É uma imagem estática.'}`,
-  });
+  content.push({ type: 'text', text: buildFrameContext(frames, creativeType) });
 
   for (const frame of frames) {
     content.push({

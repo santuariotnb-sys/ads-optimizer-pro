@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Bot, Send, Sparkles, Target, Image as ImageIcon, Play, Cpu, Radio } from 'lucide-react';
+import { Bot, Send, Sparkles, Target, Image as ImageIcon, Play, Cpu, Radio, X, Wifi, WifiOff, Terminal } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useStore } from '../../store/useStore';
 import { AIAgent } from '../../services/aiAgent';
+import { localBridge, type BridgeStatus, type TaskHandle } from '../../services/localBridgeClient';
+import type { CreativeAnalysisResult } from '../../services/creativeVision';
 
 interface Message {
   id: string;
@@ -11,133 +13,135 @@ interface Message {
   timestamp: Date;
 }
 
+type ConnectionMode = 'bridge' | 'api' | 'demo';
+
 const quickTopics = [
-  { id: 'overview', label: 'Visão Geral', icon: Sparkles, question: 'Faça uma análise geral da minha conta de anúncios.' },
-  { id: 'bidding', label: 'Estratégia de Lances', icon: Target, question: 'Qual a melhor estratégia de lances para minhas campanhas atuais?' },
-  { id: 'creatives', label: 'Análise de Criativos', icon: ImageIcon, question: 'Analise meus criativos e identifique oportunidades.' },
-  { id: 'hooks', label: 'Análise de Hooks', icon: Play, question: 'Como posso melhorar os hooks dos meus vídeos?' },
-  { id: 'andromeda', label: 'Andromeda/Algoritmo', icon: Cpu, question: 'Explique como o Andromeda está afetando minhas campanhas.' },
+  { id: 'overview', label: 'Visao Geral', icon: Sparkles, question: 'Faca uma analise geral da minha conta de anuncios.' },
+  { id: 'bidding', label: 'Estrategia de Lances', icon: Target, question: 'Qual a melhor estrategia de lances para minhas campanhas atuais?' },
+  { id: 'creatives', label: 'Analise de Criativos', icon: ImageIcon, question: 'Analise meus criativos e identifique oportunidades.' },
+  { id: 'hooks', label: 'Analise de Hooks', icon: Play, question: 'Como posso melhorar os hooks dos meus videos?' },
+  { id: 'andromeda', label: 'Andromeda/Algoritmo', icon: Cpu, question: 'Explique como o Andromeda esta afetando minhas campanhas.' },
   { id: 'signal', label: 'Signal Engineering', icon: Radio, question: 'Como posso melhorar meu Signal Engineering e EMQ?' },
 ];
 
 const demoResponses: Record<string, string> = {
-  overview: `**Análise Geral da Conta**
+  overview: `**Analise Geral da Conta**
 
-Sua conta está com Score 74/100, o que é considerado "Bom" mas com espaço significativo para melhoria.
+Sua conta esta com Score 74/100, o que e considerado "Bom" mas com espaco significativo para melhoria.
 
 **Pontos Positivos:**
-- CPA geral de R$ 52,40 está dentro do alvo
-- ROAS de 3.24x é saudável para o segmento
-- Campanha [ASC] Protocolo Detox é uma estrela com ROAS 3.82x e Opportunity Score 87
+- CPA geral de R$ 52,40 esta dentro do alvo
+- ROAS de 3.24x e saudavel para o segmento
+- Campanha [ASC] Protocolo Detox e uma estrela com ROAS 3.82x e Opportunity Score 87
 - Campanha [RETARGET] Carrinho Abandonado entrega ROAS 5.21x
 
-**Pontos de Atenção:**
-- Campanha [CBO] Colágeno Premium está operando com ROAS 0.82 (negativo). Recomendo pausar imediatamente.
-- Campanha [ASC] Black Friday está em Learning Limited há 18 dias com apenas 35/50 conversões. Considere consolidar ad sets.
-- EMQ está em 6.8, abaixo do ideal (8.0+). Isso está aumentando seu CPA em ~11%.
-- 4 criativos com mais de 10 dias ativos — novelty bias está erodindo performance.
+**Pontos de Atencao:**
+- Campanha [CBO] Colageno Premium esta operando com ROAS 0.82 (negativo). Recomendo pausar imediatamente.
+- Campanha [ASC] Black Friday esta em Learning Limited ha 18 dias com apenas 35/50 conversoes. Considere consolidar ad sets.
+- EMQ esta em 6.8, abaixo do ideal (8.0+). Isso esta aumentando seu CPA em ~11%.
+- 4 criativos com mais de 10 dias ativos -- novelty bias esta erodindo performance.
 
-**Ação Imediata:** Pausar Colágeno Premium, escalar Protocolo Detox +10%, e corrigir CAPI para subir EMQ.`,
+**Acao Imediata:** Pausar Colageno Premium, escalar Protocolo Detox +10%, e corrigir CAPI para subir EMQ.`,
 
-  bidding: `**Estratégia de Lances Recomendada**
+  bidding: `**Estrategia de Lances Recomendada**
 
 Analisando suas 6 campanhas, recomendo a seguinte abordagem:
 
 **Campanhas de Performance (Detox, Skincare):**
-Mantenha LOWEST_COST_WITHOUT_CAP. Com CPA de R$ 42,50 e R$ 58,30 respectivamente, o algoritmo está encontrando bons clusters. Forçar um bid cap poderia limitar o aprendizado do Andromeda.
+Mantenha LOWEST_COST_WITHOUT_CAP. Com CPA de R$ 42,50 e R$ 58,30 respectivamente, o algoritmo esta encontrando bons clusters. Forcar um bid cap poderia limitar o aprendizado do Andromeda.
 
 **Retargeting (Carrinho Abandonado):**
-Com ROAS 5.21x, considere mudar para COST_CAP com cap em R$ 35. Isso permitirá escalar sem perder eficiência. A frequência de 3.2 indica que o público está saturando — expanda a janela de 7d para 14d.
+Com ROAS 5.21x, considere mudar para COST_CAP com cap em R$ 35. Isso permitira escalar sem perder eficiencia. A frequencia de 3.2 indica que o publico esta saturando -- expanda a janela de 7d para 14d.
 
 **Campanhas Novas (Whey):**
-Em learning phase, NUNCA altere o bid strategy. O Andromeda precisa de estabilidade. Espere completar 50 conversões/semana. Com 22/50, faltam ~4 dias se manter o ritmo.
+Em learning phase, NUNCA altere o bid strategy. O Andromeda precisa de estabilidade. Espere completar 50 conversoes/semana. Com 22/50, faltam ~4 dias se manter o ritmo.
 
 **Advantage+ Sales:**
-Para suas campanhas ASC, o broad targeting é correto. O GEM está entregando +5% conversões no Instagram — garanta que seus criativos estejam otimizados para IG Reels (formato que mais performa). O investimento ideal para Advantage+ é entre R$ 500-800/dia para manter o aprendizado estável.`,
+Para suas campanhas ASC, o broad targeting e correto. O GEM esta entregando +5% conversoes no Instagram -- garanta que seus criativos estejam otimizados para IG Reels (formato que mais performa). O investimento ideal para Advantage+ e entre R$ 500-800/dia para manter o aprendizado estavel.`,
 
-  creatives: `**Análise de Criativos + Entity IDs**
+  creatives: `**Analise de Criativos + Entity IDs**
 
-Você tem 24 criativos distribuídos em 5 Entity IDs. Isso é bom, mas há problemas:
+Voce tem 24 criativos distribuidos em 5 Entity IDs. Isso e bom, mas ha problemas:
 
-**Entity ID #2 (Statics — Antes/Depois) — SUPERLOTADO:**
-5 criativos com similaridade visual >60%. O Andromeda está usando apenas 1 ticket no leilão para todos eles. Você está pagando para produzir 5 criativos mas obtendo a chance de apenas 1.
+**Entity ID #2 (Statics -- Antes/Depois) -- SUPERLOTADO:**
+5 criativos com similaridade visual >60%. O Andromeda esta usando apenas 1 ticket no leilao para todos eles. Voce esta pagando para produzir 5 criativos mas obtendo a chance de apenas 1.
 
 **Winners Identificados:**
-- "Reels — Trend Sound Detox" (Score 96): Hook Rate 48%, CPA R$ 32. ESCALE JÁ!
-- "UGC — Influencer Detox" (Score 95): Hook Rate 45%, Hold Rate 62%. Perfeito.
-- "UGC — Resultados 30 dias" (Score 93): Novíssimo (2 dias), excelente performance.
+- "Reels -- Trend Sound Detox" (Score 96): Hook Rate 48%, CPA R$ 32. ESCALE JA!
+- "UGC -- Influencer Detox" (Score 95): Hook Rate 45%, Hold Rate 62%. Perfeito.
+- "UGC -- Resultados 30 dias" (Score 93): Novissimo (2 dias), excelente performance.
 
 **Losers para Pausar:**
-- "Carrossel — 5 Produtos Top" (Score 22): CTR 0.8%, CPA R$ 120. Pausar imediatamente.
-- "Static — Comparativo Preço" (Score 18): CTR 0.7%, 13 dias ativo. Morto.
+- "Carrossel -- 5 Produtos Top" (Score 22): CTR 0.8%, CPA R$ 120. Pausar imediatamente.
+- "Static -- Comparativo Preco" (Score 18): CTR 0.7%, 13 dias ativo. Morto.
 
 **Fadiga Detectada:**
-- "Static — Antes/Depois Detox" (12 dias): CPM subiu de R$ 28 para R$ 35.20 (+25%). Substituir por novo Entity ID.
+- "Static -- Antes/Depois Detox" (12 dias): CPM subiu de R$ 28 para R$ 35.20 (+25%). Substituir por novo Entity ID.
 
-**Recomendação:** Crie 3 novos criativos em formatos diferentes (UGC testemunho, Reels trend, Motion 3D) para adicionar novos Entity IDs ao leilão.`,
+**Recomendacao:** Crie 3 novos criativos em formatos diferentes (UGC testemunho, Reels trend, Motion 3D) para adicionar novos Entity IDs ao leilao.`,
 
-  hooks: `**Análise de Hooks — O que está funcionando**
+  hooks: `**Analise de Hooks -- O que esta funcionando**
 
-Analisei o Hook Rate (3s views / impressões) e Hold Rate (ThruPlay / 3s views) dos seus criativos:
+Analisei o Hook Rate (3s views / impressoes) e Hold Rate (ThruPlay / 3s views) dos seus criativos:
 
 **Top Hooks (>40% Hook Rate):**
-1. "Reels — Trend Sound" (48%): Música trend + corte rápido nos primeiros 0.5s. O pattern interrupt é forte.
-2. "UGC — Influencer Detox" (45%): Pessoa real falando direto com a câmera + expressão de surpresa.
-3. "UGC — Resultados 30 dias" (43%): Antes/depois com transição rápida.
-4. "VSL Detox — Hook Curiosidade" (42%): Pergunta provocativa nos primeiros 2s.
+1. "Reels -- Trend Sound" (48%): Musica trend + corte rapido nos primeiros 0.5s. O pattern interrupt e forte.
+2. "UGC -- Influencer Detox" (45%): Pessoa real falando direto com a camera + expressao de surpresa.
+3. "UGC -- Resultados 30 dias" (43%): Antes/depois com transicao rapida.
+4. "VSL Detox -- Hook Curiosidade" (42%): Pergunta provocativa nos primeiros 2s.
 
-**Padrão dos Winners:** Todos usam os primeiros 0.5-1s para pattern interrupt (som, movimento, pergunta). O Hold Rate acima de 55% indica que o conteúdo após o hook entrega valor.
+**Padrao dos Winners:** Todos usam os primeiros 0.5-1s para pattern interrupt (som, movimento, pergunta). O Hold Rate acima de 55% indica que o conteudo apos o hook entrega valor.
 
 **Hooks que Falham (<25%):**
-- Carrosseis têm hook rate médio de 18% — formato desfavorecido pelo algoritmo
+- Carrosseis tem hook rate medio de 18% -- formato desfavorecido pelo algoritmo
 - Statics de produto puro (sem face humana) ficam abaixo de 25%
 
-**Recomendação para novos hooks:**
-1. "Você não vai acreditar no que aconteceu..." (curiosity gap)
-2. Áudio trend do momento + visual inesperado
+**Recomendacao para novos hooks:**
+1. "Voce nao vai acreditar no que aconteceu..." (curiosity gap)
+2. Audio trend do momento + visual inesperado
 3. Close-up em resultado real + corte para produto
 4. Depoimento emocional nos primeiros 3s
 
 Lembre-se: o Meta analisa os primeiros 3 segundos para determinar a qualidade do criativo. Um hook fraco significa CPM mais alto e alcance menor.`,
 
-  andromeda: `**Como o Andromeda está afetando suas campanhas**
+  andromeda: `**Como o Andromeda esta afetando suas campanhas**
 
-O Andromeda é o retrieval engine do Meta — ele filtra bilhões de ads para ~1.000 candidatos em <200ms usando o NVIDIA Grace Hopper Superchip + MTIA v2.
+O Andromeda e o retrieval engine do Meta -- ele filtra bilhoes de ads para ~1.000 candidatos em <200ms usando o NVIDIA Grace Hopper Superchip + MTIA v2.
 
 **Impacto na sua conta:**
 
-1. **Entity ID Clustering:** Seus 24 criativos estão agrupados em 5 Entity IDs. O Entity #2 (statics) está superlotado com 5 criativos — o Andromeda vê todos como "o mesmo ad" e usa 1 ticket. Você tem efetivamente 4 chances no leilão, não 5.
+1. **Entity ID Clustering:** Seus 24 criativos estao agrupados em 5 Entity IDs. O Entity #2 (statics) esta superlotado com 5 criativos -- o Andromeda ve todos como "o mesmo ad" e usa 1 ticket. Voce tem efetivamente 4 chances no leilao, nao 5.
 
-2. **GEM Ranking:** Desde Q2 2025, o GEM (escala GPT-4) rankeia seus ads. Ele aprende cross-platform (IG↔FB). Seus UGCs estão performando melhor no IG (+5% conv) enquanto VSLs performam melhor no FB Feed (+3%).
+2. **GEM Ranking:** Desde Q2 2025, o GEM (escala GPT-4) rankeia seus ads. Ele aprende cross-platform (IG<>FB). Seus UGCs estao performando melhor no IG (+5% conv) enquanto VSLs performam melhor no FB Feed (+3%).
 
-3. **Broad vs Interesses:** Sua campanha Broad (Detox, Score 87) supera a de Interesses (Colágeno, Score 28) por uma margem enorme. O Andromeda é MELHOR que você em encontrar públicos — broad targeting é o caminho.
+3. **Broad vs Interesses:** Sua campanha Broad (Detox, Score 87) supera a de Interesses (Colageno, Score 28) por uma margem enorme. O Andromeda e MELHOR que voce em encontrar publicos -- broad targeting e o caminho.
 
-4. **Learning Phase:** A campanha Whey (8 dias, 22/50 conv) precisa de mais volume. O Andromeda calibra nos primeiros 50 conversões/semana. Abaixo disso = "foto borrada".
+4. **Learning Phase:** A campanha Whey (8 dias, 22/50 conv) precisa de mais volume. O Andromeda calibra nos primeiros 50 conversoes/semana. Abaixo disso = "foto borrada".
 
-**Ação:** Mate a campanha de interesses (Colágeno), diversifique Entity IDs, e confie no broad targeting. O Andromeda + GEM em 2025 é absurdamente mais inteligente que segmentação manual.`,
+**Acao:** Mate a campanha de interesses (Colageno), diversifique Entity IDs, e confie no broad targeting. O Andromeda + GEM em 2025 e absurdamente mais inteligente que segmentacao manual.`,
 
-  signal: `**Signal Engineering — Seu Maior Gargalo**
+  signal: `**Signal Engineering -- Seu Maior Gargalo**
 
-Seu EMQ está em 6.8/10. Isso significa que o Andromeda está recebendo uma "foto borrada" dos seus clientes. Você está no Nível 2 (CAPI básico) — 90% dos anunciantes estão aqui.
+Seu EMQ esta em 6.8/10. Isso significa que o Andromeda esta recebendo uma "foto borrada" dos seus clientes. Voce esta no Nivel 2 (CAPI basico) -- 90% dos anunciantes estao aqui.
 
 **Breakdown do seu EMQ:**
-- Email: 2.0/2.0 ✅
-- Phone: 1.5/1.5 ✅
-- External ID: 1.5/1.5 ✅
-- IP + User Agent: 1.0/1.0 ✅
-- FBP (browser cookie): 0.5/0.5 ✅
-- FBC (click ID): 0.3/0.5 ⚠️ — Você está perdendo 0.2 por não capturar todos os fbc
+- Email: 2.0/2.0
+- Phone: 1.5/1.5
+- External ID: 1.5/1.5
+- IP + User Agent: 1.0/1.0
+- FBP (browser cookie): 0.5/0.5
+- FBC (click ID): 0.3/0.5 -- Voce esta perdendo 0.2 por nao capturar todos os fbc
 
-**Para subir para Nível 4 (EMQ 8.5+):**
+**Para subir para Nivel 4 (EMQ 8.5+):**
 Adicione estes campos no custom_data do CAPI:
 - predicted_ltv: valor previsto de LTV do cliente
 - margin_tier: "high", "medium", "low" baseado na margem
 - engagement_score: 0-10 baseado no comportamento
 
-**Impacto estimado:** EMQ 6.8 → 8.4 = CPA -11% (dados reais de case study). Para seu CPA de R$ 52,40, isso significaria R$ 46,64 — economia de R$ 5,76 por conversão × 878 conv/semana = R$ 5.057/semana.
+**Impacto estimado:** EMQ 6.8 -> 8.4 = CPA -11% (dados reais de case study). Para seu CPA de R$ 52,40, isso significaria R$ 46,64 -- economia de R$ 5,76 por conversao x 878 conv/semana = R$ 5.057/semana.
 
-**Synthetic Events (Nível 5):**
-Implemente DeepEngagement (scroll 75% + 2min na LP) e HighIntentVisitor (3 visitas em 48h) via CAPI. Apenas 0.01% dos anunciantes fazem isso. Isso ensina o Andromeda comportamentos pré-compra que ele não consegue ver sozinho.`,
+**Synthetic Events (Nivel 5):**
+Implemente DeepEngagement (scroll 75% + 2min na LP) e HighIntentVisitor (3 visitas em 48h) via CAPI. Apenas 0.01% dos anunciantes fazem isso. Isso ensina o Andromeda comportamentos pre-compra que ele nao consegue ver sozinho.`,
 };
 
 /** Safe markdown renderer — returns React elements instead of raw HTML */
@@ -222,6 +226,7 @@ const inputWrapperStyle: React.CSSProperties = {
   border: '1px solid rgba(15,23,42,0.1)',
   borderRadius: 12,
   padding: '10px 12px 10px 16px',
+  minHeight: 44,
   backdropFilter: 'blur(12px)',
   WebkitBackdropFilter: 'blur(12px)',
   transition: 'border-color 0.2s ease',
@@ -260,6 +265,7 @@ const topicPillStyle: React.CSSProperties = {
   alignItems: 'center',
   gap: 6,
   padding: '8px 14px',
+  minHeight: 44,
   borderRadius: 20,
   border: '1px solid rgba(99,102,241,0.25)',
   background: 'rgba(99,102,241,0.08)',
@@ -339,20 +345,76 @@ function getAnthropicKey(): string | null {
   return sessionStorage.getItem(SESSION_KEY) || import.meta.env.VITE_ANTHROPIC_API_KEY || null;
 }
 
+/** Build context string from store data for bridge prompts */
+function buildBridgeContext(
+  campaignCount: number,
+  cpa: number,
+  roas: number,
+  emq: number,
+): string {
+  return [
+    'Contexto: App Ads.Everest. Dados atuais do gestor de trafego:',
+    `- Campanhas ativas: ${campaignCount}`,
+    `- CPA medio: R$ ${cpa.toFixed(2)}`,
+    `- ROAS medio: ${roas.toFixed(2)}x`,
+    `- EMQ Score: ${emq.toFixed(1)}`,
+    '',
+  ].join('\n');
+}
+
+/** Extract text content from streaming event */
+function extractStreamText(event: unknown): string | null {
+  if (!event || typeof event !== 'object') return null;
+  const evt = event as Record<string, unknown>;
+
+  // Handle stream-json format from claude CLI
+  if (evt.type === 'assistant' && evt.message && typeof evt.message === 'object') {
+    const msg = evt.message as Record<string, unknown>;
+    if (Array.isArray(msg.content)) {
+      return (msg.content as Array<Record<string, unknown>>)
+        .filter((b) => b.type === 'text')
+        .map((b) => String(b.text ?? ''))
+        .join('');
+    }
+  }
+
+  // Handle content_block_delta
+  if (evt.type === 'content_block_delta' && evt.delta && typeof evt.delta === 'object') {
+    const delta = evt.delta as Record<string, unknown>;
+    if (delta.type === 'text_delta' && typeof delta.text === 'string') {
+      return delta.text;
+    }
+  }
+
+  // Handle result event
+  if (evt.type === 'result' && typeof evt.result === 'string') {
+    return evt.result;
+  }
+
+  // Fallback: if event has a text field
+  if (typeof evt.text === 'string') return evt.text;
+
+  return null;
+}
+
 export default function Agent() {
   const isMobile = useIsMobile();
   const metrics = useStore((s) => s.metrics);
   const campaigns = useStore((s) => s.campaigns);
   const emqScore = useStore((s) => s.emqScore);
+  const creativeAnalysisContext = useStore((s) => s.creativeAnalysisContext);
+  const setCreativeAnalysisContext = useStore((s) => s.setCreativeAnalysisContext);
+  const creativeContextRef = useRef<CreativeAnalysisResult | null>(null);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
       role: 'assistant',
-      content: `**Olá! Sou seu Consultor de Ads com IA.** 👋
+      content: `**Ola! Sou seu Consultor de Ads com IA.**
 
-Posso analisar suas campanhas, criativos, estratégias de lances e muito mais. Tenho acesso aos dados da sua conta e conheço profundamente o algoritmo do Meta (Andromeda + GEM).
+Posso analisar suas campanhas, criativos, estrategias de lances e muito mais. Tenho acesso aos dados da sua conta e conhego profundamente o algoritmo do Meta (Andromeda + GEM).
 
-Escolha um dos tópicos abaixo ou digite sua pergunta:`,
+Escolha um dos topicos abaixo ou digite sua pergunta:`,
       timestamp: new Date(),
     },
   ]);
@@ -364,6 +426,56 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const msgIdRef = useRef(0);
+
+  // Bridge state
+  const [bridgeStatus, setBridgeStatus] = useState<BridgeStatus | null>(null);
+  const [bridgeChecked, setBridgeChecked] = useState(false);
+  const activeTaskRef = useRef<TaskHandle | null>(null);
+  const streamBufferRef = useRef('');
+
+  // Determine connection mode
+  const connectionMode: ConnectionMode = (() => {
+    if (bridgeStatus?.available && bridgeStatus.authenticated) return 'bridge';
+    if (getAnthropicKey()) return 'api';
+    return 'demo';
+  })();
+
+  // Check bridge status on mount
+  useEffect(() => {
+    let cancelled = false;
+    localBridge.getStatus().then((status) => {
+      if (!cancelled) {
+        setBridgeStatus(status);
+        setBridgeChecked(true);
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Injetar contexto de analise de criativo quando vier do CreativeVision
+  useEffect(() => {
+    if (!creativeAnalysisContext) return;
+    creativeContextRef.current = creativeAnalysisContext;
+
+    const ctxMsg: Message = {
+      id: `assistant-ctx-${++msgIdRef.current}`,
+      role: 'assistant',
+      content: `**Analise de Criativo Carregada**
+
+Recebi os dados da analise do seu criativo:
+- **Score geral:** ${creativeAnalysisContext.score}/100
+- **Hook:** ${creativeAnalysisContext.hookType} (${creativeAnalysisContext.hookScore}/10)
+- **CTA:** ${creativeAnalysisContext.ctaType} (${creativeAnalysisContext.ctaScore}/10)
+- **Tom:** ${creativeAnalysisContext.tone}
+- **Insights:** ${creativeAnalysisContext.insights.length} pontos identificados
+
+Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar pontos fracos ou criar variacoes.`,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, ctxMsg]);
+    setCreativeAnalysisContext(null);
+  }, [creativeAnalysisContext, setCreativeAnalysisContext]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -390,12 +502,91 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
     if (!apiKey) return null;
     try {
       const agent = new AIAgent(apiKey);
-      const response = await agent.sendMessage(userMessage, { metrics, campaigns, emqScore });
+      const response = await agent.sendMessage(userMessage, { metrics, campaigns, emqScore, creativeAnalysis: creativeContextRef.current });
       return response;
     } catch {
       return null;
     }
   }, [metrics, campaigns, emqScore]);
+
+  const sendViaBridge = useCallback((userMessage: string) => {
+    const activeCampaigns = campaigns.filter((c) => c.status === 'ACTIVE').length;
+    const context = buildBridgeContext(
+      activeCampaigns || campaigns.length,
+      metrics.cpa,
+      metrics.roas,
+      emqScore,
+    );
+    const fullPrompt = `${context}\nTarefa do usuario: ${userMessage}`;
+
+    streamBufferRef.current = '';
+    const streamMsgId = `assistant-${++msgIdRef.current}`;
+
+    // Add empty assistant message that will be filled via streaming
+    setMessages((prev) => [
+      ...prev,
+      { id: streamMsgId, role: 'assistant', content: '', timestamp: new Date() },
+    ]);
+
+    const task = localBridge.sendTask({
+      prompt: fullPrompt,
+      onStream: (event) => {
+        const text = extractStreamText(event);
+        if (text) {
+          streamBufferRef.current += text;
+          const currentContent = streamBufferRef.current;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === streamMsgId ? { ...m, content: currentContent } : m,
+            ),
+          );
+        }
+      },
+      onDone: (result) => {
+        setIsTyping(false);
+        activeTaskRef.current = null;
+        if (result.cancelled) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === streamMsgId
+                ? { ...m, content: m.content + '\n\n*[Cancelado pelo usuario]*' }
+                : m,
+            ),
+          );
+        }
+        // If no content was streamed, show a fallback
+        if (!streamBufferRef.current.trim()) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === streamMsgId
+                ? { ...m, content: 'Nao foi possivel obter resposta do Claude Code. Tente novamente.' }
+                : m,
+            ),
+          );
+        }
+      },
+      onError: (err) => {
+        setIsTyping(false);
+        activeTaskRef.current = null;
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === streamMsgId
+              ? { ...m, content: `**Erro:** ${err.message}` }
+              : m,
+          ),
+        );
+      },
+    });
+
+    activeTaskRef.current = task;
+  }, [campaigns, metrics, emqScore]);
+
+  const handleCancelTask = useCallback(() => {
+    if (activeTaskRef.current) {
+      activeTaskRef.current.cancel();
+      activeTaskRef.current = null;
+    }
+  }, []);
 
   const handleTopicClick = (topicId: string, question: string) => {
     const userMsg: Message = {
@@ -406,8 +597,10 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
     };
     setMessages((prev) => [...prev, userMsg]);
 
-    const apiKey = getAnthropicKey();
-    if (apiKey) {
+    if (connectionMode === 'bridge') {
+      setIsTyping(true);
+      sendViaBridge(question);
+    } else if (connectionMode === 'api') {
       setIsTyping(true);
       sendToAI(question).then((aiResponse) => {
         setIsTyping(false);
@@ -416,13 +609,13 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
           {
             id: `assistant-${++msgIdRef.current}`,
             role: 'assistant',
-            content: aiResponse || demoResponses[topicId] || 'Desculpe, não tenho uma resposta para isso ainda.',
+            content: aiResponse || demoResponses[topicId] || 'Desculpe, nao tenho uma resposta para isso ainda.',
             timestamp: new Date(),
           },
         ]);
       });
     } else {
-      addAssistantMessage(demoResponses[topicId] || 'Desculpe, não tenho uma resposta para isso ainda.');
+      addAssistantMessage(demoResponses[topicId] || 'Desculpe, nao tenho uma resposta para isso ainda.');
     }
   };
 
@@ -438,8 +631,10 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
 
-    const apiKey = getAnthropicKey();
-    if (apiKey) {
+    if (connectionMode === 'bridge') {
+      setIsTyping(true);
+      sendViaBridge(trimmed);
+    } else if (connectionMode === 'api') {
       setIsTyping(true);
       sendToAI(trimmed).then((aiResponse) => {
         setIsTyping(false);
@@ -467,14 +662,14 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               role: 'assistant',
               content: matchedTopic
                 ? demoResponses[matchedTopic.id]
-                : `**Análise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA médio de R$ 52,40 pode ser otimizado em até 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting — campanhas sem segmentação manual estão performando 3.2x melhor\n\nPara uma análise mais detalhada, selecione um dos tópicos disponíveis acima.`,
+                : `**Analise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA medio de R$ 52,40 pode ser otimizado em ate 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting -- campanhas sem segmentacao manual estao performando 3.2x melhor\n\nPara uma analise mais detalhada, selecione um dos topicos disponiveis acima.`,
               timestamp: new Date(),
             },
           ]);
         }
       });
     } else {
-      // No API key — use demo responses
+      // No API key and no bridge — use demo responses
       const matchedTopic = quickTopics.find(
         (t) =>
           trimmed.toLowerCase().includes(t.label.toLowerCase()) ||
@@ -484,7 +679,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
         addAssistantMessage(demoResponses[matchedTopic.id]);
       } else {
         addAssistantMessage(
-          `**Análise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA médio de R$ 52,40 pode ser otimizado em até 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting — campanhas sem segmentação manual estão performando 3.2x melhor\n\nPara uma análise mais detalhada, selecione um dos tópicos disponíveis acima.`
+          `**Analise Personalizada**\n\nBaseado na sua pergunta, identifiquei os seguintes pontos relevantes:\n\n- Seu CPA medio de R$ 52,40 pode ser otimizado em ate 15% com ajustes no Signal Engineering (EMQ atual: 6.8)\n- Recomendo focar em criativos UGC que apresentam Hook Rate 45%+ versus statics com apenas 18%\n- O Andromeda favorece broad targeting -- campanhas sem segmentacao manual estao performando 3.2x melhor\n\nPara uma analise mais detalhada, selecione um dos topicos disponiveis acima.`
         );
       }
     }
@@ -495,6 +690,97 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // Connection status badge
+  const renderConnectionBadge = () => {
+    if (!bridgeChecked) return null;
+
+    if (connectionMode === 'bridge') {
+      return (
+        <div
+          style={{
+            marginLeft: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: 20,
+            background: 'rgba(74,222,128,0.1)',
+            border: '1px solid rgba(74,222,128,0.2)',
+          }}
+        >
+          <Terminal size={12} style={{ color: '#4ade80' }} />
+          <span style={{ fontSize: 11, color: '#4ade80', fontWeight: 500 }}>Claude Code</span>
+        </div>
+      );
+    }
+
+    if (bridgeStatus?.available && !bridgeStatus.authenticated) {
+      return (
+        <div
+          style={{
+            marginLeft: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: 20,
+            background: 'rgba(250,204,21,0.1)',
+            border: '1px solid rgba(250,204,21,0.2)',
+          }}
+          title="Execute `claude` no terminal para fazer login"
+        >
+          <WifiOff size={12} style={{ color: '#facc15' }} />
+          <span style={{ fontSize: 11, color: '#facc15', fontWeight: 500 }}>Login necessario</span>
+        </div>
+      );
+    }
+
+    if (connectionMode === 'api') {
+      return (
+        <div
+          style={{
+            marginLeft: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: 20,
+            background: 'rgba(99,102,241,0.1)',
+            border: '1px solid rgba(99,102,241,0.2)',
+          }}
+        >
+          <Wifi size={12} style={{ color: '#6366f1' }} />
+          <span style={{ fontSize: 11, color: '#6366f1', fontWeight: 500 }}>API Key</span>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        style={{
+          marginLeft: 'auto',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          padding: '4px 10px',
+          borderRadius: 20,
+          background: 'rgba(148,163,184,0.1)',
+          border: '1px solid rgba(148,163,184,0.2)',
+        }}
+      >
+        <div
+          style={{
+            width: 6,
+            height: 6,
+            borderRadius: '50%',
+            background: '#94a3b8',
+          }}
+        />
+        <span style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>Demo</span>
+      </div>
+    );
   };
 
   return (
@@ -520,33 +806,27 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
               Consultor de Ads IA
             </h2>
             <p style={{ margin: 0, fontSize: 12, color: '#64748b' }}>
-              Análise inteligente das suas campanhas Meta Ads
+              Analise inteligente das suas campanhas Meta Ads
             </p>
           </div>
-          <div
-            style={{
-              marginLeft: 'auto',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '4px 10px',
-              borderRadius: 20,
-              background: 'rgba(74,222,128,0.1)',
-              border: '1px solid rgba(74,222,128,0.2)',
-            }}
-          >
-            <div
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: '#4ade80',
-                boxShadow: '0 0 8px rgba(74,222,128,0.5)',
-              }}
-            />
-            <span style={{ fontSize: 11, color: '#4ade80', fontWeight: 500 }}>Online</span>
-          </div>
+          {renderConnectionBadge()}
         </div>
+
+        {/* Bridge instructions when available but not authenticated */}
+        {bridgeStatus?.available && !bridgeStatus.authenticated && (
+          <div style={{
+            padding: '10px 14px',
+            borderRadius: 10,
+            background: 'rgba(250,204,21,0.08)',
+            border: '1px solid rgba(250,204,21,0.15)',
+            marginBottom: 12,
+            fontSize: 12,
+            color: '#92400e',
+            lineHeight: 1.5,
+          }}>
+            <strong>Agent Bridge detectado.</strong> Execute <code style={{ background: 'rgba(0,0,0,0.06)', padding: '1px 5px', borderRadius: 4 }}>claude</code> no terminal para fazer login e ativar o modo local.
+          </div>
+        )}
 
         {/* Quick Topics */}
         <div
@@ -607,7 +887,7 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
         )}
 
         {/* Typing Indicator */}
-        {isTyping && (
+        {isTyping && !activeTaskRef.current && (
           <div style={assistantMessageStyle} aria-live="polite">
             <div style={botAvatarStyle}>
               <Bot size={16} color="#fff" />
@@ -653,21 +933,35 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
             rows={1}
             style={inputStyle}
           />
-          <button
-            onClick={handleSend}
-            onMouseEnter={() => setHoveredSend(true)}
-            onMouseLeave={() => setHoveredSend(false)}
-            aria-label="Enviar mensagem"
-            style={{
-              ...sendButtonStyle,
-              transform: hoveredSend ? 'scale(1.05)' : 'scale(1)',
-              boxShadow: hoveredSend
-                ? '0 4px 20px rgba(99,102,241,0.45)'
-                : '0 2px 12px rgba(99,102,241,0.3)',
-            }}
-          >
-            <Send size={16} />
-          </button>
+          {activeTaskRef.current ? (
+            <button
+              onClick={handleCancelTask}
+              aria-label="Cancelar tarefa"
+              style={{
+                ...sendButtonStyle,
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                boxShadow: '0 2px 12px rgba(239,68,68,0.3)',
+              }}
+            >
+              <X size={16} />
+            </button>
+          ) : (
+            <button
+              onClick={handleSend}
+              onMouseEnter={() => setHoveredSend(true)}
+              onMouseLeave={() => setHoveredSend(false)}
+              aria-label="Enviar mensagem"
+              style={{
+                ...sendButtonStyle,
+                transform: hoveredSend ? 'scale(1.05)' : 'scale(1)',
+                boxShadow: hoveredSend
+                  ? '0 4px 20px rgba(99,102,241,0.45)'
+                  : '0 2px 12px rgba(99,102,241,0.3)',
+              }}
+            >
+              <Send size={16} />
+            </button>
+          )}
         </div>
         <p
           style={{
@@ -677,7 +971,11 @@ Escolha um dos tópicos abaixo ou digite sua pergunta:`,
             textAlign: 'center',
           }}
         >
-          Modo demonstração — respostas pré-configuradas com dados simulados
+          {connectionMode === 'bridge'
+            ? 'Claude Code conectado localmente via Agent Bridge'
+            : connectionMode === 'api'
+              ? 'Conectado via API key'
+              : 'Modo demonstracao -- configure uma API key ou instale o Agent Bridge'}
         </p>
       </div>
     </div>

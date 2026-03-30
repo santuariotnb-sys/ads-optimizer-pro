@@ -1,9 +1,11 @@
 import type { DashboardMetrics, Campaign } from '../types/meta';
+import type { CreativeAnalysisResult } from './creativeVision';
 
 interface AgentContext {
   metrics: DashboardMetrics;
   campaigns: Campaign[];
   emqScore: number;
+  creativeAnalysis?: CreativeAnalysisResult | null;
 }
 
 export class AIAgent {
@@ -57,6 +59,17 @@ Dados atuais da conta:
 - EMQ: ${context.emqScore}/10
 - Campanhas ativas: ${context.campaigns.filter(c => c.status === 'ACTIVE').length}
 
-Responda sempre em português brasileiro. Seja direto, prático e baseado em dados.`;
+Responda sempre em português brasileiro. Seja direto, prático e baseado em dados.${context.creativeAnalysis ? `
+
+Análise de criativo carregada:
+- Score: ${context.creativeAnalysis.score}/100
+- Hook: ${context.creativeAnalysis.hookType} (${context.creativeAnalysis.hookScore}/10) — "${context.creativeAnalysis.hookText}"
+- CTA: ${context.creativeAnalysis.ctaType} (${context.creativeAnalysis.ctaScore}/10) — "${context.creativeAnalysis.ctaText}"
+- Tom: ${context.creativeAnalysis.tone}
+- Elementos: ${context.creativeAnalysis.elements.join(', ')}
+- Insights: ${context.creativeAnalysis.insights.map(i => `[${i.type}] ${i.text}`).join('; ')}
+- Resumo: ${context.creativeAnalysis.summary}
+
+O usuário quer discutir melhorias para este criativo. Use os dados acima para dar recomendações específicas.` : ''}`;
   }
 }

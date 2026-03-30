@@ -25,6 +25,7 @@ interface AppState {
   sidebarCollapsed: boolean;
   isLoading: boolean;
   signalAudit: SignalAuditResult | null;
+  creativeAnalysisContext: CreativeAnalysisResult | null;
 
   setAccessToken: (token: string | null) => void;
   setAdAccountId: (id: string | null) => void;
@@ -46,6 +47,7 @@ interface AppState {
   toggleTheme: () => void;
   setIsLoading: (loading: boolean) => void;
   setSignalAudit: (audit: SignalAuditResult | null) => void;
+  setCreativeAnalysisContext: (ctx: CreativeAnalysisResult | null) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -71,6 +73,7 @@ export const useStore = create<AppState>((set) => ({
   sidebarCollapsed: false,
   isLoading: false,
   signalAudit: null,
+  creativeAnalysisContext: null,
 
   setAccessToken: (token) => set({ accessToken: token, mode: token ? 'live' : 'demo' }),
   setAdAccountId: (id) => set({ adAccountId: id }),
@@ -94,4 +97,5 @@ export const useStore = create<AppState>((set) => ({
   toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
   setIsLoading: (loading) => set({ isLoading: loading }),
   setSignalAudit: (audit) => set({ signalAudit: audit }),
+  setCreativeAnalysisContext: (ctx) => set({ creativeAnalysisContext: ctx }),
 }));

@@ -204,7 +204,7 @@ export default function Financial() {
         <h3 style={{ fontSize: 15, fontWeight: 700, color: c.text, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
           <Receipt size={16} color={c.accent} /> DRE — Demonstrativo de Resultado
         </h3>
-        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 13 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 13, overflowX: 'auto' }}>
           {[
             { label: '(+) Receita Bruta de Vendas', value: summary.grossRevenue, bold: false, color: c.text },
             { label: '(-) Taxas de Plataforma', value: -summary.totalCommission, bold: false, color: c.danger },
@@ -325,7 +325,7 @@ export default function Financial() {
                 const pct = totalExpenses > 0 ? (val / totalExpenses) * 100 : 0;
                 return (
                   <div key={cat} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <span style={{ fontSize: 12, color: c.textSecondary, width: 120, flexShrink: 0 }}>
+                    <span style={{ fontSize: 12, color: c.textSecondary, minWidth: isMobile ? 80 : 120, flexShrink: 0 }}>
                       {EXPENSE_CATEGORIES.find(ec => ec.id === cat)?.label || cat}
                     </span>
                     <div style={{ flex: 1, height: 8, borderRadius: 4, background: c.surface3 }}>

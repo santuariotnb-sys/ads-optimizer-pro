@@ -1,0 +1,9 @@
+{
+  "name": "com.agentbridge.claude",
+  "description": "Agent Bridge — conecta seu app web ao Claude Code local",
+  "path": "__BRIDGE_PATH__",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://__EXTENSION_ID__/"
+  ]
+}

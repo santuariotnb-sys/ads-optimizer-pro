@@ -255,12 +255,12 @@ export default function Settings() {
             <p style={{ fontSize: 12, color: c.textMuted, marginBottom: 14 }}>
               Envie vendas de qualquer checkout, gateway ou página externa para este endpoint.
             </p>
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', overflowX: 'auto' }}>
               <code style={{
                 flex: 1, minWidth: 200, padding: '10px 14px', borderRadius: 10,
                 background: 'rgba(15,23,42,0.04)', border: `1px solid ${c.border}`,
                 fontSize: 12, fontFamily: "'JetBrains Mono', monospace", color: c.text,
-                wordBreak: 'break-all',
+                wordBreak: 'break-all', overflowX: 'auto',
               }}>
                 {`${import.meta.env.VITE_SUPABASE_URL || 'https://seu-projeto.supabase.co'}/functions/v1/webhook-sales`}
               </code>

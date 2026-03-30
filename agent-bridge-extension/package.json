@@ -1,0 +1,16 @@
+{
+  "name": "agent-bridge",
+  "version": "1.0.0",
+  "description": "Native messaging host — conecta seu app web ao Claude Code local",
+  "main": "native-host/index.js",
+  "type": "commonjs",
+  "bin": {
+    "agent-bridge": "./native-host/index.js"
+  },
+  "scripts": {
+    "start": "node native-host/index.js",
+    "install-host": "node scripts/install.js",
+    "uninstall-host": "node scripts/uninstall.js"
+  },
+  "dependencies": {}
+}
