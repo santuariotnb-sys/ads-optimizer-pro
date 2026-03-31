@@ -1497,6 +1497,62 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   .xt-sum-item span { margin-bottom:0 }
   .xt-smoke { inset:-20px -20px }
 
+  /* Xtracker mobile: card carousel */
+  .xt-scroll-area {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 14px 14px;
+  }
+  .xt-table-real { min-width:0; display:flex; gap:14px; width:max-content }
+  .xt-table-real thead { display:none }
+  .xt-table-real tbody { display:flex; gap:14px; width:max-content }
+  .xt-table-real tbody tr {
+    display:flex; flex-direction:column; gap:0;
+    min-width:280px; max-width:300px;
+    scroll-snap-align: start;
+    background: rgba(255,255,255,0.52);
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: 20px;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 12px 28px -14px rgba(13,26,46,0.16), inset 0 1px 0 rgba(255,255,255,0.9);
+    flex-shrink: 0;
+  }
+  .xt-table-real tbody tr:hover td { background:transparent }
+  .xt-table-real tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(15,23,42,0.05);
+    font-size: 12.5px;
+    white-space: normal;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  .xt-table-real tbody td:last-child { border-bottom:none }
+  .xt-table-real tbody td::before {
+    content: attr(data-label);
+    font: 600 9px/1 'JetBrains Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+  .xt-table-real tbody td.xt-td-name {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.3) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+  }
+  .xt-table-real tbody td.xt-td-name::before { display:none }
+  .xt-table-real tbody td.xt-td-hl { background: rgba(59,130,246,0.04) !important }
+  .xt-mono { text-align:right !important; font-size:12px !important }
+
   /* ROI */
   .roi-stats { grid-template-columns:1fr 1fr }
   .roi-wrap { padding:24px 16px }
@@ -1877,89 +1933,89 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
             </thead>
             <tbody>
               <tr>
-                <td><span class="xt-status xt-status-on">Ativo</span></td>
+                <td data-label="Status"><span class="xt-status xt-status-on">Ativo</span></td>
                 <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>Retargeting — Win Back</strong><span class="xt-utm">utm_campaign=retarg_winback</span></td>
-                <td class="xt-mono">R$ 150/dia</td>
-                <td class="xt-mono xt-td-hl"><strong class="g">87</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="g">R$ 14,25</strong></td>
-                <td class="xt-mono">R$ 1.240</td>
-                <td class="xt-mono">R$ 5.220</td>
-                <td class="xt-mono"><strong class="g">R$ 3.980</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="g">4.21×</strong></td>
-                <td class="xt-mono"><strong class="g">76%</strong></td>
-                <td class="xt-mono"><strong class="g">321%</strong></td>
-                <td class="xt-mono">3.8%</td>
-                <td class="xt-mono">R$ 18,40</td>
-                <td class="xt-mono">67.391</td>
-                <td class="xt-mono">2.560</td>
+                <td class="xt-mono" data-label="Orçamento">R$ 150/dia</td>
+                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="g">87</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="g">R$ 14,25</strong></td>
+                <td class="xt-mono" data-label="Gastos">R$ 1.240</td>
+                <td class="xt-mono" data-label="Faturamento">R$ 5.220</td>
+                <td class="xt-mono" data-label="Lucro"><strong class="g">R$ 3.980</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="g">4.21×</strong></td>
+                <td class="xt-mono" data-label="Margem"><strong class="g">76%</strong></td>
+                <td class="xt-mono" data-label="ROI"><strong class="g">321%</strong></td>
+                <td class="xt-mono" data-label="CTR">3.8%</td>
+                <td class="xt-mono" data-label="CPM">R$ 18,40</td>
+                <td class="xt-mono" data-label="Impressões">67.391</td>
+                <td class="xt-mono" data-label="Cliques">2.560</td>
               </tr>
               <tr>
-                <td><span class="xt-status xt-status-on">Ativo</span></td>
+                <td data-label="Status"><span class="xt-status xt-status-on">Ativo</span></td>
                 <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>Prospecção — VSL Curta</strong><span class="xt-utm">utm_campaign=prosp_vsl_short</span></td>
-                <td class="xt-mono">R$ 300/dia</td>
-                <td class="xt-mono xt-td-hl"><strong class="g">64</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="g">R$ 41,87</strong></td>
-                <td class="xt-mono">R$ 2.680</td>
-                <td class="xt-mono">R$ 8.320</td>
-                <td class="xt-mono"><strong class="g">R$ 5.640</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="g">3.10×</strong></td>
-                <td class="xt-mono"><strong class="g">67%</strong></td>
-                <td class="xt-mono"><strong class="g">210%</strong></td>
-                <td class="xt-mono">2.9%</td>
-                <td class="xt-mono">R$ 24,10</td>
-                <td class="xt-mono">111.203</td>
-                <td class="xt-mono">3.224</td>
+                <td class="xt-mono" data-label="Orçamento">R$ 300/dia</td>
+                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="g">64</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="g">R$ 41,87</strong></td>
+                <td class="xt-mono" data-label="Gastos">R$ 2.680</td>
+                <td class="xt-mono" data-label="Faturamento">R$ 8.320</td>
+                <td class="xt-mono" data-label="Lucro"><strong class="g">R$ 5.640</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="g">3.10×</strong></td>
+                <td class="xt-mono" data-label="Margem"><strong class="g">67%</strong></td>
+                <td class="xt-mono" data-label="ROI"><strong class="g">210%</strong></td>
+                <td class="xt-mono" data-label="CTR">2.9%</td>
+                <td class="xt-mono" data-label="CPM">R$ 24,10</td>
+                <td class="xt-mono" data-label="Impressões">111.203</td>
+                <td class="xt-mono" data-label="Cliques">3.224</td>
               </tr>
               <tr>
-                <td><span class="xt-status xt-status-warn">Monitorar</span></td>
+                <td data-label="Status"><span class="xt-status xt-status-warn">Monitorar</span></td>
                 <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--amber)"></div><strong>Lookalike — Compradores 90d</strong><span class="xt-utm">utm_campaign=lal_buyers_90d</span></td>
-                <td class="xt-mono">R$ 200/dia</td>
-                <td class="xt-mono xt-td-hl"><strong class="a">31</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="a">R$ 60,96</strong></td>
-                <td class="xt-mono">R$ 1.890</td>
-                <td class="xt-mono">R$ 3.410</td>
-                <td class="xt-mono"><strong class="a">R$ 1.520</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="a">1.80×</strong></td>
-                <td class="xt-mono"><strong class="a">44%</strong></td>
-                <td class="xt-mono"><strong class="a">80%</strong></td>
-                <td class="xt-mono">1.6%</td>
-                <td class="xt-mono">R$ 32,50</td>
-                <td class="xt-mono">58.153</td>
-                <td class="xt-mono">930</td>
+                <td class="xt-mono" data-label="Orçamento">R$ 200/dia</td>
+                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="a">31</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="a">R$ 60,96</strong></td>
+                <td class="xt-mono" data-label="Gastos">R$ 1.890</td>
+                <td class="xt-mono" data-label="Faturamento">R$ 3.410</td>
+                <td class="xt-mono" data-label="Lucro"><strong class="a">R$ 1.520</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="a">1.80×</strong></td>
+                <td class="xt-mono" data-label="Margem"><strong class="a">44%</strong></td>
+                <td class="xt-mono" data-label="ROI"><strong class="a">80%</strong></td>
+                <td class="xt-mono" data-label="CTR">1.6%</td>
+                <td class="xt-mono" data-label="CPM">R$ 32,50</td>
+                <td class="xt-mono" data-label="Impressões">58.153</td>
+                <td class="xt-mono" data-label="Cliques">930</td>
               </tr>
               <tr>
-                <td><span class="xt-status xt-status-off">Pausar</span></td>
+                <td data-label="Status"><span class="xt-status xt-status-off">Pausar</span></td>
                 <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--red)"></div><strong>Broad — Carrossel Oferta</strong><span class="xt-utm">utm_campaign=broad_carousel_v2</span></td>
-                <td class="xt-mono">R$ 350/dia</td>
-                <td class="xt-mono xt-td-hl"><strong class="r">18</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="r">R$ 174,44</strong></td>
-                <td class="xt-mono">R$ 3.140</td>
-                <td class="xt-mono">R$ 2.160</td>
-                <td class="xt-mono"><strong class="r">-R$ 980</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="r">0.68×</strong></td>
-                <td class="xt-mono"><strong class="r">-45%</strong></td>
-                <td class="xt-mono"><strong class="r">-31%</strong></td>
-                <td class="xt-mono">0.9%</td>
-                <td class="xt-mono">R$ 48,30</td>
-                <td class="xt-mono">65.010</td>
-                <td class="xt-mono">585</td>
+                <td class="xt-mono" data-label="Orçamento">R$ 350/dia</td>
+                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="r">18</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="r">R$ 174,44</strong></td>
+                <td class="xt-mono" data-label="Gastos">R$ 3.140</td>
+                <td class="xt-mono" data-label="Faturamento">R$ 2.160</td>
+                <td class="xt-mono" data-label="Lucro"><strong class="r">-R$ 980</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="r">0.68×</strong></td>
+                <td class="xt-mono" data-label="Margem"><strong class="r">-45%</strong></td>
+                <td class="xt-mono" data-label="ROI"><strong class="r">-31%</strong></td>
+                <td class="xt-mono" data-label="CTR">0.9%</td>
+                <td class="xt-mono" data-label="CPM">R$ 48,30</td>
+                <td class="xt-mono" data-label="Impressões">65.010</td>
+                <td class="xt-mono" data-label="Cliques">585</td>
               </tr>
               <tr>
-                <td><span class="xt-status xt-status-on">Ativo</span></td>
+                <td data-label="Status"><span class="xt-status xt-status-on">Ativo</span></td>
                 <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>DPA — Catálogo Dinâmico</strong><span class="xt-utm">utm_campaign=dpa_catalog_main</span></td>
-                <td class="xt-mono">R$ 120/dia</td>
-                <td class="xt-mono xt-td-hl"><strong class="g">42</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="g">R$ 22,85</strong></td>
-                <td class="xt-mono">R$ 960</td>
-                <td class="xt-mono">R$ 3.780</td>
-                <td class="xt-mono"><strong class="g">R$ 2.820</strong></td>
-                <td class="xt-mono xt-td-hl"><strong class="g">3.93×</strong></td>
-                <td class="xt-mono"><strong class="g">74%</strong></td>
-                <td class="xt-mono"><strong class="g">293%</strong></td>
-                <td class="xt-mono">4.2%</td>
-                <td class="xt-mono">R$ 15,80</td>
-                <td class="xt-mono">60.759</td>
-                <td class="xt-mono">2.551</td>
+                <td class="xt-mono" data-label="Orçamento">R$ 120/dia</td>
+                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="g">42</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="g">R$ 22,85</strong></td>
+                <td class="xt-mono" data-label="Gastos">R$ 960</td>
+                <td class="xt-mono" data-label="Faturamento">R$ 3.780</td>
+                <td class="xt-mono" data-label="Lucro"><strong class="g">R$ 2.820</strong></td>
+                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="g">3.93×</strong></td>
+                <td class="xt-mono" data-label="Margem"><strong class="g">74%</strong></td>
+                <td class="xt-mono" data-label="ROI"><strong class="g">293%</strong></td>
+                <td class="xt-mono" data-label="CTR">4.2%</td>
+                <td class="xt-mono" data-label="CPM">R$ 15,80</td>
+                <td class="xt-mono" data-label="Impressões">60.759</td>
+                <td class="xt-mono" data-label="Cliques">2.551</td>
               </tr>
             </tbody>
           </table>
@@ -2194,16 +2250,19 @@ document.querySelectorAll('.xt-tab').forEach(tab => {
   });
 });
 
-// Xtracker drag scroll
-(function(){
-  const el = document.querySelector('.xt-scroll-area');
-  if(!el) return;
+// Xtracker drag scroll — all scroll areas
+document.querySelectorAll('.xt-scroll-area').forEach(el => {
   let isDown=false, startX, scrollL;
   el.addEventListener('mousedown', e => { isDown=true; el.style.cursor='grabbing'; startX=e.pageX-el.offsetLeft; scrollL=el.scrollLeft });
   el.addEventListener('mouseleave', () => { isDown=false; el.style.cursor='grab' });
   el.addEventListener('mouseup', () => { isDown=false; el.style.cursor='grab' });
   el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; el.scrollLeft=scrollL-(x-startX)*1.5 });
-})();
+  // Touch drag
+  let touchX, touchScroll;
+  el.addEventListener('touchstart', e => { touchX=e.touches[0].pageX; touchScroll=el.scrollLeft }, {passive:true});
+  el.addEventListener('touchmove', e => { if(touchX===undefined) return; el.scrollLeft=touchScroll-(e.touches[0].pageX-touchX) }, {passive:true});
+  el.addEventListener('touchend', () => { touchX=undefined });
+});
 
 // Marquee items
 const mqi = ['Dashboard Inteligente','Tracking Server-Side','Agente de IA','Análise de Criativos','Sinais Proprietários','ROAS Real','Escala com Lucro','Score por Criativo','Atribuição Multi-Touch','Alertas Preditivos','CPA Real','Funil Completo'];
