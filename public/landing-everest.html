@@ -537,6 +537,21 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
 .bloco:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0 }
 .bloco.rev { direction:rtl } .bloco.rev > * { direction:ltr }
 
+.bloco-fullwidth {
+  margin-bottom:80px; padding:48px 40px; border-bottom:1px solid rgba(13,26,46,0.06);
+  background:rgba(0,153,204,0.03); border:1px solid rgba(0,153,204,0.12);
+  border-radius:20px; backdrop-filter:blur(12px);
+}
+.bloco-fullwidth:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0 }
+
+.b-feats-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:12px 32px;
+}
+.tracking-kpis {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:20px;
+}
+.tcc-bar-fill { transition: width 1.2s cubic-bezier(0.22,1,0.36,1) }
+
 .bloco-tag {
   display:inline-flex; align-items:center; gap:8px;
   font: 600 10px/1 'JetBrains Mono', monospace;
@@ -1425,6 +1440,9 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   .xt-summary { flex-wrap:wrap; gap:16px }
   .bloco { grid-template-columns:1fr; gap:36px }
   .bloco.rev { direction:ltr }
+  .bloco-fullwidth { padding:36px 24px }
+  .b-feats-grid { grid-template-columns:1fr }
+  .tracking-kpis { grid-template-columns:repeat(2,1fr) }
   .pricing-layout { grid-template-columns:1fr }
   .bens-side { order:-1 }
   .roi-compare { grid-template-columns:1fr }
@@ -1722,10 +1740,45 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
     <p class="s-sub" style="text-align:center; margin:0 auto">Cada bloco ataca uma dor específica. Integrados, formam a plataforma mais completa para <strong>operar Meta Ads com dados reais</strong>.</p>
   </div>
 
-  <!-- BLOCO 1 — DASHBOARD -->
+  <!-- BLOCO 1 — TRACKING (fullwidth) -->
+  <div class="bloco-fullwidth fade-up">
+    <div>
+      <div class="bloco-tag">📡 Bloco 01 · Tracking Real de Vendas</div>
+      <h3 class="bloco-h3">Sinais que <em>nenhuma outra</em><br>plataforma captura.</h3>
+
+      <!-- Callout de destaque -->
+      <div class="tracking-callout">
+        <div class="tracking-callout-badge">DIFERENCIAL CORE</div>
+        <p class="tracking-callout-text">
+          O pixel padrão do Meta <span class="loss">perde até 40% das conversões</span> por iOS e bloqueadores.
+          Nosso tracking server-side captura <span class="capture">98.4%</span> e alimenta o algoritmo com <strong>dados reais</strong>.
+        </p>
+        <div class="tracking-callout-compare">
+          <div class="tcc-item tcc-before">
+            <span class="tcc-label">Pixel padrão</span>
+            <div class="tcc-bar-bg"><div class="tcc-bar-fill tcc-fill-weak anim-bar" style="width:0" data-width="61"></div></div>
+            <span class="tcc-val tcc-val-weak">61%</span>
+          </div>
+          <div class="tcc-item tcc-after">
+            <span class="tcc-label">Ads.Everest</span>
+            <div class="tcc-bar-bg"><div class="tcc-bar-fill tcc-fill-strong anim-bar" style="width:0" data-width="98.4"></div></div>
+            <span class="tcc-val tcc-val-strong">98.4%</span>
+          </div>
+        </div>
+      </div>
+      <div class="b-feats b-feats-grid">
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Server-side tracking</strong> — funciona mesmo com iOS 14+, ad blockers e Safari.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Atribuição multi-touch</strong> — cada ponto de contato antes da compra, mapeado.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Funil completo</strong> — visita, lead, carrinho, compra, recompra. Tudo rastreado.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>LTV por campanha</strong> — saiba qual campanha traz o cliente que compra mais de uma vez.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLOCO 2 — DASHBOARD -->
   <div class="bloco fade-up">
     <div>
-      <div class="bloco-tag">📊 Bloco 01 · Dashboard Inteligente</div>
+      <div class="bloco-tag">📊 Bloco 02 · Dashboard Inteligente</div>
       <h3 class="bloco-h3">A visão que o Ads Manager<br>nunca <em>te entregou</em>.</h3>
       <p class="bloco-p">Toda a sua conta numa tela. Campanhas, conjuntos e criativos organizados por <strong>impacto real</strong>. Em 30 segundos você sabe o que escalar, o que pausar e o que precisa de atenção agora.</p>
       <div class="b-feats">
@@ -1745,59 +1798,8 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
           <div class="kpi-card"><div class="kpi-lbl">Score</div><div class="kpi-val g">92</div><div class="kpi-d g">Saudável</div></div>
         </div>
         <div class="chart-area">
-          <div class="chart-card"><div class="card-lbl">Receita × Gasto — 7 dias</div><div class="bar-chart" id="dashBars"></div></div>
+          <div class="chart-card"><div class="card-lbl">Receita x Gasto — 7 dias</div><div class="bar-chart" id="dashBars"></div></div>
           <div class="table-card"><div class="card-lbl">Top campanhas ROAS</div><div id="campRows"></div></div>
-        </div>
-      </div>
-    </div></div>
-  </div>
-
-  <!-- BLOCO 2 — TRACKING -->
-  <div class="bloco rev fade-up">
-    <div>
-      <div class="bloco-tag">📡 Bloco 02 · Tracking Real de Vendas</div>
-      <h3 class="bloco-h3">Sinais que <em>nenhuma outra</em><br>plataforma captura.</h3>
-
-      <!-- Callout de destaque -->
-      <div class="tracking-callout">
-        <div class="tracking-callout-badge">DIFERENCIAL CORE</div>
-        <p class="tracking-callout-text">
-          O pixel padrão do Meta <span class="loss">perde até 40% das conversões</span> por iOS e bloqueadores.
-          Nosso tracking server-side captura <span class="capture">98.4%</span> e alimenta o algoritmo com <strong>dados reais</strong>.
-        </p>
-        <div class="tracking-callout-compare">
-          <div class="tcc-item tcc-before">
-            <span class="tcc-label">Pixel padrão</span>
-            <div class="tcc-bar-bg"><div class="tcc-bar-fill tcc-fill-weak" style="width:61%"></div></div>
-            <span class="tcc-val tcc-val-weak">61%</span>
-          </div>
-          <div class="tcc-item tcc-after">
-            <span class="tcc-label">Ads.Everest</span>
-            <div class="tcc-bar-bg"><div class="tcc-bar-fill tcc-fill-strong" style="width:98.4%"></div></div>
-            <span class="tcc-val tcc-val-strong">98.4%</span>
-          </div>
-        </div>
-      </div>
-      <div class="b-feats">
-        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Server-side tracking</strong> — funciona mesmo com iOS 14+, ad blockers e Safari.</div></div>
-        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Atribuição multi-touch</strong> — cada ponto de contato antes da compra, mapeado.</div></div>
-        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Funil completo</strong> — visita, lead, carrinho, compra, recompra. Tudo rastreado.</div></div>
-        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>LTV por campanha</strong> — saiba qual campanha traz o cliente que compra mais de uma vez.</div></div>
-      </div>
-    </div>
-    <div class="glass glass-strong tilt-card fade-up d2"><div class="shine"></div><div style="padding:0">
-      <div class="vb-bar"><div class="vb-dots"><div class="vb-dot" style="background:#ff5f56"></div><div class="vb-dot" style="background:#febc2e"></div><div class="vb-dot" style="background:#28c840"></div></div><div class="vb-title">Tracking Real</div><div class="vb-badge">98.4% capturado</div></div>
-      <div class="vb-body">
-        <div class="track-funnel">
-          <div class="tf-step"><div class="tf-icon">👁</div><div class="tf-lbl">Visitas únicas</div><div class="tf-val">12.480</div></div>
-          <div class="tf-step"><div class="tf-icon">🛒</div><div class="tf-lbl">Iniciaram checkout</div><div class="tf-val">1.847</div></div>
-          <div class="tf-step"><div class="tf-icon">✅</div><div class="tf-lbl">Compras confirmadas</div><div class="tf-val">248</div></div>
-        </div>
-        <div class="sigs-2col">
-          <div class="sig-card"><div class="sc-lbl">Taxa captura</div><div class="sc-val g">98.4%</div><div class="sc-sub">vs 61% pixel padrão</div></div>
-          <div class="sig-card"><div class="sc-lbl">ROAS real</div><div class="sc-val c">3.8×</div><div class="sc-sub">Ads Manager: 2.1×</div></div>
-          <div class="sig-card"><div class="sc-lbl">LTV 90d</div><div class="sc-val p">R$187</div><div class="sc-sub">Recompra: 31%</div></div>
-          <div class="sig-card"><div class="sc-lbl">CPA real</div><div class="sc-val g">R$14</div><div class="sc-sub">Meta reportou: R$22</div></div>
         </div>
       </div>
     </div></div>
@@ -2297,6 +2299,17 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(x => { if(x.isIntersecting) x.target.classList.add('vis') });
 }, { threshold: 0.08 });
 document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+// Animated bars
+const barObs = new IntersectionObserver(entries => {
+  entries.forEach(x => {
+    if(x.isIntersecting) {
+      x.target.style.width = x.target.dataset.width + '%';
+      barObs.unobserve(x.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.anim-bar').forEach(el => barObs.observe(el));
 
 // FAQ toggle
 document.querySelectorAll('.faq-item').forEach(item => {
