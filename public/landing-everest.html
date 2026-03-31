@@ -1444,7 +1444,12 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
 @media (max-width:640px) {
   /* Hero mobile */
   .hero-video-section { min-height:auto }
-  .hero-overlay { min-height:auto; padding:120px 0 80px }
+  .hero-video {
+    transform: scale(1.35);
+    transform-origin: center 40%;
+    opacity: 0.7;
+  }
+  .hero-overlay { min-height:auto; padding:110px 0 70px }
   .hero-content {
     padding:24px 20px;
     border-radius:22px;
