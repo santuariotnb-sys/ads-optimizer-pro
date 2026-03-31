@@ -1054,12 +1054,17 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
   scrollbar-width: thin;
   scrollbar-color: rgba(0,204,255,0.25) rgba(13,26,46,0.04);
   padding: 4px 18px 18px;
   cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .xt-scroll-area:active { cursor: grabbing }
+.xt-scroll-area.dragging { scroll-behavior: auto; scroll-snap-type: none }
 .xt-scroll-area::-webkit-scrollbar { height: 6px }
 .xt-scroll-area::-webkit-scrollbar-track { background: rgba(13,26,46,0.04); border-radius: 999px }
 .xt-scroll-area::-webkit-scrollbar-thumb { background: rgba(0,204,255,0.25); border-radius: 999px }
@@ -1223,10 +1228,26 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
 /* ═══════ CAMPAIGN CARDS (compact, like dashboard) ═══════ */
 .camp-cards {
   display: flex;
-  gap: 12px;
-  padding: 4px 0;
+  gap: 14px;
+  padding: 6px 4px;
   width: max-content;
 }
+
+/* Scroll hint — gradient fade on edges */
+.camp-scroll-hint {
+  position: relative;
+}
+.camp-scroll-hint::before,
+.camp-scroll-hint::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 40px;
+  z-index: 3;
+  pointer-events: none;
+}
+.camp-scroll-hint::before { left:0; background:linear-gradient(90deg, rgba(244,246,248,0.9), transparent) }
+.camp-scroll-hint::after { right:0; background:linear-gradient(-90deg, rgba(244,246,248,0.9), transparent) }
 .camp-card {
   min-width: 360px;
   padding: 0;
@@ -1254,20 +1275,25 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 16px 20px;
-  background:
-    linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
-  border-bottom: 1px solid rgba(13,26,46,0.06);
-  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.5);
+  padding: 14px 20px;
+  background: linear-gradient(145deg, rgba(13,26,46,0.94), rgba(22,37,64,0.88));
+  border-bottom: 1px solid rgba(0,204,255,0.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.15);
 }
 .camp-card-head strong {
-  font: 800 15px/1.25 'Outfit', sans-serif;
-  color: var(--text);
+  font: 800 14.5px/1.25 'Outfit', sans-serif;
+  color: #fff;
   letter-spacing: -0.02em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 230px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.2);
+}
+.camp-card-head .xt-status {
+  border: none;
+  font-size: 9px;
+  box-shadow: 0 0 10px -3px currentColor;
 }
 
 /* KPIs grid com profundidade */
@@ -2122,7 +2148,7 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
       <!-- TAB: Campanhas -->
       <!-- TAB: Campanhas — cards compactos com scroll horizontal -->
       <div class="xt-tab-content active" id="tab-campanhas">
-        <div class="xt-scroll-area">
+        <div class="xt-scroll-area camp-scroll-hint">
           <div class="camp-cards">
 
             <div class="camp-card">
@@ -2447,18 +2473,49 @@ document.querySelectorAll('.xt-tab').forEach(tab => {
   });
 });
 
-// Xtracker drag scroll — all scroll areas
+// Xtracker drag scroll — all scroll areas with momentum
 document.querySelectorAll('.xt-scroll-area').forEach(el => {
-  let isDown=false, startX, scrollL;
-  el.addEventListener('mousedown', e => { isDown=true; el.style.cursor='grabbing'; startX=e.pageX-el.offsetLeft; scrollL=el.scrollLeft });
-  el.addEventListener('mouseleave', () => { isDown=false; el.style.cursor='grab' });
-  el.addEventListener('mouseup', () => { isDown=false; el.style.cursor='grab' });
-  el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; el.scrollLeft=scrollL-(x-startX)*1.5 });
-  // Touch drag
-  let touchX, touchScroll;
-  el.addEventListener('touchstart', e => { touchX=e.touches[0].pageX; touchScroll=el.scrollLeft }, {passive:true});
-  el.addEventListener('touchmove', e => { if(touchX===undefined) return; el.scrollLeft=touchScroll-(e.touches[0].pageX-touchX) }, {passive:true});
-  el.addEventListener('touchend', () => { touchX=undefined });
+  let isDown=false, startX, scrollL, velX=0, lastX=0, lastTime=0, rafId;
+
+  function startDrag(x) {
+    isDown=true;
+    el.classList.add('dragging');
+    startX=x; scrollL=el.scrollLeft; velX=0; lastX=x; lastTime=Date.now();
+    cancelAnimationFrame(rafId);
+  }
+  function endDrag() {
+    if(!isDown) return;
+    isDown=false;
+    el.classList.remove('dragging');
+    // Momentum
+    if(Math.abs(velX) > 0.5) {
+      function coast() {
+        velX *= 0.92;
+        el.scrollLeft -= velX;
+        if(Math.abs(velX) > 0.5) rafId = requestAnimationFrame(coast);
+      }
+      rafId = requestAnimationFrame(coast);
+    }
+  }
+  function moveDrag(x) {
+    if(!isDown) return;
+    const dx = x - startX;
+    el.scrollLeft = scrollL - dx;
+    const now = Date.now();
+    const dt = now - lastTime;
+    if(dt > 0) { velX = (x - lastX) / dt * 16; }
+    lastX = x; lastTime = now;
+  }
+
+  el.addEventListener('mousedown', e => { e.preventDefault(); startDrag(e.pageX) });
+  el.addEventListener('mouseleave', endDrag);
+  el.addEventListener('mouseup', endDrag);
+  el.addEventListener('mousemove', e => { if(isDown) { e.preventDefault(); moveDrag(e.pageX) } });
+
+  // Touch
+  el.addEventListener('touchstart', e => { startDrag(e.touches[0].pageX) }, {passive:true});
+  el.addEventListener('touchend', endDrag, {passive:true});
+  el.addEventListener('touchmove', e => { moveDrag(e.touches[0].pageX) }, {passive:true});
 });
 
 // Marquee items
