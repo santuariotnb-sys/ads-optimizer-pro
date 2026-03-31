@@ -304,30 +304,49 @@ function HeroSection() {
       background: DARK_BG, overflow: 'hidden',
       padding: isMobile ? '100px 20px 60px' : '120px 48px 80px',
     }}>
+      {/* Video background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          objectFit: 'cover', opacity: 0.35, pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      >
+        <source src="https://hfxgotszsexyodcibxtf.supabase.co/storage/v1/object/public/assets/landing-bg.mp4" type="video/mp4" />
+      </video>
+      {/* Dark overlay on video */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,
+        background: 'linear-gradient(180deg, rgba(6,8,15,0.6) 0%, rgba(6,8,15,0.3) 40%, rgba(6,8,15,0.7) 100%)',
+      }} />
       {/* Radial glow — primary blue */}
       <div style={{
         position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
-        width: 800, height: 600, borderRadius: '50%', pointerEvents: 'none',
-        background: 'radial-gradient(ellipse, rgba(37,99,235,0.15) 0%, transparent 70%)',
+        width: 800, height: 600, borderRadius: '50%', pointerEvents: 'none', zIndex: 2,
+        background: 'radial-gradient(ellipse, rgba(37,99,235,0.2) 0%, transparent 70%)',
         filter: 'blur(60px)',
       }} />
       {/* Radial glow — secondary purple */}
       <div style={{
         position: 'absolute', top: '35%', left: '60%', transform: 'translateX(-50%)',
-        width: 500, height: 400, borderRadius: '50%', pointerEvents: 'none',
-        background: 'radial-gradient(ellipse, rgba(124,58,237,0.1) 0%, transparent 70%)',
+        width: 500, height: 400, borderRadius: '50%', pointerEvents: 'none', zIndex: 2,
+        background: 'radial-gradient(ellipse, rgba(124,58,237,0.12) 0%, transparent 70%)',
         filter: 'blur(80px)',
       }} />
       {/* Dot grid overlay */}
       <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)',
+        position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 2,
+        backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)',
         backgroundSize: '24px 24px',
       }} />
 
       {/* Content */}
       <div style={{
-        position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column',
+        position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column',
         alignItems: 'center', textAlign: 'center', maxWidth: 800,
       }}>
         {/* Animated gradient badge */}
