@@ -961,6 +961,175 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
 .xt-pill strong { display:block; font:700 14px/1.3 'Outfit',sans-serif; color:var(--text); margin-bottom:5px; letter-spacing:-0.02em }
 .xt-pill span { display:block; font-size:12.5px; color:var(--text-2); line-height:1.6 }
 
+/* ═══════════════════════════════════════
+   XTRACKER DARK SECTION
+   ═══════════════════════════════════════ */
+.xt-dark-section {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(0,204,255,0.06), transparent 40%),
+    radial-gradient(ellipse at 80% 90%, rgba(124,58,237,0.04), transparent 35%),
+    linear-gradient(180deg, #0a1520 0%, #0d1e30 30%, #101c2c 60%, #0b1722 100%);
+  padding: 0 0 20px;
+  overflow: hidden;
+}
+.xt-dark-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(rgba(255,255,255,0.03) 0.7px, transparent 0.7px);
+  background-size: 22px 22px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+/* Top/bottom soft edges */
+.xt-dark-section::after {
+  content: '';
+  position: absolute;
+  top: -1px; left: 0; right: 0; height: 80px;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+  pointer-events: none;
+}
+.xt-dark-bottom-fade {
+  position: absolute;
+  bottom: -1px; left: 0; right: 0; height: 80px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Override elements inside dark section */
+.xt-dark-section .xt-card {
+  background: rgba(18,30,46,0.7);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow:
+    0 24px 60px -20px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.xt-dark-section .xt-reflection {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+}
+.xt-dark-section .xt-sheen {
+  background: linear-gradient(135deg, rgba(255,255,255,0.04), transparent 40%, transparent 60%, rgba(255,255,255,0.02));
+}
+.xt-dark-section .xt-topbar {
+  background: rgba(14,24,38,0.8);
+  border-bottom-color: rgba(255,255,255,0.06);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.xt-dark-section .xt-topbar-title { color: rgba(200,218,238,0.5) }
+.xt-dark-section .vb-badge {
+  background: rgba(0,204,255,0.1);
+  border-color: rgba(0,204,255,0.2);
+  color: var(--brand);
+}
+.xt-dark-section .xt-tabs {
+  border-bottom-color: rgba(255,255,255,0.06);
+}
+.xt-dark-section .xt-tab {
+  color: rgba(200,218,238,0.4);
+}
+.xt-dark-section .xt-tab:hover {
+  color: rgba(200,218,238,0.7);
+  background: rgba(255,255,255,0.04);
+}
+.xt-dark-section .xt-tab.active {
+  color: var(--brand);
+  background: rgba(0,204,255,0.06);
+  border-bottom-color: var(--brand);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* Camp cards on dark */
+.xt-dark-section .camp-card {
+  background: rgba(18,30,46,0.65);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow:
+    0 14px 34px -14px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.xt-dark-section .camp-card:hover {
+  border-color: rgba(0,204,255,0.15);
+  box-shadow:
+    0 20px 48px -16px rgba(0,0,0,0.5),
+    0 0 24px -8px rgba(0,204,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.xt-dark-section .camp-card-head {
+  background: linear-gradient(145deg, rgba(8,18,30,0.95), rgba(14,26,42,0.9));
+  border-bottom-color: rgba(0,204,255,0.08);
+}
+.xt-dark-section .camp-kpi {
+  border-right-color: rgba(255,255,255,0.04);
+  border-bottom-color: rgba(255,255,255,0.03);
+}
+.xt-dark-section .camp-kpi:nth-child(even) {
+  background: rgba(255,255,255,0.04);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.02);
+}
+.xt-dark-section .camp-kpi:nth-child(odd) {
+  background: rgba(0,0,0,0.12);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+.xt-dark-section .camp-kpi-lbl { color: rgba(200,218,238,0.35) }
+.xt-dark-section .camp-kpi strong { color: rgba(220,232,245,0.85) }
+.xt-dark-section .camp-kpi strong.g { color: var(--green) }
+.xt-dark-section .camp-kpi strong.r { color: var(--red) }
+.xt-dark-section .camp-kpi strong.a { color: var(--amber) }
+
+.xt-dark-section .camp-card-extra {
+  border-top-color: rgba(255,255,255,0.04);
+}
+.xt-dark-section .camp-extra {
+  background: rgba(0,0,0,0.15);
+  border-right-color: rgba(255,255,255,0.03);
+}
+.xt-dark-section .camp-extra-lbl { color: rgba(200,218,238,0.3) }
+.xt-dark-section .camp-extra strong { color: rgba(200,218,238,0.6) }
+.xt-dark-section .camp-extra strong.g { color: var(--green) }
+.xt-dark-section .camp-extra strong.r { color: var(--red) }
+.xt-dark-section .camp-extra strong.a { color: var(--amber) }
+
+/* Scroll hint on dark */
+.xt-dark-section .camp-scroll-hint::before { background: linear-gradient(90deg, rgba(10,21,32,0.9), transparent) }
+.xt-dark-section .camp-scroll-hint::after { background: linear-gradient(-90deg, rgba(10,21,32,0.9), transparent) }
+
+/* Scroll indicator dots */
+.xt-scroll-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 0 4px;
+}
+.xt-scroll-dot {
+  width: 6px; height: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.3s;
+}
+.xt-scroll-dot.active {
+  width: 20px;
+  background: var(--brand);
+  box-shadow: 0 0 12px rgba(0,204,255,0.4);
+}
+
+/* Summary on dark */
+.xt-dark-section .xt-summary {
+  background: linear-gradient(135deg, rgba(0,204,255,0.08), rgba(13,26,46,0.5));
+  border: 1px solid rgba(0,204,255,0.1);
+  box-shadow: 0 14px 32px -14px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.xt-dark-section .xt-sum-item span { color: rgba(200,218,238,0.35) }
+.xt-dark-section .xt-sum-item strong { color: #fff }
+
+/* Smoke on dark */
+.xt-dark-section .xt-smoke {
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(0,204,255,0.08), transparent 45%),
+    radial-gradient(ellipse at 70% 80%, rgba(124,58,237,0.05), transparent 40%);
+}
+
 /* Xtracker brand inline */
 .xt-brand-inline {
   font-family: 'Outfit', sans-serif;
@@ -2108,12 +2277,13 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
 
 <!-- ═══════ ROI ═══════ -->
 <!-- ═══════ XTRACKER ═══════ -->
-<div class="container" id="xtracker">
+<div class="xt-dark-section" id="xtracker">
+<div class="container">
 <section class="sec">
   <div class="fade-up" style="text-align:center; max-width:740px; margin:0 auto 20px">
-    <div class="s-tag" style="justify-content:center">Xtracker — Controle financeiro real</div>
-    <h2 class="s-h2" style="text-align:center">Saiba exatamente quantas vendas cada campanha teve.<br><em>Sem abrir o Facebook.</em></h2>
-    <p class="s-sub" style="text-align:center; margin:0 auto">O <span class="xt-brand-inline">Xtracker</span> conecta <strong>UTM's + sinais de gateway de pagamento</strong> para te dar a verdade sobre cada centavo investido. Otimize direto pelo relatório — sem pular entre abas, sem planilha paralela, sem achismo.</p>
+    <div class="s-tag" style="justify-content:center;color:var(--brand)"><span style="background:rgba(0,204,255,0.2);width:20px;height:1.5px" class=""></span>Xtracker — Controle financeiro real</div>
+    <h2 class="s-h2" style="text-align:center;color:#fff">Saiba exatamente quantas vendas cada campanha teve.<br><em style="color:var(--brand)">Sem abrir o Facebook.</em></h2>
+    <p class="s-sub" style="text-align:center; margin:0 auto; color:rgba(200,218,238,0.7)">O <span class="xt-brand-inline">Xtracker</span> conecta <strong style="color:rgba(255,255,255,0.9)">UTM's + sinais de gateway de pagamento</strong> para te dar a verdade sobre cada centavo investido. Otimize direto pelo relatório — sem pular entre abas, sem planilha paralela, sem achismo.</p>
   </div>
 
   <!-- Xtracker feature pills -->
@@ -2242,6 +2412,7 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
             </div>
 
           </div>
+          <div class="xt-scroll-dots" id="campDots"></div>
         </div>
       </div>
 
@@ -2302,8 +2473,8 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   </div>
 </section>
 </div>
-
-<div class="band"></div>
+<div class="xt-dark-bottom-fade"></div>
+</div><!-- end xt-dark-section -->
 
 <!-- ═══════ ROI ═══════ -->
 <div class="container" id="roi">
@@ -2463,6 +2634,27 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
 </footer>
 
 <script>
+// Scroll indicator dots for campaign cards
+(function(){
+  const area = document.querySelector('#tab-campanhas .xt-scroll-area');
+  const dotsEl = document.getElementById('campDots');
+  if(!area || !dotsEl) return;
+  const cards = area.querySelectorAll('.camp-card');
+  cards.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'xt-scroll-dot' + (i === 0 ? ' active' : '');
+    dotsEl.appendChild(d);
+  });
+  const dots = dotsEl.querySelectorAll('.xt-scroll-dot');
+  function updateDots() {
+    const sl = area.scrollLeft;
+    const cw = cards[0]?.offsetWidth + 14 || 374;
+    const idx = Math.round(sl / cw);
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }
+  area.addEventListener('scroll', updateDots, { passive: true });
+})();
+
 // Xtracker tabs
 document.querySelectorAll('.xt-tab').forEach(tab => {
   tab.addEventListener('click', () => {
