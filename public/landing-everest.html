@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ads.Everest — Plataforma para Gestores de Tráfego</title>
+<meta name="description" content="Dashboard, tracking real de vendas, análise de criativos com IA e agente operacional para escalar Meta Ads com lucro real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════ */
+:root {
+  --bg: #f4f6f8;
+  --text: #0b1a2b;
+  --text-2: #3d546e;
+  --text-3: #7a8fa6;
+  --brand: #00ccff;
+  --brand-2: #0099cc;
+  --brand-3: #006688;
+  --navy: #0d1a2e;
+  --navy-2: #162540;
+  --green: #0ea572;
+  --red: #e53935;
+  --amber: #e8a020;
+  --purple: #7c3aed;
+
+  /* Glass */
+  --glass-bg: rgba(255,255,255,0.42);
+  --glass-bg-strong: rgba(255,255,255,0.58);
+  --glass-border: rgba(255,255,255,0.55);
+  --glass-border-strong: rgba(255,255,255,0.72);
+  --glass-blur: 28px;
+  --glass-blur-strong: 44px;
+  --glass-shadow:
+    0 32px 80px -20px rgba(13,26,46,0.18),
+    0 8px 24px -8px rgba(13,26,46,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.92),
+    inset 0 -1px 0 rgba(13,26,46,0.04);
+  --glass-shadow-md:
+    0 18px 44px -18px rgba(13,26,46,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.94);
+
+  --radius-xl: 30px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 14px;
+  --container: 1180px;
+}
+
+/* ═══════ RESET ═══════ */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+html { scroll-behavior:smooth }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+a { color:inherit; text-decoration:none }
+img { max-width:100%; display:block }
+h1,h2,h3,h4 { margin:0; font-family:'Outfit',sans-serif; letter-spacing:-0.04em }
+
+.container { width:min(var(--container), calc(100% - 32px)); margin:0 auto; position:relative; z-index:2 }
+
+/* ═══════════════════════════════════════
+   GLASSMORPHISM SYSTEM
+   ═══════════════════════════════════════ */
+
+/* Base glass card */
+.glass {
+  position: relative;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.5);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Inner highlight gradient */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    linear-gradient(145deg,
+      rgba(255,255,255,0.78) 0%,
+      rgba(255,255,255,0.22) 30%,
+      rgba(255,255,255,0.06) 56%,
+      rgba(255,255,255,0.38) 100%);
+}
+
+/* Top edge light */
+.glass::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.96), transparent);
+  pointer-events: none;
+}
+
+/* Strong glass variant */
+.glass-strong {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.6);
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(1.6);
+}
+
+/* Shine sweep animation */
+.glass .shine {
+  position: absolute;
+  inset: -40% auto auto -20%;
+  width: 44%;
+  height: 180%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
+  transform: rotate(18deg);
+  opacity: 0.4;
+  pointer-events: none;
+  animation: shineSweep 9s linear infinite;
+  z-index: 1;
+}
+@keyframes shineSweep {
+  0% { transform: translateX(-140%) rotate(18deg) }
+  100% { transform: translateX(380%) rotate(18deg) }
+}
+
+/* 3D tilt on hover */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.22s cubic-bezier(0.22,0.68,0,1.2), box-shadow 0.22s ease;
+}
+.tilt-card:hover {
+  box-shadow:
+    0 36px 88px -22px rgba(13,26,46,0.22),
+    0 10px 28px -8px rgba(13,26,46,0.1),
+    0 0 0 1px rgba(0,204,255,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.96);
+}
+
+/* ═══════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════ */
+nav { position:fixed; top:14px; left:0; right:0; z-index:200 }
+.nav-inner {
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  background: rgba(255,255,255,0.68);
+  border: 1px solid rgba(255,255,255,0.88);
+  border-radius: 20px;
+  box-shadow: 0 12px 36px -12px rgba(13,26,46,0.14), inset 0 1px 0 rgba(255,255,255,0.96);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  padding: 12px 20px;
+}
+.nav-brand { display:flex; align-items:center; gap:10px }
+.nav-brand-icon {
+  width:36px; height:36px; border-radius:10px;
+  background: linear-gradient(135deg, var(--navy), var(--brand-3));
+  display:grid; place-items:center;
+  color: var(--brand); font:800 14px/1 'Outfit',sans-serif;
+  box-shadow: 0 6px 14px -4px rgba(13,26,46,0.3);
+}
+.nav-brand-text { font:700 16px/1 'Outfit',sans-serif; letter-spacing:-0.03em }
+.nav-brand-text span { color: var(--brand-2) }
+.nav-links { display:flex; align-items:center; gap:4px }
+.nav-link {
+  font-size:13.5px; color:var(--text-2); padding:8px 14px; border-radius:12px;
+  font-weight:500; transition:all 0.18s;
+}
+.nav-link:hover { background:rgba(13,26,46,0.05); color:var(--text) }
+.nav-cta {
+  display:inline-flex; align-items:center; gap:8px;
+  background: var(--navy); color:white;
+  font:600 13.5px/1 'Outfit',sans-serif; letter-spacing:-0.01em;
+  padding:10px 20px; border-radius:14px;
+  box-shadow: 0 10px 28px -10px rgba(13,26,46,0.5);
+  transition:all 0.2s;
+}
+.nav-cta:hover { transform:translateY(-1px); box-shadow:0 16px 36px -10px rgba(13,26,46,0.6) }
+
+/* ═══════════════════════════════════════
+   HERO — VIDEO BACKGROUND
+   ═══════════════════════════════════════ */
+.hero-video-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #0b1a2b;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.85;
+}
+
+/* Dark overlay for text readability */
+.hero-video-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(135deg,
+      rgba(11,26,43,0.82) 0%,
+      rgba(11,26,43,0.55) 40%,
+      rgba(11,26,43,0.35) 70%,
+      rgba(11,26,43,0.5) 100%);
+  pointer-events: none;
+}
+
+/* Bottom fade into white page */
+.hero-video-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  z-index: 2;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+}
+
+/* Hero content overlay */
+.hero-overlay {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  padding: 140px 0 120px;
+}
+
+.hero-content {
+  max-width: 680px;
+  position: relative;
+  padding: 44px 38px 44px 42px;
+  border-radius: 32px;
+  background:
+    radial-gradient(ellipse at 20% 40%, rgba(0,0,0,0.28), transparent 55%),
+    radial-gradient(ellipse at 80% 60%, rgba(0,0,0,0.2), transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(11,26,43,0.32), transparent 70%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.hero-badge {
+  display: inline-flex; align-items:center; gap:10px;
+  padding: 8px 18px 8px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(16px);
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 26px;
+}
+.hero-badge .pulse {
+  width: 8px; height: 8px; border-radius: 999px;
+  background: var(--brand);
+  box-shadow: 0 0 18px rgba(0,204,255,0.7);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity:1; transform:scale(1) } 50% { opacity:0.4; transform:scale(0.7) } }
+
+.hero-h1 {
+  font-size: clamp(42px, 6vw, 74px);
+  font-weight: 900;
+  line-height: 0.96;
+  color: white;
+  margin-bottom: 22px;
+}
+.hero-h1 .accent {
+  display: block;
+  background: linear-gradient(135deg, #ffffff 0%, #7de5ff 60%, #00ccff 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+
+.hero-sub {
+  font-size: 18px;
+  color: rgba(220,232,245,0.78);
+  line-height: 1.8;
+  max-width: 560px;
+  margin-bottom: 32px;
+  font-weight: 400;
+}
+.hero-sub strong { color: rgba(255,255,255,0.95); font-weight: 600 }
+
+.hero-ctas { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom: 28px }
+
+.btn-primary-hero {
+  display:inline-flex; align-items:center; gap:8px;
+  background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+  color: white;
+  font: 700 15px/1 'Outfit', sans-serif; letter-spacing:-0.01em;
+  padding: 16px 30px; border-radius: 16px;
+  box-shadow: 0 14px 38px -12px rgba(0,153,204,0.5);
+  transition: all 0.22s;
+  border: none; cursor: pointer;
+}
+.btn-primary-hero:hover { transform:translateY(-2px); box-shadow:0 20px 46px -12px rgba(0,153,204,0.65) }
+
+.btn-ghost-hero {
+  display:inline-flex; align-items:center; gap:8px;
+  border: 1px solid rgba(255,255,255,0.22);
+  color: rgba(255,255,255,0.82);
+  font: 500 15px/1 'Plus Jakarta Sans', sans-serif;
+  padding: 16px 30px; border-radius: 16px;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  transition: all 0.2s;
+}
+.btn-ghost-hero:hover { border-color:rgba(255,255,255,0.38); color:white; background:rgba(255,255,255,0.14) }
+
+.hero-proof { display:flex; align-items:center; gap:14px }
+.avatars { display:flex }
+.ava {
+  width:30px; height:30px; border-radius:999px;
+  background: linear-gradient(135deg, #93b8d4, #3d7ba4);
+  border: 2px solid rgba(255,255,255,0.3);
+  margin-left: -8px;
+  display:grid; place-items:center;
+  font: 700 9px/1 'JetBrains Mono', monospace; color:white;
+}
+.ava:first-child { margin-left:0 }
+.proof-txt { font-size:13px; color:rgba(220,232,245,0.6); font-weight:500 }
+.proof-txt strong { color:rgba(255,255,255,0.85) }
+
+/* Hero float stats */
+.hero-float {
+  position: absolute;
+  z-index: 4;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 18px 36px -14px rgba(0,0,0,0.3);
+  animation: floatIn 0.8s ease forwards, levitate 5s ease-in-out 2s infinite;
+  opacity: 0;
+}
+.hero-float strong { display:block; font:800 26px/1 'Outfit',sans-serif; color:white; letter-spacing:-0.04em }
+.hero-float span { display:block; margin-top:5px; font:600 10px/1.4 'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.12em; color:rgba(255,255,255,0.5) }
+.hf-1 { top:30%; right:8%; animation-delay:0.6s,2s }
+.hf-2 { bottom:22%; right:14%; animation-delay:0.9s,2.4s }
+@keyframes floatIn { from { opacity:0; transform:translateY(20px) scale(0.95) } to { opacity:1; transform:translateY(0) scale(1) } }
+@keyframes levitate { 0%,100% { transform:translateY(0) } 50% { transform:translateY(-10px) } }
+
+/* ═══════════════════════════════════════
+   MARQUEE
+   ═══════════════════════════════════════ */
+.marquee-strip {
+  overflow: hidden;
+  border-top: 1px solid rgba(13,26,46,0.07);
+  border-bottom: 1px solid rgba(13,26,46,0.07);
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(12px);
+  padding: 12px 0;
+}
+.marquee-track { display:flex; animation:mq 28s linear infinite; width:max-content }
+@keyframes mq { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+.mq-item {
+  display:flex; align-items:center; gap:12px; padding:0 24px;
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  color: var(--text-3); letter-spacing:0.1em; white-space:nowrap; text-transform:uppercase;
+}
+.mq-dot { width:6px; height:6px; border-radius:999px; background:var(--brand); box-shadow:0 0 14px rgba(0,204,255,0.4) }
+
+/* ═══════════════════════════════════════
+   SECTIONS
+   ═══════════════════════════════════════ */
+section.sec { padding: 96px 0; position:relative; z-index:1 }
+.band { height:1px; background:linear-gradient(90deg,transparent,rgba(13,26,46,0.08),transparent) }
+
+.s-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  font: 600 10px/1 'JetBrains Mono', monospace;
+  letter-spacing:0.16em; text-transform:uppercase;
+  color: var(--brand-2); margin-bottom:16px;
+}
+.s-tag::before { content:''; width:20px; height:1.5px; background:var(--text-3) }
+
+.s-h2 {
+  font-size: clamp(32px, 4.5vw, 54px);
+  font-weight: 800;
+  line-height: 1.06;
+  margin-bottom: 16px;
+}
+.s-h2 em { font-style:italic; color:var(--navy) }
+.s-sub { font-size:17px; color:var(--text-2); line-height:1.78; max-width:640px }
+.s-sub strong { color:var(--text); font-weight:600 }
+
+/* ═══════════════════════════════════════
+   PROBLEM CARDS
+   ═══════════════════════════════════════ */
+.prob-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  gap:1px; background:rgba(13,26,46,0.06);
+  border:1px solid rgba(13,26,46,0.06);
+  border-radius: var(--radius-xl); overflow:hidden;
+  margin-top:48px;
+}
+.prob-card {
+  background: var(--glass-bg-strong);
+  padding: 32px 26px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+}
+.prob-card:hover { background: rgba(255,255,255,0.78) }
+.prob-card::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(145deg, rgba(255,255,255,0.68) 0%, rgba(255,255,255,0.1) 55%, rgba(255,255,255,0.26) 100%);
+}
+.prob-card > * { position:relative; z-index:1 }
+.prob-num {
+  font: 600 10px/1 'JetBrains Mono', monospace;
+  letter-spacing:0.14em; color:var(--text-3); margin-bottom:18px; text-transform:uppercase;
+  display:flex; align-items:center; gap:10px;
+}
+.prob-num::after { content:''; flex:1; height:1px; background:rgba(13,26,46,0.08) }
+.prob-icon {
+  width:46px; height:46px; border-radius:14px; display:grid; place-items:center;
+  margin-bottom:16px; border:1px solid rgba(255,255,255,0.88);
+  box-shadow:0 4px 14px -4px rgba(13,26,46,0.12);
+  font-size:20px;
+}
+.prob-title { font:700 17px/1.2 'Outfit',sans-serif; letter-spacing:-0.02em; margin-bottom:10px; color:var(--text) }
+.prob-text { font-size:14px; color:var(--text-2); line-height:1.75 }
+.prob-stat {
+  margin-top:18px; padding:10px 14px;
+  background: rgba(255,255,255,0.62);
+  border: 1px solid rgba(255,255,255,0.84);
+  border-radius: 12px;
+  display:inline-flex; align-items:center; gap:10px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96);
+  backdrop-filter: blur(14px);
+  font: 600 10px/1.4 'JetBrains Mono', monospace; color:var(--text-3); text-transform:uppercase;
+}
+.prob-stat-val { font:800 22px/1 'Outfit',sans-serif; letter-spacing:-0.03em }
+
+/* ═══════════════════════════════════════
+   SOLUTION BLOCKS
+   ═══════════════════════════════════════ */
+.bloco {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:48px; align-items:center;
+  margin-bottom:80px; padding-bottom:80px;
+  border-bottom:1px solid rgba(13,26,46,0.06);
+}
+.bloco:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0 }
+.bloco.rev { direction:rtl } .bloco.rev > * { direction:ltr }
+
+.bloco-tag {
+  display:inline-flex; align-items:center; gap:8px;
+  font: 600 10px/1 'JetBrains Mono', monospace;
+  letter-spacing:0.12em; text-transform:uppercase;
+  border-radius:999px; padding:6px 14px; margin-bottom:16px;
+  background: rgba(255,255,255,0.62); border:1px solid rgba(255,255,255,0.88);
+  box-shadow:0 3px 10px -4px rgba(13,26,46,0.08); backdrop-filter:blur(14px);
+  color: var(--text-2);
+}
+.bloco-h3 {
+  font: 800 clamp(26px,3.2vw,38px)/1.08 'Outfit',sans-serif;
+  letter-spacing:-0.04em; margin-bottom:14px;
+}
+.bloco-h3 em { font-style:italic; color:var(--navy) }
+.bloco-p { font-size:15.5px; color:var(--text-2); line-height:1.78; margin-bottom:22px }
+.bloco-p strong { color:var(--text); font-weight:600 }
+
+.b-feats { display:flex; flex-direction:column; gap:10px }
+.b-feat { display:flex; align-items:flex-start; gap:11px }
+.b-ck {
+  width:20px; height:20px; border-radius:7px; display:grid; place-items:center;
+  flex-shrink:0; margin-top:1px;
+  background: rgba(0,204,255,0.1); border:1px solid rgba(0,204,255,0.22);
+  color: var(--brand-2); font-size:11px; font-weight:700;
+}
+.b-feat-txt { font-size:14px; color:var(--text-2); line-height:1.65 }
+.b-feat-txt strong { color:var(--text); font-weight:700 }
+
+/* Visual blocks */
+.vblock { border-radius:var(--radius-lg); overflow:hidden }
+.vb-bar {
+  display:flex; align-items:center; justify-content:space-between; padding:12px 16px;
+  border-bottom:1px solid rgba(13,26,46,0.05); background:rgba(255,255,255,0.48);
+}
+.vb-dots { display:flex; gap:6px }
+.vb-dot { width:10px; height:10px; border-radius:999px }
+.vb-title { font:600 10px/1 'JetBrains Mono',monospace; color:var(--text-3); letter-spacing:0.06em; text-transform:uppercase }
+.vb-badge {
+  font:600 10px/1 'JetBrains Mono',monospace; border-radius:8px; padding:4px 10px;
+  border:1px solid rgba(0,204,255,0.22); background:rgba(0,204,255,0.08); color:var(--brand-2);
+  letter-spacing:0.08em; text-transform:uppercase;
+}
+.vb-body { padding:18px }
+
+/* KPI mini cards */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:12px }
+.kpi-card {
+  background: rgba(255,255,255,0.62); border:1px solid rgba(255,255,255,0.86);
+  border-radius:14px; padding:12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96);
+  backdrop-filter:blur(16px);
+}
+.kpi-lbl { font:600 8px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-3); margin-bottom:6px }
+.kpi-val { font:800 18px/1 'Outfit',sans-serif; letter-spacing:-0.03em }
+.kpi-d { font:500 10px/1 'JetBrains Mono',monospace; margin-top:3px }
+.c { color:var(--navy) } .g { color:var(--green) } .r { color:var(--red) } .a { color:var(--amber) } .p { color:var(--purple) }
+
+/* Chart & table */
+.chart-area { display:grid; grid-template-columns:1.3fr 1fr; gap:10px }
+.chart-card,.table-card {
+  background:rgba(255,255,255,0.54); border:1px solid rgba(255,255,255,0.82);
+  border-radius:14px; padding:12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96);
+  backdrop-filter:blur(16px);
+}
+.card-lbl { font:600 8px/1 'JetBrains Mono',monospace; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-3); margin-bottom:10px }
+.bar-chart { display:flex; align-items:flex-end; gap:5px; height:72px }
+.bc-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end }
+.bc-bar {
+  width:100%; border-radius:4px 4px 0 0;
+  background: linear-gradient(180deg, rgba(0,204,255,0.9) 0%, rgba(13,26,46,0.7) 100%);
+  box-shadow: 0 0 12px -4px rgba(0,204,255,0.3), inset 0 1px 0 rgba(255,255,255,0.6);
+  transition:height 1.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+.bc-day { font:500 7px/1 'JetBrains Mono',monospace; color:var(--text-3) }
+.camp-row { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(13,26,46,0.04); font-size:11px }
+.camp-row:last-child { border-bottom:none }
+.camp-name { color:var(--text-2); font-weight:500 }
+.camp-roas { font:600 11px/1 'JetBrains Mono',monospace; color:var(--brand-2) }
+.camp-bw { width:56px; height:4px; background:rgba(13,26,46,0.06); border-radius:2px }
+.camp-bf { height:100%; border-radius:2px; background:linear-gradient(90deg,var(--navy-2),var(--brand-2)) }
+
+/* Tracking funnel */
+.track-funnel { display:flex; flex-direction:column; gap:8px; margin-bottom:12px }
+.tf-step {
+  display:flex; align-items:center; gap:12px; padding:10px 12px;
+  border-radius:12px; background:rgba(255,255,255,0.56);
+  border:1px solid rgba(255,255,255,0.82);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96); backdrop-filter:blur(14px);
+}
+.tf-icon {
+  width:28px; height:28px; border-radius:8px; display:grid; place-items:center; flex-shrink:0;
+  background:rgba(0,204,255,0.1); border:1px solid rgba(0,204,255,0.2);
+  color:var(--brand-2); font-size:12px;
+}
+.tf-lbl { font-size:12px; color:var(--text-2); flex:1; font-weight:500 }
+.tf-val { font:600 11px/1 'JetBrains Mono',monospace; color:var(--brand-2) }
+
+.sigs-2col { display:grid; grid-template-columns:1fr 1fr; gap:8px }
+.sig-card {
+  background:rgba(255,255,255,0.56); border:1px solid rgba(255,255,255,0.82);
+  border-radius:12px; padding:10px 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96); backdrop-filter:blur(14px);
+}
+.sc-lbl { font:600 8px/1 'JetBrains Mono',monospace; letter-spacing:0.1em; text-transform:uppercase; color:var(--text-3); margin-bottom:5px }
+.sc-val { font:800 17px/1 'Outfit',sans-serif; letter-spacing:-0.03em }
+.sc-sub { font:500 10px/1 'JetBrains Mono',monospace; color:var(--text-3); margin-top:3px }
+
+/* Creative scores */
+.cc-list { display:flex; flex-direction:column; gap:8px }
+.cc-item {
+  background:rgba(255,255,255,0.56); border:1px solid rgba(255,255,255,0.84);
+  border-radius:14px; padding:12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96); backdrop-filter:blur(16px);
+}
+.cc-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px }
+.cc-name { font-size:12px; font-weight:700; color:var(--text) }
+.cc-score {
+  font:700 10px/1 'JetBrains Mono',monospace; padding:4px 10px; border-radius:6px;
+  border:1px solid rgba(0,204,255,0.22); background:rgba(0,204,255,0.08); color:var(--brand-2);
+}
+.cc-bw { height:5px; background:rgba(13,26,46,0.07); border-radius:999px; overflow:hidden; margin-bottom:8px }
+.cc-bf { height:100%; border-radius:999px; transition:width 1.2s ease }
+.cc-tags { display:flex; gap:6px; flex-wrap:wrap }
+.cc-tag {
+  font:500 9px/1 'JetBrains Mono',monospace; padding:3px 8px; border-radius:6px;
+  background:rgba(255,255,255,0.66); border:1px solid rgba(13,26,46,0.06);
+  color:var(--text-3); letter-spacing:0.04em;
+}
+
+/* Agent terminal */
+.agent-term {
+  background: rgba(11,26,43,0.94);
+  border:1px solid rgba(0,204,255,0.15);
+  border-radius:14px; padding:16px;
+  font:500 12px/1 'JetBrains Mono',monospace;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  color: #c5ecff;
+}
+.at-head { display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.08) }
+.at-dot { width:6px; height:6px; border-radius:999px; background:var(--brand); animation:pulse 1.8s ease-in-out infinite }
+.at-title { font-size:10px; color:var(--brand); letter-spacing:0.12em; text-transform:uppercase }
+.at-line { display:flex; gap:8px; margin-bottom:6px; line-height:1.6; font-size:11.5px }
+.at-pr { color:var(--text-3) } .at-cmd { color:var(--brand) } .at-ok { color:var(--green) } .at-warn { color:var(--amber) }
+.agent-acts { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px }
+.aa {
+  background:rgba(255,255,255,0.06); border:1px solid rgba(0,204,255,0.12);
+  border-radius:12px; padding:10px 12px; display:flex; align-items:center; gap:8px;
+}
+.aa-icon {
+  width:24px; height:24px; border-radius:8px; display:grid; place-items:center; flex-shrink:0;
+  background:rgba(0,204,255,0.1); border:1px solid rgba(0,204,255,0.2); font-size:11px;
+}
+.aa-txt { font-size:10.5px; color:#dff7ff }
+.aa-txt strong { color:white; display:block; font-size:11px; margin-bottom:2px }
+
+/* ═══════════════════════════════════════
+   ROI SECTION
+   ═══════════════════════════════════════ */
+.roi-wrap {
+  padding: 56px;
+  margin: 0 0 80px;
+  position:relative; overflow:hidden;
+}
+.roi-glow {
+  position:absolute; top:-40px; left:50%; transform:translateX(-50%);
+  width:600px; height:300px;
+  background:radial-gradient(ellipse, rgba(0,204,255,0.08), transparent 65%);
+  pointer-events:none;
+}
+.roi-wrap > * { position:relative; z-index:1 }
+.roi-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:36px 0 }
+.roi-stat {
+  text-align:center; padding:26px 14px;
+  background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.86);
+  border-radius:18px;
+  box-shadow: var(--glass-shadow-md);
+  backdrop-filter:blur(18px);
+}
+.roi-stat-val { font:900 clamp(30px,3.5vw,46px)/1 'Outfit',sans-serif; letter-spacing:-0.05em; margin-bottom:6px }
+.roi-stat-lbl { font:600 10px/1.5 'JetBrains Mono',monospace; color:var(--text-3); letter-spacing:0.08em; text-transform:uppercase }
+
+.roi-compare { display:grid; grid-template-columns:1fr auto 1fr; gap:18px; align-items:center }
+.roi-col {
+  background:rgba(255,255,255,0.56); border:1px solid rgba(255,255,255,0.82);
+  border-radius:18px; padding:22px;
+  box-shadow: var(--glass-shadow-md); backdrop-filter:blur(18px);
+}
+.roi-col.winner { background:rgba(255,255,255,0.68); border-color:rgba(0,204,255,0.2) }
+.roi-col-h { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px }
+.roi-col-ttl { font:700 14px/1 'Outfit',sans-serif; letter-spacing:-0.02em }
+.roi-col-badge { font:600 9px/1 'JetBrains Mono',monospace; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:6px }
+.roi-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(13,26,46,0.04); font-size:13px }
+.roi-row:last-child { border-bottom:none }
+.roi-row-lbl { color:var(--text-2) } .roi-row-val { font:600 13px/1 'JetBrains Mono',monospace }
+.roi-vs {
+  display:grid; place-items:center; width:30px; height:30px;
+  background:rgba(255,255,255,0.62); border:1px solid rgba(255,255,255,0.86);
+  border-radius:10px; font:600 10px/1 'JetBrains Mono',monospace; color:var(--text-3);
+  backdrop-filter:blur(16px);
+}
+
+/* ═══════════════════════════════════════
+   DIFFERENTIALS
+   ═══════════════════════════════════════ */
+.diff-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:1px; background:rgba(13,26,46,0.06);
+  border:1px solid rgba(13,26,46,0.06);
+  border-radius:var(--radius-xl); overflow:hidden; margin-top:48px;
+}
+.diff-card {
+  background:var(--glass-bg-strong); padding:30px 26px;
+  backdrop-filter:blur(var(--glass-blur));
+  -webkit-backdrop-filter:blur(var(--glass-blur));
+  transition:background 0.22s; position:relative; overflow:hidden;
+}
+.diff-card:hover { background:rgba(255,255,255,0.76) }
+.diff-card::before { content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(145deg,rgba(255,255,255,0.66) 0%,rgba(255,255,255,0.08) 55%,rgba(255,255,255,0.22) 100%) }
+.diff-card > * { position:relative; z-index:1 }
+.diff-num { font:600 9px/1 'JetBrains Mono',monospace; letter-spacing:0.14em; color:var(--text-3); margin-bottom:14px; text-transform:uppercase }
+.diff-h4 { font:700 17px/1.2 'Outfit',sans-serif; letter-spacing:-0.02em; margin-bottom:10px; color:var(--text) }
+.diff-p { font-size:14px; color:var(--text-2); line-height:1.75 }
+.diff-badge {
+  display:inline-block; margin-top:14px;
+  font:600 9px/1 'JetBrains Mono',monospace; letter-spacing:0.08em; text-transform:uppercase;
+  padding:5px 12px; border-radius:8px; border:1px solid rgba(0,204,255,0.22);
+  background:rgba(0,204,255,0.08); color:var(--brand-2);
+}
+
+/* ═══════════════════════════════════════
+   PRICING
+   ═══════════════════════════════════════ */
+.pricing-layout { display:grid; grid-template-columns:1fr 400px; gap:36px; align-items:start; margin-top:52px }
+.pricing-card {
+  border-radius: var(--radius-xl); overflow:hidden;
+  box-shadow: var(--glass-shadow), 0 0 0 1px rgba(0,204,255,0.1);
+}
+.pc-head { padding:28px 28px 24px; border-bottom:1px solid rgba(13,26,46,0.06); background:rgba(255,255,255,0.62) }
+.pc-plan { font:600 10px/1 'JetBrains Mono',monospace; letter-spacing:0.16em; text-transform:uppercase; color:var(--text-2); margin-bottom:4px }
+.pc-name { font:800 24px/1.1 'Outfit',sans-serif; letter-spacing:-0.04em; margin-bottom:18px }
+.pc-price-row { display:flex; align-items:baseline; gap:4px; margin-bottom:6px }
+.pc-cur { font:600 18px/1 'Outfit',sans-serif; color:var(--text-2) }
+.pc-val { font:900 52px/1 'Outfit',sans-serif; letter-spacing:-0.06em; color:var(--navy); line-height:1 }
+.pc-period { font-size:15px; color:var(--text-3); font-weight:500 }
+.pc-note { font-size:13px; color:var(--text-3); font-style:italic }
+.pc-body { padding:24px 28px; background:rgba(255,255,255,0.42) }
+.pc-items { display:flex; flex-direction:column; gap:10px; margin-bottom:24px }
+.pc-item { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:var(--text-2); line-height:1.55 }
+.pc-ck {
+  width:18px; height:18px; background:rgba(0,204,255,0.1); border:1px solid rgba(0,204,255,0.22);
+  border-radius:6px; display:grid; place-items:center; flex-shrink:0; margin-top:1px;
+  color:var(--brand-2); font:700 10px/1 'JetBrains Mono',monospace;
+}
+.btn-buy {
+  display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+  background:linear-gradient(135deg,var(--navy),var(--navy-2)); color:white;
+  font:700 15px/1 'Outfit',sans-serif; padding:16px; border-radius:16px;
+  border:none; cursor:pointer;
+  box-shadow:0 12px 34px -10px rgba(13,26,46,0.45);
+  transition:all 0.22s;
+}
+.btn-buy:hover { transform:translateY(-2px); box-shadow:0 18px 44px -10px rgba(13,26,46,0.55) }
+.btn-note { text-align:center; font:600 11px/1 'JetBrains Mono',monospace; color:var(--text-3); margin-top:10px; letter-spacing:0.04em }
+
+.bens-side { display:flex; flex-direction:column; gap:20px; padding-top:8px }
+.ben-row { display:flex; align-items:flex-start; gap:14px }
+.ben-num { font:500 10px/1 'JetBrains Mono',monospace; color:var(--text-3); letter-spacing:0.1em; margin-top:4px; flex-shrink:0; width:24px; opacity:0.5 }
+.ben-content h4 { font:700 15px/1.2 'Outfit',sans-serif; letter-spacing:-0.02em; margin-bottom:5px }
+.ben-content p { font-size:13px; color:var(--text-2); line-height:1.65; margin:0 }
+
+/* ═══════════════════════════════════════
+   FAQ
+   ═══════════════════════════════════════ */
+.faq-list {
+  display:flex; flex-direction:column;
+  gap:1px; background:rgba(13,26,46,0.06);
+  border:1px solid rgba(13,26,46,0.06);
+  border-radius:var(--radius-lg); overflow:hidden; margin-top:40px;
+}
+.faq-item {
+  background:var(--glass-bg-strong); padding:22px 26px;
+  cursor:pointer; transition:background 0.2s;
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  position:relative; overflow:hidden;
+}
+.faq-item:hover { background:rgba(255,255,255,0.76) }
+.faq-item::before { content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(145deg,rgba(255,255,255,0.62) 0%,rgba(255,255,255,0.08) 55%,rgba(255,255,255,0.2) 100%) }
+.faq-item > * { position:relative; z-index:1 }
+.faq-q { display:flex; align-items:center; justify-content:space-between; gap:16px; font:700 15px/1.4 'Outfit',sans-serif; color:var(--text); letter-spacing:-0.02em }
+.faq-plus {
+  width:20px; height:20px; border:1px solid rgba(13,26,46,0.1); border-radius:7px;
+  display:grid; place-items:center; flex-shrink:0; color:var(--text-3); font-size:14px;
+  transition:all 0.2s; background:rgba(255,255,255,0.6); backdrop-filter:blur(8px);
+}
+.faq-a { font-size:14px; color:var(--text-2); line-height:1.75; max-height:0; overflow:hidden; transition:max-height 0.35s ease, margin-top 0.35s ease }
+.faq-item.open .faq-a { max-height:220px; margin-top:12px }
+.faq-item.open .faq-plus { border-color:var(--brand-2); color:var(--brand-2); background:rgba(0,204,255,0.08); transform:rotate(45deg) }
+
+/* ═══════════════════════════════════════
+   DARK CTA
+   ═══════════════════════════════════════ */
+.dark-cta {
+  background: var(--navy);
+  border-radius: 30px;
+  padding: 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 72px;
+}
+.dark-cta::before {
+  content:''; position:absolute; top:-40%; left:50%; transform:translateX(-50%);
+  width:700px; height:400px;
+  background:radial-gradient(ellipse,rgba(0,204,255,0.1),transparent 65%);
+  pointer-events:none;
+}
+.dark-cta > * { position:relative; z-index:1 }
+.dark-cta h2 {
+  font:900 clamp(34px,5vw,58px)/1.04 'Outfit',sans-serif;
+  letter-spacing:-0.05em; color:white; max-width:600px; margin:0 auto 18px;
+}
+.dark-cta h2 span { color:var(--brand) }
+.dark-cta p { font-size:17px; color:rgba(200,218,238,0.68); margin-bottom:34px; font-weight:400 }
+.btn-cta-white {
+  display:inline-flex; align-items:center; gap:8px;
+  background:white; color:var(--navy);
+  font:700 15px/1 'Outfit',sans-serif; padding:16px 34px; border-radius:16px;
+  box-shadow:0 14px 38px -10px rgba(0,0,0,0.3);
+  transition:all 0.2s; border:none; cursor:pointer;
+}
+.btn-cta-white:hover { transform:translateY(-2px); box-shadow:0 20px 46px -10px rgba(0,0,0,0.4) }
+.cta-note { margin-top:14px; font:600 11px/1 'JetBrains Mono',monospace; color:rgba(148,165,190,0.45); letter-spacing:0.06em }
+
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
+footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
+.footer-in { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap }
+.footer-copy { font:600 11px/1 'JetBrains Mono',monospace; color:var(--text-3); letter-spacing:0.04em }
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════ */
+.fade-up { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease, transform 0.7s ease }
+.fade-up.vis { opacity:1; transform:translateY(0) }
+.fade-up.d1 { transition-delay:0.12s } .fade-up.d2 { transition-delay:0.24s } .fade-up.d3 { transition-delay:0.36s }
+
+/* Hero content stagger */
+@keyframes heroUp {
+  from { opacity:0; transform:translateY(22px) }
+  to { opacity:1; transform:translateY(0) }
+}
+.hero-anim { opacity:0; animation: heroUp 0.75s ease forwards }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media (max-width:1024px) {
+  .bloco { grid-template-columns:1fr; gap:36px }
+  .bloco.rev { direction:ltr }
+  .pricing-layout { grid-template-columns:1fr }
+  .bens-side { order:-1 }
+  .roi-compare { grid-template-columns:1fr }
+  .roi-vs { display:none }
+  .diff-grid { grid-template-columns:1fr }
+  .kpi-grid { grid-template-columns:repeat(2,1fr) }
+  .chart-area { grid-template-columns:1fr }
+  .roi-wrap { padding:36px 24px }
+  .dark-cta { padding:52px 28px }
+  .hero-float { display:none }
+}
+@media (max-width:640px) {
+  .prob-grid { grid-template-columns:1fr }
+  .nav-links { display:none }
+  .roi-stats { grid-template-columns:1fr 1fr }
+  .sigs-2col { grid-template-columns:1fr }
+  .agent-acts { grid-template-columns:1fr }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ NAV ═══════ -->
+<nav>
+<div class="container">
+<div class="nav-inner">
+  <a href="#" class="nav-brand">
+    <div class="nav-brand-icon">AE</div>
+    <div class="nav-brand-text">Ads<span>.Everest</span></div>
+  </a>
+  <div class="nav-links">
+    <a href="#problema" class="nav-link">O Problema</a>
+    <a href="#solucao" class="nav-link">Solução</a>
+    <a href="#roi" class="nav-link">ROI</a>
+    <a href="#pricing" class="nav-link">Plano</a>
+  </div>
+  <a href="#pricing" class="nav-cta">Assinar — R$97/mês →</a>
+</div>
+</div>
+</nav>
+
+<!-- ═══════ HERO — VIDEO BACKGROUND ═══════ -->
+<section class="hero-video-section">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="https://hfxgotszsexyodcibxtf.supabase.co/storage/v1/object/public/assets/landing-bg.mp4" type="video/mp4">
+  </video>
+
+  <div class="hero-video-fade"></div>
+
+  <!-- Float stats -->
+  <div class="hero-float hf-1">
+    <strong class="g">3.8×</strong>
+    <span>ROAS médio real</span>
+  </div>
+  <div class="hero-float hf-2">
+    <strong class="c" style="color:var(--brand)">98.4%</strong>
+    <span>captura de conversões</span>
+  </div>
+
+  <div class="hero-overlay">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge hero-anim" style="animation-delay:0.1s">
+          <span class="pulse"></span>
+          Plataforma para Gestores de Tráfego
+        </div>
+
+        <h1 class="hero-h1 hero-anim" style="animation-delay:0.24s">
+          Chega de queimar<br>
+          <span class="accent">verba no escuro.</span>
+        </h1>
+
+        <p class="hero-sub hero-anim" style="animation-delay:0.38s">
+          O Ads.Everest entrega <strong>visão cirúrgica da sua conta Meta</strong>,
+          tracking server-side com 98.4% de captura e um <strong>agente de IA</strong>
+          que analisa e age — para você escalar com margem real.
+        </p>
+
+        <div class="hero-ctas hero-anim" style="animation-delay:0.5s">
+          <a href="#pricing" class="btn-primary-hero">Escalar com lucro agora →</a>
+          <a href="#solucao" class="btn-ghost-hero">Ver a solução</a>
+        </div>
+
+        <div class="hero-proof hero-anim" style="animation-delay:0.62s">
+          <div class="avatars">
+            <div class="ava">RM</div><div class="ava">CL</div>
+            <div class="ava">TF</div><div class="ava">+</div>
+          </div>
+          <div class="proof-txt"><strong>+320 gestores</strong> já escalam com o Everest</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MARQUEE ═══════ -->
+<div class="marquee-strip">
+  <div class="marquee-track" id="mqTrack"></div>
+</div>
+
+<div class="band"></div>
+
+<!-- ═══════ PROBLEMA ═══════ -->
+<div class="container" id="problema">
+<section class="sec">
+  <div class="fade-up" style="text-align:center; max-width:660px; margin:0 auto 48px">
+    <div class="s-tag" style="justify-content:center">O problema real</div>
+    <h2 class="s-h2" style="text-align:center">Você perde dinheiro todos os dias.<br>E sabe disso.</h2>
+    <p class="s-sub" style="text-align:center; margin:0 auto">Mas sem a leitura certa, cada decisão é um chute. E chute em tráfego pago custa caro.</p>
+  </div>
+  <div class="prob-grid fade-up d1">
+    <div class="prob-card tilt-card">
+      <div class="prob-num">01 — Verba queimada</div>
+      <div class="prob-icon" style="background:rgba(229,57,53,0.08)">🔥</div>
+      <div class="prob-title">Campanha em fadiga e você nem sabe</div>
+      <div class="prob-text">Criativo morto, frequência alta, CPM subindo — e você só percebe quando o ROAS já desabou.</div>
+      <div class="prob-stat"><span class="prob-stat-val r">68%</span>do orçamento desperdiçado sem diagnóstico</div>
+    </div>
+    <div class="prob-card tilt-card">
+      <div class="prob-num">02 — Escala travada</div>
+      <div class="prob-icon" style="background:rgba(232,160,32,0.08)">📈</div>
+      <div class="prob-title">Toda tentativa de escala explode o CPA</div>
+      <div class="prob-text">Sem atribuição real, você não sabe o que funciona de verdade. Cada tentativa vira risco caro.</div>
+      <div class="prob-stat"><span class="prob-stat-val a">3×</span>mais fácil escalar com tracking real</div>
+    </div>
+    <div class="prob-card tilt-card">
+      <div class="prob-num">03 — Dados em caos</div>
+      <div class="prob-icon" style="background:rgba(0,153,204,0.08)">📊</div>
+      <div class="prob-title">O Ads Manager não foi feito para decidir</div>
+      <div class="prob-text">CTR aqui, CPA ali, ROAS em outra aba. Você gasta 40 min/dia tentando montar um quadro que deveria aparecer em 5 segundos.</div>
+      <div class="prob-stat"><span class="prob-stat-val c" style="color:var(--brand-2)">40min</span>por dia perdidos em métricas desconexas</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="band"></div>
+
+<!-- ═══════ SOLUÇÃO ═══════ -->
+<div class="container" id="solucao">
+<section class="sec">
+  <div class="fade-up" style="text-align:center; max-width:700px; margin:0 auto 64px">
+    <div class="s-tag" style="justify-content:center">A solução completa</div>
+    <h2 class="s-h2" style="text-align:center">Quatro blocos de inteligência.<br>Um objetivo: <em>você escalar com lucro.</em></h2>
+    <p class="s-sub" style="text-align:center; margin:0 auto">Cada bloco ataca uma dor específica. Integrados, formam a plataforma mais completa para <strong>operar Meta Ads com dados reais</strong>.</p>
+  </div>
+
+  <!-- BLOCO 1 — DASHBOARD -->
+  <div class="bloco fade-up">
+    <div>
+      <div class="bloco-tag">📊 Bloco 01 · Dashboard Inteligente</div>
+      <h3 class="bloco-h3">A visão que o Ads Manager<br>nunca <em>te entregou</em>.</h3>
+      <p class="bloco-p">Toda a sua conta numa tela. Campanhas, conjuntos e criativos organizados por <strong>impacto real</strong>. Em 30 segundos você sabe o que escalar, o que pausar e o que precisa de atenção agora.</p>
+      <div class="b-feats">
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Raio-X completo</strong> — campanhas, conjuntos, criativos e orçamento numa tela só.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Alertas em tempo real</strong> — fadiga, frequência alta, CPM explodindo, CPA fora da meta.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Score de performance</strong> — nota baseada em múltiplos sinais combinados por campanha.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Decisão em 5 minutos</strong> — sem abas, sem planilhas, sem adivinhar.</div></div>
+      </div>
+    </div>
+    <div class="glass glass-strong tilt-card fade-up d2"><div class="shine"></div><div style="padding:0">
+      <div class="vb-bar"><div class="vb-dots"><div class="vb-dot" style="background:#ff5f56"></div><div class="vb-dot" style="background:#febc2e"></div><div class="vb-dot" style="background:#28c840"></div></div><div class="vb-title">Dashboard Inteligente</div><div class="vb-badge">Live</div></div>
+      <div class="vb-body">
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-lbl">ROAS</div><div class="kpi-val c">3.8×</div><div class="kpi-d g">↑ Escalando</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">CPA</div><div class="kpi-val">R$14</div><div class="kpi-d g">↓ Meta: R$18</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Verba</div><div class="kpi-val">R$4.2k</div><div class="kpi-d" style="color:var(--text-3)">Hoje</div></div>
+          <div class="kpi-card"><div class="kpi-lbl">Score</div><div class="kpi-val g">92</div><div class="kpi-d g">Saudável</div></div>
+        </div>
+        <div class="chart-area">
+          <div class="chart-card"><div class="card-lbl">Receita × Gasto — 7 dias</div><div class="bar-chart" id="dashBars"></div></div>
+          <div class="table-card"><div class="card-lbl">Top campanhas ROAS</div><div id="campRows"></div></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- BLOCO 2 — TRACKING -->
+  <div class="bloco rev fade-up">
+    <div>
+      <div class="bloco-tag">📡 Bloco 02 · Tracking Real de Vendas</div>
+      <h3 class="bloco-h3">Sinais que <em>nenhuma outra</em><br>plataforma captura.</h3>
+      <p class="bloco-p">O pixel padrão do Meta perde até <strong>40% das conversões</strong> por iOS e bloqueadores. Nosso tracking server-side captura <strong>98.4%</strong> e alimenta o algoritmo com dados reais.</p>
+      <div class="b-feats">
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Server-side tracking</strong> — funciona mesmo com iOS 14+, ad blockers e Safari.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Atribuição multi-touch</strong> — cada ponto de contato antes da compra, mapeado.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Funil completo</strong> — visita, lead, carrinho, compra, recompra. Tudo rastreado.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>LTV por campanha</strong> — saiba qual campanha traz o cliente que compra mais de uma vez.</div></div>
+      </div>
+    </div>
+    <div class="glass glass-strong tilt-card fade-up d2"><div class="shine"></div><div style="padding:0">
+      <div class="vb-bar"><div class="vb-dots"><div class="vb-dot" style="background:#ff5f56"></div><div class="vb-dot" style="background:#febc2e"></div><div class="vb-dot" style="background:#28c840"></div></div><div class="vb-title">Tracking Real</div><div class="vb-badge">98.4% capturado</div></div>
+      <div class="vb-body">
+        <div class="track-funnel">
+          <div class="tf-step"><div class="tf-icon">👁</div><div class="tf-lbl">Visitas únicas</div><div class="tf-val">12.480</div></div>
+          <div class="tf-step"><div class="tf-icon">🛒</div><div class="tf-lbl">Iniciaram checkout</div><div class="tf-val">1.847</div></div>
+          <div class="tf-step"><div class="tf-icon">✅</div><div class="tf-lbl">Compras confirmadas</div><div class="tf-val">248</div></div>
+        </div>
+        <div class="sigs-2col">
+          <div class="sig-card"><div class="sc-lbl">Taxa captura</div><div class="sc-val g">98.4%</div><div class="sc-sub">vs 61% pixel padrão</div></div>
+          <div class="sig-card"><div class="sc-lbl">ROAS real</div><div class="sc-val c">3.8×</div><div class="sc-sub">Ads Manager: 2.1×</div></div>
+          <div class="sig-card"><div class="sc-lbl">LTV 90d</div><div class="sc-val p">R$187</div><div class="sc-sub">Recompra: 31%</div></div>
+          <div class="sig-card"><div class="sc-lbl">CPA real</div><div class="sc-val g">R$14</div><div class="sc-sub">Meta reportou: R$22</div></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- BLOCO 3 — IA CRIATIVOS -->
+  <div class="bloco fade-up">
+    <div>
+      <div class="bloco-tag">🧠 Bloco 03 · Análise de Criativos com IA</div>
+      <h3 class="bloco-h3">A IA que lê seu criativo<br>e <em>diz o que fazer</em>.</h3>
+      <p class="bloco-p">Cada anúncio ativo recebe um score de 0 a 100 baseado em CTR, hook rate, engajamento e conversão real. A IA detecta fadiga antes do CPM subir.</p>
+      <div class="b-feats">
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Score por criativo</strong> — nota baseada em CTR, hook, engajamento e conversão real.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Diagnóstico de fadiga</strong> — detecta quando o criativo esgotou antes do CPM explodir.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Recomendação de iteração</strong> — hook, copy ou CTA: o que mudar pra recuperar performance.</div></div>
+      </div>
+    </div>
+    <div class="glass glass-strong tilt-card fade-up d2"><div class="shine"></div><div style="padding:0">
+      <div class="vb-bar"><div class="vb-dots"><div class="vb-dot" style="background:#ff5f56"></div><div class="vb-dot" style="background:#febc2e"></div><div class="vb-dot" style="background:#28c840"></div></div><div class="vb-title">Análise IA de Criativos</div><div class="vb-badge">3 ativos</div></div>
+      <div class="vb-body">
+        <div class="cc-list">
+          <div class="cc-item"><div class="cc-top"><span class="cc-name">🎬 Vídeo — Hook "Você sabia..."</span><span class="cc-score" style="color:var(--green);border-color:rgba(14,165,114,.22)">Score: 87</span></div><div class="cc-bw"><div class="cc-bf" style="width:87%;background:linear-gradient(90deg,#0ea572,#065f42)"></div></div><div class="cc-tags"><span class="cc-tag" style="color:var(--green)">CTR: 4.1%</span><span class="cc-tag" style="color:var(--green)">Hook forte</span><span class="cc-tag" style="color:var(--brand-2)">Escalar ↑</span></div></div>
+          <div class="cc-item"><div class="cc-top"><span class="cc-name">📸 Imagem — "Antes e depois"</span><span class="cc-score" style="color:var(--amber);border-color:rgba(232,160,32,.22)">Score: 62</span></div><div class="cc-bw"><div class="cc-bf" style="width:62%;background:linear-gradient(90deg,#e8a020,#b57c12)"></div></div><div class="cc-tags"><span class="cc-tag" style="color:var(--amber)">CTR: 2.3%</span><span class="cc-tag" style="color:var(--amber)">Fadiga: Média</span><span class="cc-tag" style="color:var(--amber)">Iterar copy</span></div></div>
+          <div class="cc-item"><div class="cc-top"><span class="cc-name">🎯 Carrossel — "7 erros comuns"</span><span class="cc-score" style="color:var(--red);border-color:rgba(229,57,53,.22)">Score: 31</span></div><div class="cc-bw"><div class="cc-bf" style="width:31%;background:linear-gradient(90deg,#e53935,#b71c1c)"></div></div><div class="cc-tags"><span class="cc-tag" style="color:var(--red)">CTR: 0.8%</span><span class="cc-tag" style="color:var(--red)">Fadiga: Alta</span><span class="cc-tag" style="color:var(--red)">Pausar ↓</span></div></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- BLOCO 4 — AGENTE IA -->
+  <div class="bloco rev fade-up">
+    <div>
+      <div class="bloco-tag">⚡ Bloco 04 · Agente de IA Autônomo</div>
+      <h3 class="bloco-h3">O agente que <em>orquestra tudo</em><br>enquanto você escala.</h3>
+      <p class="bloco-p">Não é um chatbot. É um agente que <strong>lê sua conta, cruza os dados de tracking com análise de criativos</strong> e executa ações — com seu objetivo como norte.</p>
+      <div class="b-feats">
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Análise autônoma</strong> — cruza CTR, CPA, ROAS e tracking para achar o gargalo exato.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Recomendações de escala</strong> — quando subir orçamento, em qual campanha, em qual horário.</div></div>
+        <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Alertas preditivos</strong> — avisa antes do problema acontecer, não depois do dinheiro ir.</div></div>
+      </div>
+    </div>
+    <div class="glass glass-strong tilt-card fade-up d2"><div class="shine"></div><div style="padding:0">
+      <div class="vb-bar"><div class="vb-dots"><div class="vb-dot" style="background:#ff5f56"></div><div class="vb-dot" style="background:#febc2e"></div><div class="vb-dot" style="background:#28c840"></div></div><div class="vb-title">Agente IA — Modo ativo</div><div class="vb-badge">Orquestrando</div></div>
+      <div class="vb-body">
+        <div class="agent-term">
+          <div class="at-head"><span class="at-dot"></span><span class="at-title">Ads.Everest Agent v2.4</span></div>
+          <div class="at-line"><span class="at-pr">▸</span><span class="at-cmd">analisando conta...</span></div>
+          <div class="at-line"><span class="at-pr">▸</span><span>48 campanhas · 312 conjuntos · 847 criativos</span></div>
+          <div class="at-line"><span class="at-pr">⚠ </span><span class="at-warn">Campanha "Black V3" em fadiga (freq: 4.2)</span></div>
+          <div class="at-line"><span class="at-pr">✓</span><span class="at-ok">Retargeting Win pronta p/ escala (+40%)</span></div>
+          <div class="at-line"><span class="at-pr">✓</span><span class="at-ok">Recomendação: +40% orçamento 18h–22h</span></div>
+        </div>
+        <div class="agent-acts">
+          <div class="aa"><div class="aa-icon" style="color:var(--green)">↑</div><div class="aa-txt"><strong>Escalar orçamento</strong>+40% nas próximas 4h</div></div>
+          <div class="aa"><div class="aa-icon" style="color:var(--red)">⏸</div><div class="aa-txt"><strong>Pausar criativo</strong>Score 31 · Alta fadiga</div></div>
+          <div class="aa"><div class="aa-icon" style="color:var(--brand-2)">⟳</div><div class="aa-txt"><strong>Duplicar conjunto</strong>Melhor ROAS</div></div>
+          <div class="aa"><div class="aa-icon" style="color:var(--purple)">📄</div><div class="aa-txt"><strong>Relatório gerado</strong>Semana · PDF</div></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</section>
+</div>
+
+<div class="band"></div>
+
+<!-- ═══════ ROI ═══════ -->
+<div class="container" id="roi">
+<section class="sec">
+  <div class="glass glass-strong roi-wrap fade-up">
+    <div class="roi-glow"></div>
+    <div style="text-align:center; margin-bottom:36px">
+      <div class="s-tag" style="justify-content:center">Resultado real</div>
+      <h2 class="s-h2" style="text-align:center">Números. Não promessa.</h2>
+      <p class="s-sub" style="text-align:center; margin:0 auto; max-width:520px">Gestores reais que pararam de adivinhar e começaram a operar com dados de verdade.</p>
+    </div>
+    <div class="roi-stats">
+      <div class="roi-stat"><div class="roi-stat-val c">3.8×</div><div class="roi-stat-lbl">ROAS médio<br>após 30 dias</div></div>
+      <div class="roi-stat"><div class="roi-stat-val g">↓38%</div><div class="roi-stat-lbl">Redução de CPA<br>com tracking real</div></div>
+      <div class="roi-stat"><div class="roi-stat-val" style="color:var(--amber)">98.4%</div><div class="roi-stat-lbl">Taxa de captura<br>de conversões</div></div>
+      <div class="roi-stat"><div class="roi-stat-val p">5min</div><div class="roi-stat-lbl">Para saber o que<br>fazer na conta</div></div>
+    </div>
+    <div class="roi-compare">
+      <div class="roi-col">
+        <div class="roi-col-h"><div class="roi-col-ttl">Sem Ads.Everest</div><div class="roi-col-badge" style="background:rgba(229,57,53,.08);border:1px solid rgba(229,57,53,.14);color:var(--red)">Antes</div></div>
+        <div class="roi-row"><span class="roi-row-lbl">ROAS médio</span><span class="roi-row-val r">1.9×</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">CPA médio</span><span class="roi-row-val r">R$34</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">Taxa de captura</span><span class="roi-row-val r">61%</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">Tempo de análise</span><span class="roi-row-val r">40+ min/dia</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">Decisão de escala</span><span class="roi-row-val r">Achismo</span></div>
+      </div>
+      <div class="roi-vs">VS</div>
+      <div class="roi-col winner">
+        <div class="roi-col-h"><div class="roi-col-ttl">Com Ads.Everest</div><div class="roi-col-badge" style="background:rgba(0,204,255,.08);border:1px solid rgba(0,204,255,.18);color:var(--brand-2)">Depois</div></div>
+        <div class="roi-row"><span class="roi-row-lbl">ROAS médio</span><span class="roi-row-val g">3.8×</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">CPA médio</span><span class="roi-row-val g">R$14</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">Taxa de captura</span><span class="roi-row-val g">98.4%</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">Tempo de análise</span><span class="roi-row-val g">5 min/dia</span></div>
+        <div class="roi-row"><span class="roi-row-lbl">Decisão de escala</span><span class="roi-row-val g">Dado + IA</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══════ DIFERENCIAIS ═══════ -->
+<div class="container">
+<section class="sec">
+  <div class="fade-up" style="text-align:center; max-width:600px; margin:0 auto 48px">
+    <div class="s-tag" style="justify-content:center">Diferencial</div>
+    <h2 class="s-h2" style="text-align:center">O que nenhuma outra<br>plataforma <em>entrega junto</em>.</h2>
+  </div>
+  <div class="diff-grid fade-up d1">
+    <div class="diff-card tilt-card">
+      <div class="diff-num">01 · Tracking</div>
+      <div class="diff-h4">Server-side com sinais proprietários</div>
+      <p class="diff-p">Enquanto o pixel perde conversão por iOS e blocker, nosso tracking captura 98.4%. Dado real para o algoritmo otimizar de verdade.</p>
+      <div class="diff-badge">+37% conversões capturadas</div>
+    </div>
+    <div class="diff-card tilt-card">
+      <div class="diff-num">02 · Agente</div>
+      <div class="diff-h4">IA que age, não só que analisa</div>
+      <p class="diff-p">Não é dashboard com chatbot colado. É um agente que lê, cruza dados e executa. Parceiro de operação, não ferramenta de relatório.</p>
+      <div class="diff-badge">Único no mercado BR</div>
+    </div>
+    <div class="diff-card tilt-card">
+      <div class="diff-num">03 · Criativos</div>
+      <div class="diff-h4">Score por criativo com ação imediata</div>
+      <p class="diff-p">CTR, hook, fadiga e conversão analisados em segundos. A IA diz o que pausar, o que escalar e o que iterar.</p>
+      <div class="diff-badge">Análise em segundos</div>
+    </div>
+    <div class="diff-card tilt-card">
+      <div class="diff-num">04 · Stack completo</div>
+      <div class="diff-h4">Dashboard + Tracking + IA numa plataforma</div>
+      <p class="diff-p">Sem contratar 3 ferramentas. Os 4 blocos integrados com dados fluindo entre eles. Uma plataforma, resultado completo.</p>
+      <div class="diff-badge">Tudo num só lugar</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="band"></div>
+
+<!-- ═══════ PRICING ═══════ -->
+<div class="container" id="pricing">
+<section class="sec">
+  <div class="fade-up">
+    <div class="s-tag">Plano</div>
+    <h2 class="s-h2">Um plano. <em>Stack completo.</em></h2>
+    <p class="s-sub">Dashboard + Tracking Real + IA de Criativos + Agente Autônomo. Tudo por R$97/mês.</p>
+  </div>
+  <div class="pricing-layout fade-up d1">
+    <div class="bens-side">
+      <div class="ben-row"><div class="ben-num">01</div><div class="ben-content"><h4>Dashboard inteligente</h4><p>Visão total da conta em tempo real. Alertas e scores num painel feito para decisão rápida.</p></div></div>
+      <div class="ben-row"><div class="ben-num">02</div><div class="ben-content"><h4>Tracking real</h4><p>Server-side com sinais proprietários. 98.4% de captura. ROAS e CPA reais — não estimados.</p></div></div>
+      <div class="ben-row"><div class="ben-num">03</div><div class="ben-content"><h4>Análise de criativos IA</h4><p>Score, diagnóstico de fadiga e recomendação de ação para cada anúncio ativo na conta.</p></div></div>
+      <div class="ben-row"><div class="ben-num">04</div><div class="ben-content"><h4>Agente de IA autônomo</h4><p>Define o objetivo. A IA analisa, recomenda e executa. Alertas preditivos antes do estrago.</p></div></div>
+      <div class="ben-row"><div class="ben-num">05</div><div class="ben-content"><h4>Atualizações contínuas</h4><p>A plataforma evolui com novos sinais, análises e capacidades do agente. Incluídas.</p></div></div>
+    </div>
+    <div class="pricing-card glass glass-strong tilt-card">
+      <div class="shine"></div>
+      <div style="position:relative;z-index:2">
+        <div class="pc-head">
+          <div class="pc-plan">Ads.Everest Pro</div>
+          <div class="pc-name">Plano Mensal Completo</div>
+          <div class="pc-price-row"><span class="pc-cur">R$</span><span class="pc-val">97</span><span class="pc-period">/mês</span></div>
+          <div class="pc-note">Assinatura simples. Cancela quando quiser.</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-items">
+            <div class="pc-item"><div class="pc-ck">✓</div>Dashboard inteligente com alertas em tempo real</div>
+            <div class="pc-item"><div class="pc-ck">✓</div>Tracking server-side · 98.4% de captura</div>
+            <div class="pc-item"><div class="pc-ck">✓</div>Análise de criativos com IA · Score + diagnóstico</div>
+            <div class="pc-item"><div class="pc-ck">✓</div>Agente IA autônomo · Análise + recomendação</div>
+            <div class="pc-item"><div class="pc-ck">✓</div>Atualizações contínuas da plataforma</div>
+          </div>
+          <button class="btn-buy" onclick="window.location='#'">Assinar por R$97/mês →</button>
+          <div class="btn-note">Mensal · Sem fidelidade · Cancele quando quiser</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══════ FAQ ═══════ -->
+<div class="container">
+<section class="sec" id="faq">
+  <div class="fade-up">
+    <div class="s-tag">FAQ</div>
+    <h2 class="s-h2">Perguntas antes<br>de assinar.</h2>
+  </div>
+  <div class="faq-list fade-up d1">
+    <div class="faq-item"><div class="faq-q">O Ads.Everest substitui o Ads Manager?<div class="faq-plus">+</div></div><div class="faq-a">Não substitui — complementa. O Ads Manager é para criar e publicar anúncio. O Ads.Everest é para ler, diagnosticar e decidir. Você usa os dois, mas gasta muito menos tempo no manager.</div></div>
+    <div class="faq-item"><div class="faq-q">Como funciona o tracking server-side?<div class="faq-plus">+</div></div><div class="faq-a">Você instala um snippet no seu site ou usa nossas integrações (Shopify, Hotmart, Kiwify). As conversões são enviadas do servidor diretamente para o Meta — sem depender de cookie do browser, resultando em 98.4% de captura.</div></div>
+    <div class="faq-item"><div class="faq-q">O agente de IA executa ações automaticamente?<div class="faq-plus">+</div></div><div class="faq-a">Por padrão, funciona em modo recomendação: analisa, diagnostica e sugere com um clique de confirmação. Se quiser, ative o modo autônomo onde ele executa ações aprovadas em intervalos que você define.</div></div>
+    <div class="faq-item"><div class="faq-q">Para qual tipo de negócio funciona?<div class="faq-plus">+</div></div><div class="faq-a">Para qualquer negócio que anuncia no Meta: e-commerce, infoproduto, serviço local, SaaS, afiliado. O tracking e relatórios se adaptam ao modelo de conversão.</div></div>
+    <div class="faq-item"><div class="faq-q">Preciso saber de tecnologia para usar?<div class="faq-plus">+</div></div><div class="faq-a">Não. A instalação do tracking leva menos de 10 minutos com nosso guia passo a passo. O dashboard foi feito para gestor de tráfego, não engenheiro.</div></div>
+  </div>
+</section>
+</div>
+
+<!-- ═══════ DARK CTA ═══════ -->
+<div class="container">
+<div class="dark-cta fade-up">
+  <h2>Pare de adivinhar.<br><span>Comece a escalar.</span></h2>
+  <p>Dashboard inteligente · Tracking real · IA que age. Tudo por R$97/mês.</p>
+  <a href="#pricing" class="btn-cta-white">Assinar o Ads.Everest →</a>
+  <div class="cta-note">Mensal · Sem fidelidade · Acesso completo desde o primeiro dia</div>
+</div>
+</div>
+
+<footer>
+<div class="container">
+<div class="footer-in">
+  <div class="footer-copy">© 2025 Ads.Everest · Plataforma para gestores de tráfego</div>
+</div>
+</div>
+</footer>
+
+<script>
+// Marquee items
+const mqi = ['Dashboard Inteligente','Tracking Server-Side','Agente de IA','Análise de Criativos','Sinais Proprietários','ROAS Real','Escala com Lucro','Score por Criativo','Atribuição Multi-Touch','Alertas Preditivos','CPA Real','Funil Completo'];
+const mq = document.getElementById('mqTrack');
+[...mqi,...mqi].forEach(t => {
+  const el = document.createElement('div');
+  el.className = 'mq-item';
+  el.innerHTML = `<span class="mq-dot"></span>${t}`;
+  mq.appendChild(el);
+});
+
+// Dashboard bars
+const dbV = [55,72,61,88,75,100,82], dbD = ['S','T','Q','Q','S','S','D'];
+const dbEl = document.getElementById('dashBars');
+if(dbEl) dbV.forEach((v,i) => {
+  const w = document.createElement('div'); w.className = 'bc-wrap';
+  const b = document.createElement('div'); b.className = 'bc-bar'; b.style.height = '0';
+  const d = document.createElement('div'); d.className = 'bc-day'; d.textContent = dbD[i];
+  w.appendChild(b); w.appendChild(d); dbEl.appendChild(w);
+  setTimeout(() => { b.style.height = (v * 0.82) + '%' }, 900 + i * 80);
+});
+
+// Campaign rows
+const camps = [['Retargeting Win','4.1×','90%'],['Prosp. Video','3.2×','75%'],['Look. Frio','2.8×','65%'],['DPA Catalog','2.1×','48%']];
+const cEl = document.getElementById('campRows');
+if(cEl) camps.forEach(([n,r,p]) => {
+  cEl.innerHTML += `<div class="camp-row"><span class="camp-name">${n}</span><span class="camp-roas">${r}</span><div class="camp-bw"><div class="camp-bf" style="width:${p}"></div></div></div>`;
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(x => { if(x.isIntersecting) x.target.classList.add('vis') });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+// FAQ toggle
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!open) item.classList.add('open');
+  });
+});
+
+// 3D card tilt
+document.querySelectorAll('.tilt-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    const rx = (0.5 - y) * 12, ry = (x - 0.5) * 12;
+    card.style.transform = `perspective(1200px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.02,1.02,1.02)`;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+  });
+});
+</script>
+</body>
+</html>
