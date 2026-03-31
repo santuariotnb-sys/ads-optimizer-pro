@@ -1228,64 +1228,113 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
   width: max-content;
 }
 .camp-card {
-  min-width: 320px;
-  padding: 18px 20px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.52);
+  min-width: 360px;
+  padding: 0;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.56);
   border: 1px solid rgba(255,255,255,0.72);
   box-shadow:
-    0 10px 28px -12px rgba(13,26,46,0.14),
-    inset 0 1px 0 rgba(255,255,255,0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+    0 14px 34px -14px rgba(13,26,46,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.94);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
   flex-shrink: 0;
   scroll-snap-align: start;
   transition: all 0.22s;
+  overflow: hidden;
 }
 .camp-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 36px -14px rgba(13,26,46,0.2), inset 0 1px 0 rgba(255,255,255,0.96);
+  box-shadow: 0 20px 44px -16px rgba(13,26,46,0.22), inset 0 1px 0 rgba(255,255,255,0.96);
 }
+
+/* Card header — nome da campanha com destaque */
 .camp-card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-bottom: 14px;
+  padding: 16px 20px;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,0.7), rgba(255,255,255,0.35));
+  border-bottom: 1px solid rgba(13,26,46,0.06);
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.5);
 }
 .camp-card-head strong {
-  font: 600 13.5px/1.3 'Outfit', sans-serif;
+  font: 800 15px/1.25 'Outfit', sans-serif;
   color: var(--text);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 210px;
+  max-width: 230px;
 }
+
+/* KPIs grid com profundidade */
 .camp-card-kpis {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+  gap: 0;
+  padding: 0;
 }
 .camp-kpi {
   text-align: center;
-  padding: 8px 4px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.4);
+  padding: 14px 6px;
+  position: relative;
+  border-right: 1px solid rgba(13,26,46,0.05);
+  border-bottom: 1px solid rgba(13,26,46,0.04);
 }
+.camp-kpi:nth-child(even) {
+  background: rgba(255,255,255,0.35);
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.5);
+}
+.camp-kpi:nth-child(odd) {
+  background: rgba(240,243,248,0.3);
+  box-shadow: inset 0 1px 2px rgba(13,26,46,0.03);
+}
+.camp-kpi:last-child { border-right: none }
+
 .camp-kpi-lbl {
   display: block;
-  font: 600 8px/1 'JetBrains Mono', monospace;
+  font: 600 8.5px/1 'JetBrains Mono', monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-3);
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 .camp-kpi strong {
   display: block;
-  font: 700 13px/1 'JetBrains Mono', monospace;
+  font: 700 14px/1 'JetBrains Mono', monospace;
   color: var(--text);
   letter-spacing: -0.02em;
+}
+
+/* Extra row: gastos + faturamento + lucro */
+.camp-card-extra {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(13,26,46,0.05);
+}
+.camp-extra {
+  text-align: center;
+  padding: 10px 6px;
+  border-right: 1px solid rgba(13,26,46,0.04);
+  background: rgba(240,243,248,0.25);
+}
+.camp-extra:last-child { border-right:none }
+.camp-extra-lbl {
+  display: block;
+  font: 600 7.5px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+.camp-extra strong {
+  display: block;
+  font: 600 12px/1 'JetBrains Mono', monospace;
+  color: var(--text-2);
 }
 
 /* Mobile camp cards — rules merged into main 640px block */
@@ -1641,13 +1690,15 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
 
   /* Campaign cards mobile */
   .camp-cards { gap:10px }
-  .camp-card { min-width:260px; padding:14px 16px; border-radius:16px }
-  .camp-card-head { margin-bottom:10px }
-  .camp-card-head strong { font-size:12px; max-width:165px }
-  .camp-card-kpis { gap:1px }
-  .camp-kpi { padding:6px 3px; border-radius:8px }
-  .camp-kpi-lbl { font-size:7px; margin-bottom:4px }
-  .camp-kpi strong { font-size:11px }
+  .camp-card { min-width:300px; border-radius:16px }
+  .camp-card-head { padding:12px 16px }
+  .camp-card-head strong { font-size:14px; max-width:190px }
+  .camp-kpi { padding:10px 4px }
+  .camp-kpi-lbl { font-size:7.5px; margin-bottom:4px }
+  .camp-kpi strong { font-size:12px }
+  .camp-extra { padding:8px 4px }
+  .camp-extra-lbl { font-size:7px }
+  .camp-extra strong { font-size:11px }
 
   /* Xtracker mobile: other tabs card carousel */
   .xt-scroll-area {
@@ -2082,6 +2133,11 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">293</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 12.450</strong></div>
               </div>
+              <div class="camp-card-extra">
+                <div class="camp-extra"><span class="camp-extra-lbl">Faturamento</span><strong>R$ 47.559</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Lucro</span><strong class="g">R$ 35.109</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Margem</span><strong class="g">73.8%</strong></div>
+              </div>
             </div>
 
             <div class="camp-card">
@@ -2092,15 +2148,25 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">150</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 8.750</strong></div>
               </div>
+              <div class="camp-card-extra">
+                <div class="camp-extra"><span class="camp-extra-lbl">Faturamento</span><strong>R$ 25.725</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Lucro</span><strong class="g">R$ 16.975</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Margem</span><strong class="g">66.0%</strong></div>
+              </div>
             </div>
 
             <div class="camp-card">
-              <div class="camp-card-head"><strong>[ASC] Suplemento Whey — Perform...</strong><span class="xt-status xt-status-warn">Aprendizado</span></div>
+              <div class="camp-card-head"><strong>[ASC] Suplemento Whey — Performance</strong><span class="xt-status xt-status-warn">Aprendizado</span></div>
               <div class="camp-card-kpis">
                 <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="a">1.45x</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong class="a">R$ 89,00</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong>36</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 3.200</strong></div>
+              </div>
+              <div class="camp-card-extra">
+                <div class="camp-extra"><span class="camp-extra-lbl">Faturamento</span><strong>R$ 4.640</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Lucro</span><strong class="a">R$ 1.440</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Margem</span><strong class="a">31.0%</strong></div>
               </div>
             </div>
 
@@ -2112,6 +2178,11 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">148</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 4.200</strong></div>
               </div>
+              <div class="camp-card-extra">
+                <div class="camp-extra"><span class="camp-extra-lbl">Faturamento</span><strong>R$ 21.882</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Lucro</span><strong class="g">R$ 17.682</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Margem</span><strong class="g">80.8%</strong></div>
+              </div>
             </div>
 
             <div class="camp-card">
@@ -2122,6 +2193,11 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong>40</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 5.800</strong></div>
               </div>
+              <div class="camp-card-extra">
+                <div class="camp-extra"><span class="camp-extra-lbl">Faturamento</span><strong>R$ 4.756</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Lucro</span><strong class="r">-R$ 1.044</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Margem</span><strong class="r">-21.9%</strong></div>
+              </div>
             </div>
 
             <div class="camp-card">
@@ -2131,6 +2207,11 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
                 <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong class="g">R$ 14,25</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">87</strong></div>
                 <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 1.240</strong></div>
+              </div>
+              <div class="camp-card-extra">
+                <div class="camp-extra"><span class="camp-extra-lbl">Faturamento</span><strong>R$ 5.220</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Lucro</span><strong class="g">R$ 3.980</strong></div>
+                <div class="camp-extra"><span class="camp-extra-lbl">Margem</span><strong class="g">76.2%</strong></div>
               </div>
             </div>
 
