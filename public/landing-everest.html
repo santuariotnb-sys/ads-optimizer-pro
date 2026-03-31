@@ -1490,50 +1490,108 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   .nav-cta { padding:8px 14px; font-size:12px }
 
   /* Sections */
-  .sec { padding:64px 0 }
-  .s-h2 { font-size:clamp(26px,7vw,36px) }
-  .s-sub { font-size:15px }
+  .sec { padding:40px 0 }
+  .s-h2 { font-size:clamp(24px,7vw,34px) }
+  .s-sub { font-size:14px; line-height:1.7 }
 
   /* Problem cards */
   .prob-grid { grid-template-columns:1fr }
+  .prob-card { padding:22px 18px }
+  .prob-title { font-size:15px }
+  .prob-text { font-size:13px }
+  .prob-stat { padding:8px 12px; font-size:9px }
+  .prob-stat-val { font-size:18px }
+  .prob-icon { width:42px; height:42px }
 
   /* Solution blocks */
-  .bloco-h3 { font-size:clamp(22px,6vw,30px) }
-  .bloco-p { font-size:14px }
+  .bloco { gap:24px; margin-bottom:36px; padding-bottom:36px }
+  .bloco-h3 { font-size:clamp(22px,6vw,28px) }
+  .bloco-p { font-size:13.5px }
+  .bloco-tag { font-size:9px; padding:5px 12px }
+  .b-feat-txt { font-size:13px }
+  .b-feat-txt strong { font-size:13px }
+
+  /* Bloco fullwidth tracking */
+  .bloco-fullwidth { padding:24px 18px; margin-bottom:36px; border-radius:20px }
+  .b-feats-grid { grid-template-columns:1fr !important }
+  .tracking-kpis { grid-template-columns:1fr 1fr !important }
+
+  /* Tracking callout */
+  .tracking-callout { padding:16px; margin:14px 0 18px }
+  .tracking-callout-badge { font-size:8px; padding:4px 10px }
+  .tracking-callout-text { font-size:14px; margin-bottom:16px }
+  .tracking-callout-text .capture { font-size:1em; padding:1px 8px }
+  .tcc-item { grid-template-columns:70px 1fr 40px; gap:6px }
+  .tcc-label { font-size:9px }
+  .tcc-val { font-size:12px }
+  .tcc-bar-bg { height:8px }
+
+  /* Glass visual cards */
+  .glass-strong { border-radius:20px }
+  .vb-bar { padding:10px 12px }
+  .vb-title { font-size:9px }
+  .vb-badge { font-size:8px; padding:3px 8px }
+  .vb-body { padding:12px }
+  .kpi-grid { grid-template-columns:1fr 1fr; gap:8px }
+  .kpi-card { padding:10px }
+  .kpi-lbl { font-size:7px }
+  .kpi-val { font-size:15px }
+  .kpi-d { font-size:9px }
+  .chart-area { grid-template-columns:1fr }
+  .bar-chart { height:56px }
+
+  /* Creative scores */
+  .cc-item { padding:10px }
+  .cc-name { font-size:11px }
+  .cc-score { font-size:9px; padding:3px 8px }
+  .cc-tag { font-size:8px; padding:2px 6px }
+
+  /* Agent terminal */
+  .agent-term { padding:12px; font-size:10px }
+  .at-line { font-size:10px }
+  .agent-acts { grid-template-columns:1fr }
+  .aa { padding:8px 10px }
+  .aa-txt { font-size:9.5px }
+  .aa-icon { width:20px; height:20px; font-size:10px }
 
   /* Xtracker */
   .xt-pills { grid-template-columns:1fr }
   .xt-pill { padding:14px }
-  .xt-tabs { gap:2px; padding:10px 12px 0 }
-  .xt-tab { padding:8px 12px; font-size:11px }
-  .xt-topbar { padding:10px 14px }
+  .xt-pill strong { font-size:13px }
+  .xt-pill span { font-size:11.5px }
+  .xt-tabs { gap:2px; padding:8px 10px 0 }
+  .xt-tab { padding:7px 10px; font-size:10px }
+  .xt-topbar { padding:10px 12px }
+  .xt-topbar-title { font-size:9px }
+  .xt-card { border-radius:18px }
   .xt-summary {
     flex-direction:column; align-items:stretch;
-    margin:0 12px 12px; padding:14px 18px; gap:10px;
+    margin:0 10px 10px; padding:12px 14px; gap:8px;
   }
   .xt-sum-item { display:flex; justify-content:space-between; text-align:left }
-  .xt-sum-item span { margin-bottom:0 }
-  .xt-smoke { inset:-20px -20px }
+  .xt-sum-item span { margin-bottom:0; font-size:8px }
+  .xt-sum-item strong { font-size:15px }
+  .xt-smoke { inset:-16px -16px }
 
   /* Xtracker mobile: card carousel */
   .xt-scroll-area {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    padding: 8px 14px 14px;
+    padding: 8px 12px 12px;
   }
-  .xt-table-real { min-width:0; display:flex; gap:14px; width:max-content }
+  .xt-table-real { min-width:0; display:flex; gap:12px; width:max-content }
   .xt-table-real thead { display:none }
-  .xt-table-real tbody { display:flex; gap:14px; width:max-content }
+  .xt-table-real tbody { display:flex; gap:12px; width:max-content }
   .xt-table-real tbody tr {
     display:flex; flex-direction:column; gap:0;
-    min-width:280px; max-width:300px;
+    min-width:260px; max-width:280px;
     scroll-snap-align: start;
     background: rgba(255,255,255,0.52);
     border: 1px solid rgba(255,255,255,0.72);
-    border-radius: 20px;
+    border-radius: 18px;
     padding: 0;
     overflow: hidden;
-    box-shadow: 0 12px 28px -14px rgba(13,26,46,0.16), inset 0 1px 0 rgba(255,255,255,0.9);
+    box-shadow: 0 10px 24px -12px rgba(13,26,46,0.16), inset 0 1px 0 rgba(255,255,255,0.9);
     flex-shrink: 0;
   }
   .xt-table-real tbody tr:hover td { background:transparent }
@@ -1541,10 +1599,10 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 16px;
+    padding: 8px 14px;
     border-right: none;
-    border-bottom: 1px solid rgba(15,23,42,0.05);
-    font-size: 12.5px;
+    border-bottom: 1px solid rgba(15,23,42,0.04);
+    font-size: 12px;
     white-space: normal;
     box-shadow: none !important;
     background: transparent !important;
@@ -1552,57 +1610,86 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   .xt-table-real tbody td:last-child { border-bottom:none }
   .xt-table-real tbody td::before {
     content: attr(data-label);
-    font: 600 9px/1 'JetBrains Mono', monospace;
+    font: 600 8px/1 'JetBrains Mono', monospace;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--text-3);
     flex-shrink: 0;
-    margin-right: 12px;
+    margin-right: 10px;
   }
   .xt-table-real tbody td.xt-td-name {
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
-    padding: 14px 16px;
+    gap: 3px;
+    padding: 12px 14px;
     background: rgba(255,255,255,0.3) !important;
     border-bottom: 1px solid rgba(255,255,255,0.5);
   }
   .xt-table-real tbody td.xt-td-name::before { display:none }
+  .xt-table-real tbody td.xt-td-name strong { font-size:12px }
   .xt-table-real tbody td.xt-td-hl { background: rgba(59,130,246,0.04) !important }
-  .xt-mono { text-align:right !important; font-size:12px !important }
+  .xt-mono { text-align:right !important; font-size:11px !important }
 
   /* ROI */
-  .roi-stats { grid-template-columns:1fr 1fr }
-  .roi-wrap { padding:24px 16px }
-  .roi-stat { padding:18px 10px }
-  .roi-stat-val { font-size:clamp(24px,6vw,34px) }
+  .roi-stats { grid-template-columns:1fr 1fr; gap:10px }
+  .roi-wrap { padding:20px 14px }
+  .roi-stat { padding:16px 8px; border-radius:14px }
+  .roi-stat-val { font-size:clamp(22px,6vw,30px) }
+  .roi-stat-lbl { font-size:9px }
+  .roi-compare { gap:12px }
+  .roi-col { padding:16px; border-radius:14px }
+  .roi-col-ttl { font-size:13px }
+  .roi-col-badge { font-size:8px }
+  .roi-row { font-size:12px; padding:6px 0 }
+  .roi-row-val { font-size:12px }
 
   /* Differentials */
   .diff-grid { grid-template-columns:1fr }
+  .diff-card { padding:22px 18px }
+  .diff-h4 { font-size:15px }
+  .diff-p { font-size:13px }
+  .diff-badge { font-size:8px }
 
   /* Pricing */
-  .pcd-head { padding:22px 20px 18px }
-  .pcd-body { padding:18px 20px 22px }
-  .pcd-name { font-size:22px }
-  .pcd-val { font-size:44px }
+  .pricing-layout { gap:24px; margin-top:32px }
+  .bens-side { gap:14px }
+  .ben-content h4 { font-size:14px }
+  .ben-content p { font-size:12px }
+  .pcd-head { padding:20px 18px 16px }
+  .pcd-body { padding:16px 18px 20px }
+  .pcd-name { font-size:20px }
+  .pcd-val { font-size:40px }
+  .pcd-cur { font-size:16px }
+  .pcd-items { gap:10px }
+  .pcd-item { font-size:13px }
+  .pcd-btn { padding:14px; font-size:14px }
 
   /* FAQ */
-  .faq-q { font-size:14px }
+  .faq-list { margin-top:28px }
+  .faq-item { padding:18px }
+  .faq-q { font-size:13px }
+  .faq-a { font-size:13px }
 
   /* Dark CTA */
-  .dark-cta { padding:36px 20px; border-radius:22px }
-  .dark-cta h2 { font-size:clamp(26px,7vw,38px) }
-  .dark-cta p { font-size:15px }
+  .dark-cta { padding:32px 18px; border-radius:20px }
+  .dark-cta h2 { font-size:clamp(24px,7vw,34px) }
+  .dark-cta p { font-size:14px; margin-bottom:24px }
+  .btn-cta-white { padding:14px 24px; font-size:14px }
 
-  /* Misc glass cards */
+  /* Misc */
   .sigs-2col { grid-template-columns:1fr }
-  .agent-acts { grid-template-columns:1fr }
-  .tracking-callout { padding:18px }
-  .tcc-item { grid-template-columns:80px 1fr 44px; gap:8px }
-  .tcc-label { font-size:10px }
+  .sig-card { padding:8px 10px }
+  .sc-val { font-size:15px }
+  .sc-lbl { font-size:7px }
+  .sc-sub { font-size:9px }
 
   /* Marquee */
-  .mq-item { padding:0 16px; font-size:9px }
+  .mq-item { padding:0 14px; font-size:9px }
+  .marquee-strip { padding:8px 0 }
+
+  /* Footer */
+  .footer-in { justify-content:center; text-align:center }
+  .footer-copy { font-size:10px }
 }
 </style>
 </head>
