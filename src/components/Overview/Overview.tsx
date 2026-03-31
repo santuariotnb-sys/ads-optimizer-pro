@@ -366,7 +366,6 @@ export default function Overview() {
   const [weeklyReport, setWeeklyReport] = useState<string | null>(null);
   const [generatingReport, setGeneratingReport] = useState(false);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleGenerateReport = useCallback(async () => {
     setGeneratingReport(true);
     setWeeklyReport(null);

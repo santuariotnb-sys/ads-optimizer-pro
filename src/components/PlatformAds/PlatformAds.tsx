@@ -224,7 +224,7 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
         gap: 10,
         flexWrap: 'wrap',
       }}>
-        <button style={{
+        <button onClick={() => {}} style={{
           width: 34, height: 34, borderRadius: 10, border: 'none',
           background: 'rgba(240,243,248,0.65)', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -232,7 +232,7 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
         }}>
           <Settings size={15} color="#64748b" />
         </button>
-        <button style={{
+        <button onClick={() => {}} style={{
           width: 34, height: 34, borderRadius: 10, border: 'none',
           background: 'rgba(240,243,248,0.65)', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -240,7 +240,7 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
         }}>
           <TrendingUp size={15} color="#64748b" />
         </button>
-        <button style={{
+        <button onClick={() => {}} style={{
           width: 34, height: 34, borderRadius: 10, border: 'none',
           background: 'rgba(240,243,248,0.65)', cursor: 'pointer',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -270,7 +270,7 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
         <span style={{ fontSize: 12, color: '#94a3b8', fontFamily: 'Outfit, sans-serif' }}>
           Atualizado agora mesmo
         </span>
-        <button style={{
+        <button onClick={() => {}} style={{
           padding: '7px 16px',
           borderRadius: 12,
           border: 'none',

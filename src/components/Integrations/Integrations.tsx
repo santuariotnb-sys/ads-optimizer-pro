@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -91,6 +91,8 @@ export default function Integrations() {
 
   // Shared
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  useEffect(() => { if (notice) { const t = setTimeout(() => setNotice(null), 4000); return () => clearTimeout(t); } }, [notice]);
 
   function handleCopy(text: string, field: string) {
     navigator.clipboard.writeText(text);
@@ -191,11 +193,11 @@ export default function Integrations() {
                       <button style={btn} onClick={() => {
                         if (p.id === 'meta') {
                           const clientId = import.meta.env.VITE_META_APP_ID;
-                          if (!clientId) { alert('Configure VITE_META_APP_ID no .env para conectar Meta Ads'); return; }
+                          if (!clientId) { setNotice('Configure VITE_META_APP_ID no .env para conectar Meta Ads'); return; }
                           const redirect = import.meta.env.VITE_META_REDIRECT_URI || `${window.location.origin}/auth/callback`;
                           window.location.href = `https://www.facebook.com/v25.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirect)}&scope=ads_read,ads_management`;
                         } else {
-                          alert(`Integração com ${p.name} será disponibilizada em breve`);
+                          setNotice(`Integração com ${p.name} será disponibilizada em breve`);
                         }
                       }}><Plus size={14} /> Adicionar perfil</button>
                     </div>
@@ -243,7 +245,7 @@ export default function Integrations() {
               navigator.clipboard.writeText(webhookUrl);
               setCopiedField('new-webhook');
               setTimeout(() => setCopiedField(null), 2000);
-              alert(`Webhook criado! URL copiada para a área de transferência:\n\n${webhookUrl}`);
+              setNotice('Webhook criado! URL copiada para a área de transferência.');
             }}>
               <Plus size={16} /> Adicionar Webhook
             </button>
@@ -403,7 +405,7 @@ export default function Integrations() {
                     </div>
                     <div style={{ fontSize: 14, fontWeight: 600, color: c.text }}>{s.name}</div>
                   </div>
-                  <button style={s.action === 'baixar' ? btnOut : btn}>
+                  <button onClick={() => {}} style={s.action === 'baixar' ? btnOut : btn}>
                     {s.action === 'baixar' && <Download size={14} />}
                     {s.action === 'baixar' ? 'Baixar' : 'Ver opcoes'}
                   </button>
@@ -548,7 +550,7 @@ export default function Integrations() {
           <MessageCircle size={32} color={c.textDim} style={{ marginBottom: 8 }} />
           <p style={{ fontSize: 13, color: c.textMuted }}>Nenhum numero cadastrado</p>
         </div>
-        <button style={btn}><Plus size={16} /> Adicionar Numero</button>
+        <button onClick={() => {}} style={btn}><Plus size={16} /> Adicionar Numero</button>
       </motion.div>
     );
   }
@@ -575,14 +577,14 @@ export default function Integrations() {
             <div><label style={label}>Link</label><input type="text" value={testLink} onChange={e => setTestLink(e.target.value)} placeholder="https://seusite.com/pagina" style={input} /></div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => handleCopy(testLink, 'test-link')} style={btnOut}>{copiedField === 'test-link' ? <Check size={14} /> : <Copy size={14} />} Copiar</button>
-              <button style={btn}><TestTube size={14} /> Testar</button>
+              <button onClick={() => {}} style={btn}><TestTube size={14} /> Testar</button>
             </div>
           </div>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="glass-card" style={card}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: c.text, fontFamily: 'Space Grotesk' }}>Ultimos testes</h3>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: c.textMuted, padding: 4 }}><RefreshCw size={16} /></button>
+            <button onClick={() => {}} style={{ background: 'none', border: 'none', cursor: 'pointer', color: c.textMuted, padding: 4 }}><RefreshCw size={16} /></button>
           </div>
           <div style={{ padding: 40, borderRadius: 12, background: c.surface3, border: `1px dashed ${c.border}`, textAlign: 'center' }}>
             <TestTube size={32} color={c.textDim} style={{ marginBottom: 8 }} />
@@ -615,6 +617,25 @@ export default function Integrations() {
         ))}
       </div>
       {tabContent[activeTab]()}
+      <AnimatePresence>
+        {notice && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            style={{
+              position: 'fixed', bottom: 24, right: 24, zIndex: 9999,
+              padding: '12px 20px', borderRadius: 12,
+              background: c.surface, border: `1px solid ${c.border}`,
+              color: c.text, fontSize: 13, fontFamily: 'Outfit',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
+              maxWidth: 360,
+            }}
+          >
+            {notice}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
