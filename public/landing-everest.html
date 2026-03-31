@@ -565,6 +565,122 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
 .b-feat-txt { font-size:14px; color:var(--text-2); line-height:1.65 }
 .b-feat-txt strong { color:var(--text); font-weight:700 }
 
+/* ═══════ Tracking Callout ═══════ */
+.tracking-callout {
+  margin: 18px 0 24px;
+  padding: 24px 26px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 10% 80%, rgba(0,204,255,0.08), transparent 40%),
+    radial-gradient(circle at 90% 20%, rgba(229,57,53,0.05), transparent 40%),
+    linear-gradient(145deg, rgba(255,255,255,0.62), rgba(255,255,255,0.32));
+  border: 1px solid rgba(0,204,255,0.18);
+  box-shadow:
+    0 20px 50px -18px rgba(0,153,204,0.18),
+    0 0 0 1px rgba(255,255,255,0.6) inset,
+    inset 0 1px 0 rgba(255,255,255,0.92);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  position: relative;
+  overflow: hidden;
+}
+.tracking-callout::before {
+  content:'';
+  position:absolute; top:0; left:8%; right:8%; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(0,204,255,0.4), transparent);
+  pointer-events:none;
+}
+.tracking-callout::after {
+  content:'';
+  position:absolute; bottom:0; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, transparent, rgba(0,204,255,0.25), transparent);
+  pointer-events:none;
+}
+
+.tracking-callout-badge {
+  display: inline-block;
+  font: 700 9px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brand-2);
+  background: rgba(0,204,255,0.1);
+  border: 1px solid rgba(0,204,255,0.24);
+  border-radius: 8px;
+  padding: 5px 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 16px -4px rgba(0,204,255,0.2);
+}
+
+.tracking-callout-text {
+  font-size: 16px;
+  line-height: 1.78;
+  color: var(--text);
+  margin: 0 0 20px;
+  font-weight: 500;
+}
+.tracking-callout-text .loss {
+  color: var(--red);
+  font-weight: 700;
+  background: rgba(229,57,53,0.08);
+  padding: 1px 8px;
+  border-radius: 6px;
+}
+.tracking-callout-text .capture {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 1.15em;
+  color: var(--brand-2);
+  background: rgba(0,204,255,0.1);
+  padding: 2px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,204,255,0.2);
+  text-shadow: 0 0 14px rgba(0,204,255,0.3);
+}
+
+.tracking-callout-compare {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tcc-item {
+  display: grid;
+  grid-template-columns: 100px 1fr 56px;
+  align-items: center;
+  gap: 12px;
+}
+.tcc-label {
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+}
+.tcc-bar-bg {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(13,26,46,0.06);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
+}
+.tcc-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1.5s cubic-bezier(0.22,0.68,0,1);
+}
+.tcc-fill-weak {
+  background: linear-gradient(90deg, rgba(229,57,53,0.5), rgba(229,57,53,0.7));
+  box-shadow: 0 0 10px -2px rgba(229,57,53,0.3);
+}
+.tcc-fill-strong {
+  background: linear-gradient(90deg, var(--brand-3), var(--brand));
+  box-shadow: 0 0 16px -2px rgba(0,204,255,0.4);
+}
+.tcc-val {
+  font: 800 14px/1 'Outfit', sans-serif;
+  letter-spacing: -0.03em;
+  text-align: right;
+}
+.tcc-val-weak { color: var(--red) }
+.tcc-val-strong { color: var(--brand-2); text-shadow: 0 0 12px rgba(0,204,255,0.3) }
+
 /* Visual blocks */
 .vblock { border-radius:var(--radius-lg); overflow:hidden }
 .vb-bar {
@@ -791,16 +907,423 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
   border-radius:6px; display:grid; place-items:center; flex-shrink:0; margin-top:1px;
   color:var(--brand-2); font:700 10px/1 'JetBrains Mono',monospace;
 }
-.btn-buy {
-  display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
-  background:linear-gradient(135deg,var(--navy),var(--navy-2)); color:white;
-  font:700 15px/1 'Outfit',sans-serif; padding:16px; border-radius:16px;
-  border:none; cursor:pointer;
-  box-shadow:0 12px 34px -10px rgba(13,26,46,0.45);
-  transition:all 0.22s;
+/* ═══════════════════════════════════════
+   XTRACKER
+   ═══════════════════════════════════════ */
+.xt-pills {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 32px 0 36px;
 }
-.btn-buy:hover { transform:translateY(-2px); box-shadow:0 18px 44px -10px rgba(13,26,46,0.55) }
-.btn-note { text-align:center; font:600 11px/1 'JetBrains Mono',monospace; color:var(--text-3); margin-top:10px; letter-spacing:0.04em }
+.xt-pill {
+  padding: 18px 16px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.62), rgba(255,255,255,0.3));
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow: var(--glass-shadow-md);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  transition: all 0.3s cubic-bezier(0.22,0.68,0,1.2);
+  position: relative;
+  overflow: hidden;
+}
+.xt-pill::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background: linear-gradient(145deg, rgba(255,255,255,0.6), rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.2) 100%);
+}
+.xt-pill::after {
+  content:''; position:absolute; top:0; left:10%; right:10%; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.88), transparent);
+  pointer-events:none;
+}
+.xt-pill:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 22px 50px -16px rgba(13,26,46,0.2), 0 0 0 1px rgba(0,204,255,0.1);
+}
+.xt-pill > * { position:relative; z-index:1 }
+.xt-pill-icon { font-size:22px; display:block; margin-bottom:10px }
+.xt-pill strong { display:block; font:700 14px/1.3 'Outfit',sans-serif; color:var(--text); margin-bottom:5px; letter-spacing:-0.02em }
+.xt-pill span { display:block; font-size:12.5px; color:var(--text-2); line-height:1.6 }
+
+/* Xtracker brand inline */
+.xt-brand-inline {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ccff, #0077aa);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+
+/* Neumorphic card */
+.xt-dashboard-wrap { margin-top:8px; position:relative }
+
+.xt-smoke {
+  position:absolute; inset:-40px -60px;
+  background:
+    radial-gradient(ellipse at 30% 20%, rgba(59,130,246,0.1), transparent 45%),
+    radial-gradient(ellipse at 70% 80%, rgba(124,58,237,0.06), transparent 40%);
+  filter: blur(40px);
+  pointer-events:none; z-index:0;
+}
+
+.xt-card {
+  position: relative; z-index:1;
+  background: rgba(240,243,248,0.55);
+  backdrop-filter: blur(48px) saturate(1.6);
+  -webkit-backdrop-filter: blur(48px) saturate(1.6);
+  border: 1px solid rgba(255,255,255,0.50);
+  border-radius: 22px;
+  box-shadow:
+    8px 8px 24px rgba(15,23,42,0.1),
+    -6px -6px 18px rgba(255,255,255,0.75),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  transform-style: preserve-3d;
+  overflow: hidden;
+}
+
+.xt-reflection {
+  position:absolute; top:0; left:0; right:0; height:60px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.55), transparent);
+  pointer-events:none; z-index:3;
+}
+.xt-sheen {
+  position:absolute; inset:0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent 40%, transparent 60%, rgba(255,255,255,0.1));
+  pointer-events:none; z-index:3;
+}
+
+.xt-topbar {
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:14px 20px;
+  background: rgba(240,243,248,0.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.6);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.xt-topbar-title {
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  letter-spacing:0.06em; color:var(--text-2); text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+}
+
+/* Sub-tabs */
+.xt-tabs {
+  display:flex; gap:4px; padding:12px 20px 0;
+  border-bottom: 1px solid rgba(15,23,42,0.06);
+}
+.xt-tab {
+  padding: 10px 16px;
+  border: none; cursor:pointer;
+  background: transparent;
+  font: 600 12px/1 'Outfit', sans-serif;
+  color: var(--text-3);
+  border-radius: 12px 12px 0 0;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+  letter-spacing: -0.01em;
+}
+.xt-tab:hover { color:var(--text-2); background:rgba(255,255,255,0.3) }
+.xt-tab.active {
+  color: var(--brand-2);
+  background: rgba(255,255,255,0.5);
+  border-bottom-color: var(--brand-2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.xt-tab-content { display:none }
+.xt-tab-content.active { display:block }
+
+.xt-scroll-area {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,204,255,0.25) rgba(13,26,46,0.04);
+  padding: 4px 18px 18px;
+  cursor: grab;
+}
+.xt-scroll-area:active { cursor: grabbing }
+.xt-scroll-area::-webkit-scrollbar { height: 6px }
+.xt-scroll-area::-webkit-scrollbar-track { background: rgba(13,26,46,0.04); border-radius: 999px }
+.xt-scroll-area::-webkit-scrollbar-thumb { background: rgba(0,204,255,0.25); border-radius: 999px }
+.xt-scroll-area::-webkit-scrollbar-thumb:hover { background: rgba(0,204,255,0.4) }
+
+/* Neumorphic table */
+.xt-table-real {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.xt-th-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(240,243,248,0.70);
+  backdrop-filter: blur(16px);
+  padding: 10px 14px;
+  font: 600 10px/1 'Outfit', sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #475569;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.6);
+  border-right: 1px solid rgba(255,255,255,0.25);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.xt-th-sticky:last-child { border-right:none }
+.xt-th-wide { min-width:200px }
+.xt-th-mono { text-align:right; font-family:'JetBrains Mono',monospace; font-size:9px }
+
+/* Highlighted columns */
+.xt-th-hl {
+  background: rgba(59,130,246,0.10);
+  color: #1e40af;
+  box-shadow: inset 0 -2px 0 rgba(59,130,246,0.15), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+.xt-td-hl {
+  background: rgba(59,130,246,0.04);
+  border-left: 1px solid rgba(59,130,246,0.06);
+  border-right: 1px solid rgba(59,130,246,0.06);
+}
+
+.xt-table-real tbody td {
+  padding: 9px 14px;
+  font: 500 13px/1.4 'Outfit', sans-serif;
+  color: #1e293b;
+  border-bottom: 1px solid rgba(15,23,42,0.05);
+  border-right: 1px solid rgba(15,23,42,0.03);
+  transition: background 0.2s cubic-bezier(.4,0,.2,1);
+  white-space: nowrap;
+}
+.xt-table-real tbody td:last-child { border-right:none }
+
+/* Zebra + depth */
+.xt-table-real tbody tr:nth-child(odd) td { background: rgba(255,255,255,0.20) }
+.xt-table-real tbody tr:nth-child(odd) .xt-td-hl { background: rgba(59,130,246,0.06) }
+.xt-table-real tbody tr:hover td { background: rgba(255,255,255,0.50) }
+.xt-table-real tbody tr:hover .xt-td-hl { background: rgba(59,130,246,0.08) }
+
+/* Column depth (neumorphic) — even cols raised, odd cols recessed */
+.xt-table-real tbody td:nth-child(even) { box-shadow: inset 0 1px 2px rgba(255,255,255,0.4) }
+.xt-table-real tbody td:nth-child(odd) { box-shadow: inset 0 1px 2px rgba(15,23,42,0.03) }
+
+.xt-mono {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 12px !important;
+  color: #0f172a;
+  text-align: right;
+}
+.xt-mono strong { font-weight:700 }
+
+.xt-td-name {
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.xt-td-name strong {
+  font: 600 13px/1.3 'Outfit', sans-serif;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  display: block;
+}
+.xt-camp-dot { width:8px; height:8px; border-radius:999px; flex-shrink:0; box-shadow:0 0 10px -2px currentColor }
+.xt-utm {
+  display: block;
+  font: 500 9.5px/1 'JetBrains Mono', monospace;
+  color: var(--text-3);
+  letter-spacing: 0.02em;
+  margin-top: 3px;
+  opacity: 0.7;
+}
+
+.xt-status {
+  font: 600 10px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+.xt-status-on { color:var(--green); background:rgba(14,165,114,0.08); border:1px solid rgba(14,165,114,0.18) }
+.xt-status-warn { color:var(--amber); background:rgba(232,160,32,0.08); border:1px solid rgba(232,160,32,0.18) }
+.xt-status-off { color:var(--red); background:rgba(229,57,53,0.08); border:1px solid rgba(229,57,53,0.18) }
+
+.xt-action {
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  padding: 7px 12px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.02em;
+}
+.xt-action-scale {
+  color: white;
+  background: linear-gradient(135deg, var(--green), #087a52);
+  box-shadow: 0 6px 16px -6px rgba(14,165,114,0.4);
+}
+.xt-action-scale:hover { transform:translateY(-1px); box-shadow:0 10px 22px -6px rgba(14,165,114,0.5) }
+.xt-action-iter {
+  color: var(--amber);
+  background: rgba(232,160,32,0.1);
+  border: 1px solid rgba(232,160,32,0.22);
+}
+.xt-action-iter:hover { background:rgba(232,160,32,0.18) }
+.xt-action-pause {
+  color: var(--red);
+  background: rgba(229,57,53,0.1);
+  border: 1px solid rgba(229,57,53,0.22);
+}
+.xt-action-pause:hover { background:rgba(229,57,53,0.18) }
+
+/* Summary bar */
+.xt-summary {
+  display: flex;
+  justify-content: space-around;
+  gap: 12px;
+  padding: 18px 24px;
+  margin: 0 18px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(13,26,46,0.96), rgba(15,35,55,0.92));
+  box-shadow: 0 14px 32px -14px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.xt-sum-item { text-align:center }
+.xt-sum-item span {
+  display: block;
+  font: 600 9px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 6px;
+}
+.xt-sum-item strong {
+  font: 800 18px/1 'Outfit', sans-serif;
+  letter-spacing: -0.03em;
+  color: white;
+}
+
+/* ═══════ DARK PRICING CARD ═══════ */
+.pricing-card-dark {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(160deg, rgba(11,26,43,0.97), rgba(15,35,55,0.94), rgba(13,26,46,0.98));
+  box-shadow:
+    0 36px 80px -24px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(0,204,255,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  transform-style: preserve-3d;
+}
+.pricing-card-dark::before {
+  content:'';
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 30% 10%, rgba(0,204,255,0.1), transparent 40%),
+    radial-gradient(circle at 70% 90%, rgba(0,150,200,0.06), transparent 35%),
+    linear-gradient(180deg, rgba(255,255,255,0.04), transparent 40%);
+}
+.pricing-card-dark::after {
+  content:'';
+  position:absolute; top:0; left:8%; right:8%; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(0,204,255,0.35), transparent);
+  pointer-events:none;
+}
+.pcd-glow {
+  position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+  width:500px; height:260px;
+  background: radial-gradient(ellipse, rgba(0,204,255,0.1), transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+.pcd-head { padding:30px 30px 24px; position:relative }
+.pcd-badge {
+  display:inline-block;
+  font: 700 9px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.2em; text-transform:uppercase;
+  color: var(--brand);
+  background: rgba(0,204,255,0.12);
+  border: 1px solid rgba(0,204,255,0.24);
+  border-radius: 8px;
+  padding: 5px 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 0 18px -4px rgba(0,204,255,0.3);
+}
+.pcd-plan {
+  font: 600 10px/1 'JetBrains Mono', monospace;
+  letter-spacing:0.16em; text-transform:uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 4px;
+}
+.pcd-name {
+  font: 800 26px/1.1 'Outfit', sans-serif;
+  letter-spacing: -0.04em;
+  color: white;
+  margin-bottom: 20px;
+}
+.pcd-price-row { display:flex; align-items:baseline; gap:5px; margin-bottom:8px }
+.pcd-cur { font:600 20px/1 'Outfit',sans-serif; color:rgba(255,255,255,0.5) }
+.pcd-val {
+  font: 900 58px/1 'Outfit', sans-serif;
+  letter-spacing: -0.06em;
+  background: linear-gradient(135deg, #ffffff 0%, #7de5ff 70%, #00ccff 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+  text-shadow: none;
+}
+.pcd-period { font-size:16px; color:rgba(255,255,255,0.4); font-weight:500 }
+.pcd-note { font-size:13px; color:rgba(255,255,255,0.35); font-style:italic }
+
+.pcd-divider {
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(0,204,255,0.2), transparent);
+}
+
+.pcd-body { padding:24px 30px 30px }
+.pcd-items { display:flex; flex-direction:column; gap:12px; margin-bottom:26px }
+.pcd-item {
+  display:flex; align-items:flex-start; gap:10px;
+  font-size:14px; color:rgba(220,232,245,0.72); line-height:1.6;
+}
+.pcd-ck {
+  width:20px; height:20px;
+  background: rgba(0,204,255,0.12);
+  border: 1px solid rgba(0,204,255,0.25);
+  border-radius: 7px;
+  display:grid; place-items:center; flex-shrink:0; margin-top:1px;
+  color: var(--brand);
+  font: 700 11px/1 'JetBrains Mono', monospace;
+  box-shadow: 0 0 12px -4px rgba(0,204,255,0.2);
+}
+.pcd-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+  background: linear-gradient(135deg, var(--brand-2), var(--brand-3));
+  color: white;
+  font: 700 16px/1 'Outfit', sans-serif; letter-spacing:-0.01em;
+  padding: 18px; border-radius: 16px;
+  border: none; cursor: pointer;
+  box-shadow:
+    0 14px 38px -10px rgba(0,153,204,0.5),
+    0 0 0 1px rgba(0,204,255,0.15) inset,
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  transition: all 0.22s;
+}
+.pcd-btn:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 22px 50px -12px rgba(0,153,204,0.65),
+    0 0 0 1px rgba(0,204,255,0.2) inset,
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.pcd-footnote {
+  text-align:center;
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  color: rgba(255,255,255,0.3);
+  margin-top: 12px;
+  letter-spacing: 0.04em;
+}
 
 .bens-side { display:flex; flex-direction:column; gap:20px; padding-top:8px }
 .ben-row { display:flex; align-items:flex-start; gap:14px }
@@ -896,7 +1419,10 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
 /* ═══════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════ */
+/* ═══════ TABLET ═══════ */
 @media (max-width:1024px) {
+  .xt-pills { grid-template-columns:repeat(2,1fr) }
+  .xt-summary { flex-wrap:wrap; gap:16px }
   .bloco { grid-template-columns:1fr; gap:36px }
   .bloco.rev { direction:ltr }
   .pricing-layout { grid-template-columns:1fr }
@@ -909,13 +1435,95 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   .roi-wrap { padding:36px 24px }
   .dark-cta { padding:52px 28px }
   .hero-float { display:none }
+  .hero-content { padding:32px 28px }
+  .xt-tabs { overflow-x:auto; -webkit-overflow-scrolling:touch; flex-wrap:nowrap }
+  .xt-tab { white-space:nowrap; flex-shrink:0 }
 }
+
+/* ═══════ MOBILE ═══════ */
 @media (max-width:640px) {
-  .prob-grid { grid-template-columns:1fr }
+  /* Hero mobile */
+  .hero-video-section { min-height:auto }
+  .hero-overlay { min-height:auto; padding:120px 0 80px }
+  .hero-content {
+    padding:24px 20px;
+    border-radius:22px;
+    max-width:100%;
+  }
+  .hero-h1 { font-size:clamp(32px,10vw,46px) }
+  .hero-sub { font-size:15px; line-height:1.7; margin-bottom:24px }
+  .hero-badge { font-size:9px; padding:6px 12px 6px 8px }
+  .hero-ctas { flex-direction:column; gap:10px }
+  .btn-primary-hero,
+  .btn-ghost-hero { width:100%; justify-content:center; padding:14px 20px; font-size:14px }
+  .hero-proof { flex-direction:column; gap:8px; text-align:center }
+  .hero-video-fade { height:120px }
+
+  /* Nav */
   .nav-links { display:none }
+  .nav-inner { padding:10px 14px }
+  .nav-brand-text { font-size:14px }
+  .nav-brand-icon { width:30px; height:30px; font-size:11px }
+  .nav-cta { padding:8px 14px; font-size:12px }
+
+  /* Sections */
+  .sec { padding:64px 0 }
+  .s-h2 { font-size:clamp(26px,7vw,36px) }
+  .s-sub { font-size:15px }
+
+  /* Problem cards */
+  .prob-grid { grid-template-columns:1fr }
+
+  /* Solution blocks */
+  .bloco-h3 { font-size:clamp(22px,6vw,30px) }
+  .bloco-p { font-size:14px }
+
+  /* Xtracker */
+  .xt-pills { grid-template-columns:1fr }
+  .xt-pill { padding:14px }
+  .xt-tabs { gap:2px; padding:10px 12px 0 }
+  .xt-tab { padding:8px 12px; font-size:11px }
+  .xt-topbar { padding:10px 14px }
+  .xt-summary {
+    flex-direction:column; align-items:stretch;
+    margin:0 12px 12px; padding:14px 18px; gap:10px;
+  }
+  .xt-sum-item { display:flex; justify-content:space-between; text-align:left }
+  .xt-sum-item span { margin-bottom:0 }
+  .xt-smoke { inset:-20px -20px }
+
+  /* ROI */
   .roi-stats { grid-template-columns:1fr 1fr }
+  .roi-wrap { padding:24px 16px }
+  .roi-stat { padding:18px 10px }
+  .roi-stat-val { font-size:clamp(24px,6vw,34px) }
+
+  /* Differentials */
+  .diff-grid { grid-template-columns:1fr }
+
+  /* Pricing */
+  .pcd-head { padding:22px 20px 18px }
+  .pcd-body { padding:18px 20px 22px }
+  .pcd-name { font-size:22px }
+  .pcd-val { font-size:44px }
+
+  /* FAQ */
+  .faq-q { font-size:14px }
+
+  /* Dark CTA */
+  .dark-cta { padding:36px 20px; border-radius:22px }
+  .dark-cta h2 { font-size:clamp(26px,7vw,38px) }
+  .dark-cta p { font-size:15px }
+
+  /* Misc glass cards */
   .sigs-2col { grid-template-columns:1fr }
   .agent-acts { grid-template-columns:1fr }
+  .tracking-callout { padding:18px }
+  .tcc-item { grid-template-columns:80px 1fr 44px; gap:8px }
+  .tcc-label { font-size:10px }
+
+  /* Marquee */
+  .mq-item { padding:0 16px; font-size:9px }
 }
 </style>
 </head>
@@ -1088,7 +1696,27 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
     <div>
       <div class="bloco-tag">📡 Bloco 02 · Tracking Real de Vendas</div>
       <h3 class="bloco-h3">Sinais que <em>nenhuma outra</em><br>plataforma captura.</h3>
-      <p class="bloco-p">O pixel padrão do Meta perde até <strong>40% das conversões</strong> por iOS e bloqueadores. Nosso tracking server-side captura <strong>98.4%</strong> e alimenta o algoritmo com dados reais.</p>
+
+      <!-- Callout de destaque -->
+      <div class="tracking-callout">
+        <div class="tracking-callout-badge">DIFERENCIAL CORE</div>
+        <p class="tracking-callout-text">
+          O pixel padrão do Meta <span class="loss">perde até 40% das conversões</span> por iOS e bloqueadores.
+          Nosso tracking server-side captura <span class="capture">98.4%</span> e alimenta o algoritmo com <strong>dados reais</strong>.
+        </p>
+        <div class="tracking-callout-compare">
+          <div class="tcc-item tcc-before">
+            <span class="tcc-label">Pixel padrão</span>
+            <div class="tcc-bar-bg"><div class="tcc-bar-fill tcc-fill-weak" style="width:61%"></div></div>
+            <span class="tcc-val tcc-val-weak">61%</span>
+          </div>
+          <div class="tcc-item tcc-after">
+            <span class="tcc-label">Ads.Everest</span>
+            <div class="tcc-bar-bg"><div class="tcc-bar-fill tcc-fill-strong" style="width:98.4%"></div></div>
+            <span class="tcc-val tcc-val-strong">98.4%</span>
+          </div>
+        </div>
+      </div>
       <div class="b-feats">
         <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Server-side tracking</strong> — funciona mesmo com iOS 14+, ad blockers e Safari.</div></div>
         <div class="b-feat"><div class="b-ck">✓</div><div class="b-feat-txt"><strong>Atribuição multi-touch</strong> — cada ponto de contato antes da compra, mapeado.</div></div>
@@ -1169,6 +1797,224 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
         </div>
       </div>
     </div></div>
+  </div>
+</section>
+</div>
+
+<div class="band"></div>
+
+<!-- ═══════ ROI ═══════ -->
+<!-- ═══════ XTRACKER ═══════ -->
+<div class="container" id="xtracker">
+<section class="sec">
+  <div class="fade-up" style="text-align:center; max-width:740px; margin:0 auto 20px">
+    <div class="s-tag" style="justify-content:center">Xtracker — Controle financeiro real</div>
+    <h2 class="s-h2" style="text-align:center">Saiba exatamente quantas vendas cada campanha teve.<br><em>Sem abrir o Facebook.</em></h2>
+    <p class="s-sub" style="text-align:center; margin:0 auto">O <span class="xt-brand-inline">Xtracker</span> conecta <strong>UTM's + sinais de gateway de pagamento</strong> para te dar a verdade sobre cada centavo investido. Otimize direto pelo relatório — sem pular entre abas, sem planilha paralela, sem achismo.</p>
+  </div>
+
+  <!-- Xtracker feature pills -->
+  <div class="xt-pills fade-up d1">
+    <div class="xt-pill"><span class="xt-pill-icon">🔗</span><strong>UTM's inteligentes</strong><span>Cada clique rastreado do anúncio até a compra confirmada no gateway</span></div>
+    <div class="xt-pill"><span class="xt-pill-icon">💳</span><strong>Sinais de gateway</strong><span>Hotmart, Kiwify, Stripe, Shopify — venda real, não estimativa do pixel</span></div>
+    <div class="xt-pill"><span class="xt-pill-icon">📊</span><strong>Relatório operacional</strong><span>Vendas por campanha, conjunto e criativo com CPA e ROAS reais</span></div>
+    <div class="xt-pill"><span class="xt-pill-icon">⚡</span><strong>Otimize sem sair</strong><span>Pause, escale ou itere direto do painel — sem abrir o Ads Manager</span></div>
+  </div>
+
+  <!-- Xtracker dashboard carousel -->
+  <!-- Xtracker Neumorphic Dashboard -->
+  <div class="xt-dashboard-wrap fade-up d2">
+    <!-- Smoke glow behind card -->
+    <div class="xt-smoke"></div>
+
+    <div class="xt-card">
+      <!-- Glass reflections -->
+      <div class="xt-reflection"></div>
+      <div class="xt-sheen"></div>
+
+      <!-- Browser bar -->
+      <div class="xt-topbar">
+        <div class="vb-dots"><div class="vb-dot" style="background:#ff5f56"></div><div class="vb-dot" style="background:#febc2e"></div><div class="vb-dot" style="background:#28c840"></div></div>
+        <div class="xt-topbar-title"><span class="xt-brand-inline" style="font-size:12px">Xtracker</span> · Controle financeiro real</div>
+        <div class="vb-badge">Gateway sync ativo</div>
+      </div>
+
+      <!-- Sub-tabs -->
+      <div class="xt-tabs">
+        <button class="xt-tab active" data-tab="campanhas">📊 Campanhas</button>
+        <button class="xt-tab" data-tab="utms">🔗 UTMs</button>
+        <button class="xt-tab" data-tab="vendas">💳 Vendas</button>
+        <button class="xt-tab" data-tab="relatorios">📄 Relatórios</button>
+      </div>
+
+      <!-- TAB: Campanhas -->
+      <div class="xt-tab-content active" id="tab-campanhas">
+        <div class="xt-scroll-area">
+          <table class="xt-table-real">
+            <thead>
+              <tr>
+                <th class="xt-th-sticky">Status</th>
+                <th class="xt-th-sticky xt-th-wide">Campanha</th>
+                <th class="xt-th-sticky xt-th-mono">Orçamento</th>
+                <th class="xt-th-sticky xt-th-mono xt-th-hl">Vendas</th>
+                <th class="xt-th-sticky xt-th-mono xt-th-hl">CPA</th>
+                <th class="xt-th-sticky xt-th-mono">Gastos</th>
+                <th class="xt-th-sticky xt-th-mono">Faturamento</th>
+                <th class="xt-th-sticky xt-th-mono">Lucro</th>
+                <th class="xt-th-sticky xt-th-mono xt-th-hl">ROAS</th>
+                <th class="xt-th-sticky xt-th-mono">Margem</th>
+                <th class="xt-th-sticky xt-th-mono">ROI</th>
+                <th class="xt-th-sticky xt-th-mono">CTR</th>
+                <th class="xt-th-sticky xt-th-mono">CPM</th>
+                <th class="xt-th-sticky xt-th-mono">Impressões</th>
+                <th class="xt-th-sticky xt-th-mono">Cliques</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="xt-status xt-status-on">Ativo</span></td>
+                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>Retargeting — Win Back</strong><span class="xt-utm">utm_campaign=retarg_winback</span></td>
+                <td class="xt-mono">R$ 150/dia</td>
+                <td class="xt-mono xt-td-hl"><strong class="g">87</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="g">R$ 14,25</strong></td>
+                <td class="xt-mono">R$ 1.240</td>
+                <td class="xt-mono">R$ 5.220</td>
+                <td class="xt-mono"><strong class="g">R$ 3.980</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="g">4.21×</strong></td>
+                <td class="xt-mono"><strong class="g">76%</strong></td>
+                <td class="xt-mono"><strong class="g">321%</strong></td>
+                <td class="xt-mono">3.8%</td>
+                <td class="xt-mono">R$ 18,40</td>
+                <td class="xt-mono">67.391</td>
+                <td class="xt-mono">2.560</td>
+              </tr>
+              <tr>
+                <td><span class="xt-status xt-status-on">Ativo</span></td>
+                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>Prospecção — VSL Curta</strong><span class="xt-utm">utm_campaign=prosp_vsl_short</span></td>
+                <td class="xt-mono">R$ 300/dia</td>
+                <td class="xt-mono xt-td-hl"><strong class="g">64</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="g">R$ 41,87</strong></td>
+                <td class="xt-mono">R$ 2.680</td>
+                <td class="xt-mono">R$ 8.320</td>
+                <td class="xt-mono"><strong class="g">R$ 5.640</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="g">3.10×</strong></td>
+                <td class="xt-mono"><strong class="g">67%</strong></td>
+                <td class="xt-mono"><strong class="g">210%</strong></td>
+                <td class="xt-mono">2.9%</td>
+                <td class="xt-mono">R$ 24,10</td>
+                <td class="xt-mono">111.203</td>
+                <td class="xt-mono">3.224</td>
+              </tr>
+              <tr>
+                <td><span class="xt-status xt-status-warn">Monitorar</span></td>
+                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--amber)"></div><strong>Lookalike — Compradores 90d</strong><span class="xt-utm">utm_campaign=lal_buyers_90d</span></td>
+                <td class="xt-mono">R$ 200/dia</td>
+                <td class="xt-mono xt-td-hl"><strong class="a">31</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="a">R$ 60,96</strong></td>
+                <td class="xt-mono">R$ 1.890</td>
+                <td class="xt-mono">R$ 3.410</td>
+                <td class="xt-mono"><strong class="a">R$ 1.520</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="a">1.80×</strong></td>
+                <td class="xt-mono"><strong class="a">44%</strong></td>
+                <td class="xt-mono"><strong class="a">80%</strong></td>
+                <td class="xt-mono">1.6%</td>
+                <td class="xt-mono">R$ 32,50</td>
+                <td class="xt-mono">58.153</td>
+                <td class="xt-mono">930</td>
+              </tr>
+              <tr>
+                <td><span class="xt-status xt-status-off">Pausar</span></td>
+                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--red)"></div><strong>Broad — Carrossel Oferta</strong><span class="xt-utm">utm_campaign=broad_carousel_v2</span></td>
+                <td class="xt-mono">R$ 350/dia</td>
+                <td class="xt-mono xt-td-hl"><strong class="r">18</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="r">R$ 174,44</strong></td>
+                <td class="xt-mono">R$ 3.140</td>
+                <td class="xt-mono">R$ 2.160</td>
+                <td class="xt-mono"><strong class="r">-R$ 980</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="r">0.68×</strong></td>
+                <td class="xt-mono"><strong class="r">-45%</strong></td>
+                <td class="xt-mono"><strong class="r">-31%</strong></td>
+                <td class="xt-mono">0.9%</td>
+                <td class="xt-mono">R$ 48,30</td>
+                <td class="xt-mono">65.010</td>
+                <td class="xt-mono">585</td>
+              </tr>
+              <tr>
+                <td><span class="xt-status xt-status-on">Ativo</span></td>
+                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>DPA — Catálogo Dinâmico</strong><span class="xt-utm">utm_campaign=dpa_catalog_main</span></td>
+                <td class="xt-mono">R$ 120/dia</td>
+                <td class="xt-mono xt-td-hl"><strong class="g">42</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="g">R$ 22,85</strong></td>
+                <td class="xt-mono">R$ 960</td>
+                <td class="xt-mono">R$ 3.780</td>
+                <td class="xt-mono"><strong class="g">R$ 2.820</strong></td>
+                <td class="xt-mono xt-td-hl"><strong class="g">3.93×</strong></td>
+                <td class="xt-mono"><strong class="g">74%</strong></td>
+                <td class="xt-mono"><strong class="g">293%</strong></td>
+                <td class="xt-mono">4.2%</td>
+                <td class="xt-mono">R$ 15,80</td>
+                <td class="xt-mono">60.759</td>
+                <td class="xt-mono">2.551</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: UTMs -->
+      <div class="xt-tab-content" id="tab-utms">
+        <div class="xt-scroll-area">
+          <table class="xt-table-real">
+            <thead><tr><th class="xt-th-sticky xt-th-wide">utm_campaign</th><th class="xt-th-sticky xt-th-mono xt-th-hl">Vendas</th><th class="xt-th-sticky xt-th-mono xt-th-hl">CPA</th><th class="xt-th-sticky xt-th-mono">Gastos</th><th class="xt-th-sticky xt-th-mono">Faturamento</th><th class="xt-th-sticky xt-th-mono">Lucro</th><th class="xt-th-sticky xt-th-mono xt-th-hl">ROAS</th><th class="xt-th-sticky xt-th-mono">Margem</th><th class="xt-th-sticky xt-th-mono">CTR</th><th class="xt-th-sticky xt-th-mono">CPM</th></tr></thead>
+            <tbody>
+              <tr><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:12px">retarg_winback</span></td><td class="xt-mono xt-td-hl"><strong class="g">87</strong></td><td class="xt-mono xt-td-hl"><strong class="g">R$ 14,25</strong></td><td class="xt-mono">R$ 1.240</td><td class="xt-mono">R$ 5.220</td><td class="xt-mono"><strong class="g">R$ 3.980</strong></td><td class="xt-mono xt-td-hl"><strong class="g">4.21×</strong></td><td class="xt-mono">76%</td><td class="xt-mono">3.8%</td><td class="xt-mono">R$ 18,40</td></tr>
+              <tr><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:12px">prosp_vsl_short</span></td><td class="xt-mono xt-td-hl"><strong class="g">64</strong></td><td class="xt-mono xt-td-hl"><strong class="g">R$ 41,87</strong></td><td class="xt-mono">R$ 2.680</td><td class="xt-mono">R$ 8.320</td><td class="xt-mono"><strong class="g">R$ 5.640</strong></td><td class="xt-mono xt-td-hl"><strong class="g">3.10×</strong></td><td class="xt-mono">67%</td><td class="xt-mono">2.9%</td><td class="xt-mono">R$ 24,10</td></tr>
+              <tr><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:12px">lal_buyers_90d</span></td><td class="xt-mono xt-td-hl"><strong class="a">31</strong></td><td class="xt-mono xt-td-hl"><strong class="a">R$ 60,96</strong></td><td class="xt-mono">R$ 1.890</td><td class="xt-mono">R$ 3.410</td><td class="xt-mono"><strong class="a">R$ 1.520</strong></td><td class="xt-mono xt-td-hl"><strong class="a">1.80×</strong></td><td class="xt-mono">44%</td><td class="xt-mono">1.6%</td><td class="xt-mono">R$ 32,50</td></tr>
+              <tr><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:12px">broad_carousel_v2</span></td><td class="xt-mono xt-td-hl"><strong class="r">18</strong></td><td class="xt-mono xt-td-hl"><strong class="r">R$ 174,44</strong></td><td class="xt-mono">R$ 3.140</td><td class="xt-mono">R$ 2.160</td><td class="xt-mono"><strong class="r">-R$ 980</strong></td><td class="xt-mono xt-td-hl"><strong class="r">0.68×</strong></td><td class="xt-mono">-45%</td><td class="xt-mono">0.9%</td><td class="xt-mono">R$ 48,30</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Vendas -->
+      <div class="xt-tab-content" id="tab-vendas">
+        <div class="xt-scroll-area">
+          <table class="xt-table-real">
+            <thead><tr><th class="xt-th-sticky">Data</th><th class="xt-th-sticky">Produto</th><th class="xt-th-sticky">Cliente</th><th class="xt-th-sticky xt-th-mono xt-th-hl">Valor</th><th class="xt-th-sticky">Status</th><th class="xt-th-sticky">Plataforma</th><th class="xt-th-sticky">UTM Source</th><th class="xt-th-sticky">UTM Campaign</th></tr></thead>
+            <tbody>
+              <tr><td>31/03/2026</td><td>Curso Expert Ads</td><td>Maria S.</td><td class="xt-mono xt-td-hl"><strong>R$ 497</strong></td><td><span class="xt-status xt-status-on">Pago</span></td><td>Hotmart</td><td>fb</td><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:11px">retarg_winback</span></td></tr>
+              <tr><td>31/03/2026</td><td>Mentoria Scale</td><td>João P.</td><td class="xt-mono xt-td-hl"><strong>R$ 1.297</strong></td><td><span class="xt-status xt-status-on">Pago</span></td><td>Kiwify</td><td>fb</td><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:11px">prosp_vsl_short</span></td></tr>
+              <tr><td>30/03/2026</td><td>Curso Expert Ads</td><td>Ana L.</td><td class="xt-mono xt-td-hl"><strong>R$ 497</strong></td><td><span class="xt-status xt-status-warn">Pendente</span></td><td>Hotmart</td><td>fb</td><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:11px">lal_buyers_90d</span></td></tr>
+              <tr><td>30/03/2026</td><td>Template Pack</td><td>Carlos M.</td><td class="xt-mono xt-td-hl"><strong>R$ 97</strong></td><td><span class="xt-status xt-status-on">Pago</span></td><td>Stripe</td><td>fb</td><td class="xt-td-name"><span class="xt-utm" style="opacity:1;font-size:11px">dpa_catalog_main</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Relatórios -->
+      <div class="xt-tab-content" id="tab-relatorios">
+        <div class="xt-scroll-area">
+          <table class="xt-table-real">
+            <thead><tr><th class="xt-th-sticky">Data</th><th class="xt-th-sticky">Dia</th><th class="xt-th-sticky xt-th-mono xt-th-hl">Vendas</th><th class="xt-th-sticky xt-th-mono xt-th-hl">CPA</th><th class="xt-th-sticky xt-th-mono">Gastos</th><th class="xt-th-sticky xt-th-mono">Faturamento</th><th class="xt-th-sticky xt-th-mono">Lucro</th><th class="xt-th-sticky xt-th-mono xt-th-hl">ROAS</th><th class="xt-th-sticky xt-th-mono">Margem</th><th class="xt-th-sticky xt-th-mono">ROI</th></tr></thead>
+            <tbody>
+              <tr><td>31/03</td><td>Seg</td><td class="xt-mono xt-td-hl"><strong class="g">42</strong></td><td class="xt-mono xt-td-hl"><strong class="g">R$ 28,50</strong></td><td class="xt-mono">R$ 1.197</td><td class="xt-mono">R$ 4.830</td><td class="xt-mono"><strong class="g">R$ 3.633</strong></td><td class="xt-mono xt-td-hl"><strong class="g">4.03×</strong></td><td class="xt-mono">75%</td><td class="xt-mono">303%</td></tr>
+              <tr><td>30/03</td><td>Dom</td><td class="xt-mono xt-td-hl"><strong class="g">38</strong></td><td class="xt-mono xt-td-hl"><strong class="g">R$ 31,10</strong></td><td class="xt-mono">R$ 1.181</td><td class="xt-mono">R$ 4.180</td><td class="xt-mono"><strong class="g">R$ 2.999</strong></td><td class="xt-mono xt-td-hl"><strong class="g">3.54×</strong></td><td class="xt-mono">71%</td><td class="xt-mono">253%</td></tr>
+              <tr><td>29/03</td><td>Sáb</td><td class="xt-mono xt-td-hl"><strong class="a">24</strong></td><td class="xt-mono xt-td-hl"><strong class="a">R$ 52,00</strong></td><td class="xt-mono">R$ 1.248</td><td class="xt-mono">R$ 2.640</td><td class="xt-mono"><strong class="a">R$ 1.392</strong></td><td class="xt-mono xt-td-hl"><strong class="a">2.11×</strong></td><td class="xt-mono">52%</td><td class="xt-mono">111%</td></tr>
+              <tr><td>28/03</td><td>Sex</td><td class="xt-mono xt-td-hl"><strong class="g">51</strong></td><td class="xt-mono xt-td-hl"><strong class="g">R$ 22,80</strong></td><td class="xt-mono">R$ 1.162</td><td class="xt-mono">R$ 5.610</td><td class="xt-mono"><strong class="g">R$ 4.448</strong></td><td class="xt-mono xt-td-hl"><strong class="g">4.82×</strong></td><td class="xt-mono">79%</td><td class="xt-mono">382%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom summary bar -->
+      <div class="xt-summary">
+        <div class="xt-sum-item"><span>Total gasto</span><strong>R$ 10.630</strong></div>
+        <div class="xt-sum-item"><span>Vendas reais</span><strong class="g">254</strong></div>
+        <div class="xt-sum-item"><span>Receita total</span><strong>R$ 23.970</strong></div>
+        <div class="xt-sum-item"><span>ROAS geral</span><strong class="g">2.25×</strong></div>
+        <div class="xt-sum-item"><span>Lucro líquido</span><strong class="g">R$ 13.340</strong></div>
+      </div>
+    </div>
   </div>
 </section>
 </div>
@@ -1268,25 +2114,28 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
       <div class="ben-row"><div class="ben-num">04</div><div class="ben-content"><h4>Agente de IA autônomo</h4><p>Define o objetivo. A IA analisa, recomenda e executa. Alertas preditivos antes do estrago.</p></div></div>
       <div class="ben-row"><div class="ben-num">05</div><div class="ben-content"><h4>Atualizações contínuas</h4><p>A plataforma evolui com novos sinais, análises e capacidades do agente. Incluídas.</p></div></div>
     </div>
-    <div class="pricing-card glass glass-strong tilt-card">
-      <div class="shine"></div>
+    <div class="pricing-card-dark tilt-card">
+      <div class="pcd-glow"></div>
+      <div class="shine" style="opacity:0.2"></div>
       <div style="position:relative;z-index:2">
-        <div class="pc-head">
-          <div class="pc-plan">Ads.Everest Pro</div>
-          <div class="pc-name">Plano Mensal Completo</div>
-          <div class="pc-price-row"><span class="pc-cur">R$</span><span class="pc-val">97</span><span class="pc-period">/mês</span></div>
-          <div class="pc-note">Assinatura simples. Cancela quando quiser.</div>
+        <div class="pcd-head">
+          <div class="pcd-badge">OFERTA DE ENTRADA</div>
+          <div class="pcd-plan">Ads.Everest Pro</div>
+          <div class="pcd-name">Plano Mensal Completo</div>
+          <div class="pcd-price-row"><span class="pcd-cur">R$</span><span class="pcd-val">97</span><span class="pcd-period">/mês</span></div>
+          <div class="pcd-note">Assinatura simples. Cancela quando quiser.</div>
         </div>
-        <div class="pc-body">
-          <div class="pc-items">
-            <div class="pc-item"><div class="pc-ck">✓</div>Dashboard inteligente com alertas em tempo real</div>
-            <div class="pc-item"><div class="pc-ck">✓</div>Tracking server-side · 98.4% de captura</div>
-            <div class="pc-item"><div class="pc-ck">✓</div>Análise de criativos com IA · Score + diagnóstico</div>
-            <div class="pc-item"><div class="pc-ck">✓</div>Agente IA autônomo · Análise + recomendação</div>
-            <div class="pc-item"><div class="pc-ck">✓</div>Atualizações contínuas da plataforma</div>
+        <div class="pcd-divider"></div>
+        <div class="pcd-body">
+          <div class="pcd-items">
+            <div class="pcd-item"><div class="pcd-ck">✓</div>Dashboard inteligente com alertas em tempo real</div>
+            <div class="pcd-item"><div class="pcd-ck">✓</div>Tracking server-side · 98.4% de captura</div>
+            <div class="pcd-item"><div class="pcd-ck">✓</div>Análise de criativos com IA · Score + diagnóstico</div>
+            <div class="pcd-item"><div class="pcd-ck">✓</div>Agente IA autônomo · Análise + recomendação</div>
+            <div class="pcd-item"><div class="pcd-ck">✓</div>Atualizações contínuas da plataforma</div>
           </div>
-          <button class="btn-buy" onclick="window.location='#'">Assinar por R$97/mês →</button>
-          <div class="btn-note">Mensal · Sem fidelidade · Cancele quando quiser</div>
+          <button class="pcd-btn" onclick="window.location='#'">Assinar por R$97/mês →</button>
+          <div class="pcd-footnote">Mensal · Sem fidelidade · Cancele quando quiser</div>
         </div>
       </div>
     </div>
@@ -1330,6 +2179,27 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
 </footer>
 
 <script>
+// Xtracker tabs
+document.querySelectorAll('.xt-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.xt-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.xt-tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab)?.classList.add('active');
+  });
+});
+
+// Xtracker drag scroll
+(function(){
+  const el = document.querySelector('.xt-scroll-area');
+  if(!el) return;
+  let isDown=false, startX, scrollL;
+  el.addEventListener('mousedown', e => { isDown=true; el.style.cursor='grabbing'; startX=e.pageX-el.offsetLeft; scrollL=el.scrollLeft });
+  el.addEventListener('mouseleave', () => { isDown=false; el.style.cursor='grab' });
+  el.addEventListener('mouseup', () => { isDown=false; el.style.cursor='grab' });
+  el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; el.scrollLeft=scrollL-(x-startX)*1.5 });
+})();
+
 // Marquee items
 const mqi = ['Dashboard Inteligente','Tracking Server-Side','Agente de IA','Análise de Criativos','Sinais Proprietários','ROAS Real','Escala com Lucro','Score por Criativo','Atribuição Multi-Touch','Alertas Preditivos','CPA Real','Funil Completo'];
 const mq = document.getElementById('mqTrack');
