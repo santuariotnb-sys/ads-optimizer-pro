@@ -1220,6 +1220,84 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
   color: white;
 }
 
+/* ═══════ CAMPAIGN CARDS (compact, like dashboard) ═══════ */
+.camp-cards {
+  display: flex;
+  gap: 12px;
+  padding: 4px 0;
+  width: max-content;
+}
+.camp-card {
+  min-width: 320px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.52);
+  border: 1px solid rgba(255,255,255,0.72);
+  box-shadow:
+    0 10px 28px -12px rgba(13,26,46,0.14),
+    inset 0 1px 0 rgba(255,255,255,0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  transition: all 0.22s;
+}
+.camp-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -14px rgba(13,26,46,0.2), inset 0 1px 0 rgba(255,255,255,0.96);
+}
+.camp-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.camp-card-head strong {
+  font: 600 13.5px/1.3 'Outfit', sans-serif;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 210px;
+}
+.camp-card-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+.camp-kpi {
+  text-align: center;
+  padding: 8px 4px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.4);
+}
+.camp-kpi-lbl {
+  display: block;
+  font: 600 8px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 5px;
+}
+.camp-kpi strong {
+  display: block;
+  font: 700 13px/1 'JetBrains Mono', monospace;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+/* Mobile camp cards */
+@media (max-width:640px) {
+  .camp-card { min-width: 270px; padding: 14px 16px }
+  .camp-card-head strong { font-size: 12px; max-width: 170px }
+  .camp-card-kpis { gap: 1px }
+  .camp-kpi { padding: 6px 3px }
+  .camp-kpi-lbl { font-size: 7px }
+  .camp-kpi strong { font-size: 11px }
+}
+
 /* ═══════ DARK PRICING CARD ═══════ */
 .pricing-card-dark {
   border-radius: var(--radius-xl);
@@ -1964,12 +2042,7 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   </div>
 
   <!-- Xtracker feature pills -->
-  <div class="xt-pills fade-up d1">
-    <div class="xt-pill"><span class="xt-pill-icon">🔗</span><strong>UTM's inteligentes</strong><span>Cada clique rastreado do anúncio até a compra confirmada no gateway</span></div>
-    <div class="xt-pill"><span class="xt-pill-icon">💳</span><strong>Sinais de gateway</strong><span>Hotmart, Kiwify, Stripe, Shopify — venda real, não estimativa do pixel</span></div>
-    <div class="xt-pill"><span class="xt-pill-icon">📊</span><strong>Relatório operacional</strong><span>Vendas por campanha, conjunto e criativo com CPA e ROAS reais</span></div>
-    <div class="xt-pill"><span class="xt-pill-icon">⚡</span><strong>Otimize sem sair</strong><span>Pause, escale ou itere direto do painel — sem abrir o Ads Manager</span></div>
-  </div>
+  <!-- Pills removidos — tabs já cumprem esse papel -->
 
   <!-- Xtracker dashboard carousel -->
   <!-- Xtracker Neumorphic Dashboard -->
@@ -1998,116 +2071,72 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
       </div>
 
       <!-- TAB: Campanhas -->
+      <!-- TAB: Campanhas — cards compactos com scroll horizontal -->
       <div class="xt-tab-content active" id="tab-campanhas">
         <div class="xt-scroll-area">
-          <table class="xt-table-real">
-            <thead>
-              <tr>
-                <th class="xt-th-sticky">Status</th>
-                <th class="xt-th-sticky xt-th-wide">Campanha</th>
-                <th class="xt-th-sticky xt-th-mono">Orçamento</th>
-                <th class="xt-th-sticky xt-th-mono xt-th-hl">Vendas</th>
-                <th class="xt-th-sticky xt-th-mono xt-th-hl">CPA</th>
-                <th class="xt-th-sticky xt-th-mono">Gastos</th>
-                <th class="xt-th-sticky xt-th-mono">Faturamento</th>
-                <th class="xt-th-sticky xt-th-mono">Lucro</th>
-                <th class="xt-th-sticky xt-th-mono xt-th-hl">ROAS</th>
-                <th class="xt-th-sticky xt-th-mono">Margem</th>
-                <th class="xt-th-sticky xt-th-mono">ROI</th>
-                <th class="xt-th-sticky xt-th-mono">CTR</th>
-                <th class="xt-th-sticky xt-th-mono">CPM</th>
-                <th class="xt-th-sticky xt-th-mono">Impressões</th>
-                <th class="xt-th-sticky xt-th-mono">Cliques</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td data-label="Status"><span class="xt-status xt-status-on">Ativo</span></td>
-                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>Retargeting — Win Back</strong><span class="xt-utm">utm_campaign=retarg_winback</span></td>
-                <td class="xt-mono" data-label="Orçamento">R$ 150/dia</td>
-                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="g">87</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="g">R$ 14,25</strong></td>
-                <td class="xt-mono" data-label="Gastos">R$ 1.240</td>
-                <td class="xt-mono" data-label="Faturamento">R$ 5.220</td>
-                <td class="xt-mono" data-label="Lucro"><strong class="g">R$ 3.980</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="g">4.21×</strong></td>
-                <td class="xt-mono" data-label="Margem"><strong class="g">76%</strong></td>
-                <td class="xt-mono" data-label="ROI"><strong class="g">321%</strong></td>
-                <td class="xt-mono" data-label="CTR">3.8%</td>
-                <td class="xt-mono" data-label="CPM">R$ 18,40</td>
-                <td class="xt-mono" data-label="Impressões">67.391</td>
-                <td class="xt-mono" data-label="Cliques">2.560</td>
-              </tr>
-              <tr>
-                <td data-label="Status"><span class="xt-status xt-status-on">Ativo</span></td>
-                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>Prospecção — VSL Curta</strong><span class="xt-utm">utm_campaign=prosp_vsl_short</span></td>
-                <td class="xt-mono" data-label="Orçamento">R$ 300/dia</td>
-                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="g">64</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="g">R$ 41,87</strong></td>
-                <td class="xt-mono" data-label="Gastos">R$ 2.680</td>
-                <td class="xt-mono" data-label="Faturamento">R$ 8.320</td>
-                <td class="xt-mono" data-label="Lucro"><strong class="g">R$ 5.640</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="g">3.10×</strong></td>
-                <td class="xt-mono" data-label="Margem"><strong class="g">67%</strong></td>
-                <td class="xt-mono" data-label="ROI"><strong class="g">210%</strong></td>
-                <td class="xt-mono" data-label="CTR">2.9%</td>
-                <td class="xt-mono" data-label="CPM">R$ 24,10</td>
-                <td class="xt-mono" data-label="Impressões">111.203</td>
-                <td class="xt-mono" data-label="Cliques">3.224</td>
-              </tr>
-              <tr>
-                <td data-label="Status"><span class="xt-status xt-status-warn">Monitorar</span></td>
-                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--amber)"></div><strong>Lookalike — Compradores 90d</strong><span class="xt-utm">utm_campaign=lal_buyers_90d</span></td>
-                <td class="xt-mono" data-label="Orçamento">R$ 200/dia</td>
-                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="a">31</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="a">R$ 60,96</strong></td>
-                <td class="xt-mono" data-label="Gastos">R$ 1.890</td>
-                <td class="xt-mono" data-label="Faturamento">R$ 3.410</td>
-                <td class="xt-mono" data-label="Lucro"><strong class="a">R$ 1.520</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="a">1.80×</strong></td>
-                <td class="xt-mono" data-label="Margem"><strong class="a">44%</strong></td>
-                <td class="xt-mono" data-label="ROI"><strong class="a">80%</strong></td>
-                <td class="xt-mono" data-label="CTR">1.6%</td>
-                <td class="xt-mono" data-label="CPM">R$ 32,50</td>
-                <td class="xt-mono" data-label="Impressões">58.153</td>
-                <td class="xt-mono" data-label="Cliques">930</td>
-              </tr>
-              <tr>
-                <td data-label="Status"><span class="xt-status xt-status-off">Pausar</span></td>
-                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--red)"></div><strong>Broad — Carrossel Oferta</strong><span class="xt-utm">utm_campaign=broad_carousel_v2</span></td>
-                <td class="xt-mono" data-label="Orçamento">R$ 350/dia</td>
-                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="r">18</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="r">R$ 174,44</strong></td>
-                <td class="xt-mono" data-label="Gastos">R$ 3.140</td>
-                <td class="xt-mono" data-label="Faturamento">R$ 2.160</td>
-                <td class="xt-mono" data-label="Lucro"><strong class="r">-R$ 980</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="r">0.68×</strong></td>
-                <td class="xt-mono" data-label="Margem"><strong class="r">-45%</strong></td>
-                <td class="xt-mono" data-label="ROI"><strong class="r">-31%</strong></td>
-                <td class="xt-mono" data-label="CTR">0.9%</td>
-                <td class="xt-mono" data-label="CPM">R$ 48,30</td>
-                <td class="xt-mono" data-label="Impressões">65.010</td>
-                <td class="xt-mono" data-label="Cliques">585</td>
-              </tr>
-              <tr>
-                <td data-label="Status"><span class="xt-status xt-status-on">Ativo</span></td>
-                <td class="xt-td-name"><div class="xt-camp-dot" style="background:var(--green)"></div><strong>DPA — Catálogo Dinâmico</strong><span class="xt-utm">utm_campaign=dpa_catalog_main</span></td>
-                <td class="xt-mono" data-label="Orçamento">R$ 120/dia</td>
-                <td class="xt-mono xt-td-hl" data-label="Vendas"><strong class="g">42</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="CPA"><strong class="g">R$ 22,85</strong></td>
-                <td class="xt-mono" data-label="Gastos">R$ 960</td>
-                <td class="xt-mono" data-label="Faturamento">R$ 3.780</td>
-                <td class="xt-mono" data-label="Lucro"><strong class="g">R$ 2.820</strong></td>
-                <td class="xt-mono xt-td-hl" data-label="ROAS"><strong class="g">3.93×</strong></td>
-                <td class="xt-mono" data-label="Margem"><strong class="g">74%</strong></td>
-                <td class="xt-mono" data-label="ROI"><strong class="g">293%</strong></td>
-                <td class="xt-mono" data-label="CTR">4.2%</td>
-                <td class="xt-mono" data-label="CPM">R$ 15,80</td>
-                <td class="xt-mono" data-label="Impressões">60.759</td>
-                <td class="xt-mono" data-label="Cliques">2.551</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="camp-cards">
+
+            <div class="camp-card">
+              <div class="camp-card-head"><strong>[ASC] Protocolo Detox — Broad</strong><span class="xt-status xt-status-on">Ativo</span></div>
+              <div class="camp-card-kpis">
+                <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="g">3.82x</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong>R$ 42,50</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">293</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 12.450</strong></div>
+              </div>
+            </div>
+
+            <div class="camp-card">
+              <div class="camp-card-head"><strong>[CBO] Kit Skincare — Lookalike 1%</strong><span class="xt-status xt-status-on">Ativo</span></div>
+              <div class="camp-card-kpis">
+                <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="g">2.94x</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong>R$ 58,30</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">150</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 8.750</strong></div>
+              </div>
+            </div>
+
+            <div class="camp-card">
+              <div class="camp-card-head"><strong>[ASC] Suplemento Whey — Perform...</strong><span class="xt-status xt-status-warn">Aprendizado</span></div>
+              <div class="camp-card-kpis">
+                <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="a">1.45x</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong class="a">R$ 89,00</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong>36</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 3.200</strong></div>
+              </div>
+            </div>
+
+            <div class="camp-card">
+              <div class="camp-card-head"><strong>[RETARGET] Carrinho Abandonado 7d</strong><span class="xt-status xt-status-on">Ativo</span></div>
+              <div class="camp-card-kpis">
+                <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="g">5.21x</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong class="g">R$ 28,40</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">148</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 4.200</strong></div>
+              </div>
+            </div>
+
+            <div class="camp-card">
+              <div class="camp-card-head"><strong>[CBO] Colágeno Premium — Interesses</strong><span class="xt-status xt-status-off">Pausado</span></div>
+              <div class="camp-card-kpis">
+                <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="r">0.82x</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong class="r">R$ 145,00</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong>40</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 5.800</strong></div>
+              </div>
+            </div>
+
+            <div class="camp-card">
+              <div class="camp-card-head"><strong>[ASC] Retargeting — Win Back</strong><span class="xt-status xt-status-on">Ativo</span></div>
+              <div class="camp-card-kpis">
+                <div class="camp-kpi"><span class="camp-kpi-lbl">ROAS</span><strong class="g">4.21x</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">CPA</span><strong class="g">R$ 14,25</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Vendas</span><strong class="g">87</strong></div>
+                <div class="camp-kpi"><span class="camp-kpi-lbl">Gastos</span><strong>R$ 1.240</strong></div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 
