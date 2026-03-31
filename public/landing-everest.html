@@ -301,6 +301,21 @@ nav { position:fixed; top:14px; left:0; right:0; z-index:200 }
 }
 .hero-sub strong { color: rgba(255,255,255,0.95); font-weight: 600 }
 
+.utm-highlight {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.95em;
+  color: #7de5ff;
+  background: rgba(0,204,255,0.12);
+  border: 1px solid rgba(0,204,255,0.28);
+  padding: 2px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 18px rgba(0,204,255,0.5);
+  box-shadow: 0 0 20px -6px rgba(0,204,255,0.25);
+}
+
 .hero-ctas { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom: 28px }
 
 .btn-primary-hero {
@@ -419,18 +434,45 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
 .prob-card {
   background: var(--glass-bg-strong);
   padding: 32px 26px;
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur-strong));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong));
   position: relative;
   overflow: hidden;
-  transition: background 0.25s;
+  transition: all 0.35s cubic-bezier(0.22,0.68,0,1.2);
+  transform-style: preserve-3d;
 }
-.prob-card:hover { background: rgba(255,255,255,0.78) }
+.prob-card:hover {
+  background: rgba(255,255,255,0.82);
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 28px 60px -18px rgba(13,26,46,0.22), 0 0 0 1px rgba(0,204,255,0.08);
+}
 .prob-card::before {
   content:''; position:absolute; inset:0; pointer-events:none;
-  background: linear-gradient(145deg, rgba(255,255,255,0.68) 0%, rgba(255,255,255,0.1) 55%, rgba(255,255,255,0.26) 100%);
+  background: linear-gradient(145deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0.32) 100%);
+}
+.prob-card::after {
+  content:''; position:absolute; top:0; left:12%; right:12%; height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.88), transparent);
+  pointer-events:none;
 }
 .prob-card > * { position:relative; z-index:1 }
+
+/* Accent glow per card */
+.prob-card:nth-child(1)::before {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(229,57,53,0.06), transparent 40%),
+    linear-gradient(145deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.32) 100%);
+}
+.prob-card:nth-child(2)::before {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(232,160,32,0.06), transparent 40%),
+    linear-gradient(145deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.32) 100%);
+}
+.prob-card:nth-child(3)::before {
+  background:
+    radial-gradient(circle at 20% 80%, rgba(0,153,204,0.06), transparent 40%),
+    linear-gradient(145deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.32) 100%);
+}
 .prob-num {
   font: 600 10px/1 'JetBrains Mono', monospace;
   letter-spacing:0.14em; color:var(--text-3); margin-bottom:18px; text-transform:uppercase;
@@ -438,24 +480,50 @@ section.sec { padding: 96px 0; position:relative; z-index:1 }
 }
 .prob-num::after { content:''; flex:1; height:1px; background:rgba(13,26,46,0.08) }
 .prob-icon {
-  width:46px; height:46px; border-radius:14px; display:grid; place-items:center;
-  margin-bottom:16px; border:1px solid rgba(255,255,255,0.88);
-  box-shadow:0 4px 14px -4px rgba(13,26,46,0.12);
-  font-size:20px;
+  width:52px; height:52px; border-radius:16px; display:grid; place-items:center;
+  margin-bottom:18px;
+  border: 1px solid rgba(255,255,255,0.82);
+  box-shadow:
+    0 8px 22px -6px rgba(13,26,46,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.92),
+    inset 0 -2px 6px rgba(0,0,0,0.04);
+  font-size:22px;
+  position: relative;
+  overflow: hidden;
 }
-.prob-title { font:700 17px/1.2 'Outfit',sans-serif; letter-spacing:-0.02em; margin-bottom:10px; color:var(--text) }
-.prob-text { font-size:14px; color:var(--text-2); line-height:1.75 }
+.prob-icon::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: linear-gradient(145deg, rgba(255,255,255,0.6), transparent 60%);
+  pointer-events:none;
+}
+.prob-icon svg {
+  width:24px; height:24px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+}
+.prob-title { font:700 18px/1.25 'Outfit',sans-serif; letter-spacing:-0.03em; margin-bottom:10px; color:var(--text) }
+.prob-text { font-size:14.5px; color:var(--text-2); line-height:1.78 }
 .prob-stat {
-  margin-top:18px; padding:10px 14px;
-  background: rgba(255,255,255,0.62);
-  border: 1px solid rgba(255,255,255,0.84);
-  border-radius: 12px;
-  display:inline-flex; align-items:center; gap:10px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.96);
-  backdrop-filter: blur(14px);
+  margin-top:20px; padding:12px 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.68), rgba(255,255,255,0.42));
+  border: 1px solid rgba(255,255,255,0.86);
+  border-radius: 14px;
+  display:inline-flex; align-items:center; gap:12px;
+  box-shadow:
+    0 10px 24px -10px rgba(13,26,46,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.96);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   font: 600 10px/1.4 'JetBrains Mono', monospace; color:var(--text-3); text-transform:uppercase;
+  transition: all 0.25s;
 }
-.prob-stat-val { font:800 22px/1 'Outfit',sans-serif; letter-spacing:-0.03em }
+.prob-card:hover .prob-stat {
+  box-shadow:
+    0 14px 30px -10px rgba(13,26,46,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.98);
+}
+.prob-stat-val { font:800 24px/1 'Outfit',sans-serif; letter-spacing:-0.04em }
 
 /* ═══════════════════════════════════════
    SOLUTION BLOCKS
@@ -907,6 +975,7 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
           O Ads.Everest entrega <strong>visão cirúrgica da sua conta Meta</strong>,
           tracking server-side com 98.4% de captura e um <strong>agente de IA</strong>
           que analisa e age — para você escalar com margem real.
+          Com <span class="utm-highlight">UTM's</span> e controle financeiro real dos anúncios.
         </p>
 
         <div class="hero-ctas hero-anim" style="animation-delay:0.5s">
@@ -944,21 +1013,27 @@ footer { border-top:1px solid rgba(13,26,46,0.06); padding:32px 0 }
   <div class="prob-grid fade-up d1">
     <div class="prob-card tilt-card">
       <div class="prob-num">01 — Verba queimada</div>
-      <div class="prob-icon" style="background:rgba(229,57,53,0.08)">🔥</div>
+      <div class="prob-icon" style="background:linear-gradient(135deg, rgba(229,57,53,0.12), rgba(229,57,53,0.04))">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e53935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2-2.96 0-7-1-8 0 3.038-1.773 4.741-3 6-1.226 1.26-2 3.24-2 5a6 6 0 1 0 12 0c0-1.532-1.056-3.192-2-4-1.786 2-2.791 3-4 3z"/></svg>
+      </div>
       <div class="prob-title">Campanha em fadiga e você nem sabe</div>
-      <div class="prob-text">Criativo morto, frequência alta, CPM subindo — e você só percebe quando o ROAS já desabou.</div>
+      <div class="prob-text">Criativo morto, frequência alta, CPM subindo — e você só percebe quando o ROAS já desabou. 3 dias de orçamento jogados fora.</div>
       <div class="prob-stat"><span class="prob-stat-val r">68%</span>do orçamento desperdiçado sem diagnóstico</div>
     </div>
     <div class="prob-card tilt-card">
       <div class="prob-num">02 — Escala travada</div>
-      <div class="prob-icon" style="background:rgba(232,160,32,0.08)">📈</div>
+      <div class="prob-icon" style="background:linear-gradient(135deg, rgba(232,160,32,0.12), rgba(232,160,32,0.04))">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e8a020" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      </div>
       <div class="prob-title">Toda tentativa de escala explode o CPA</div>
-      <div class="prob-text">Sem atribuição real, você não sabe o que funciona de verdade. Cada tentativa vira risco caro.</div>
+      <div class="prob-text">Sem atribuição real, você não sabe o que funciona de verdade. Cada tentativa de escala vira um risco caro sem respaldo.</div>
       <div class="prob-stat"><span class="prob-stat-val a">3×</span>mais fácil escalar com tracking real</div>
     </div>
     <div class="prob-card tilt-card">
       <div class="prob-num">03 — Dados em caos</div>
-      <div class="prob-icon" style="background:rgba(0,153,204,0.08)">📊</div>
+      <div class="prob-icon" style="background:linear-gradient(135deg, rgba(0,153,204,0.12), rgba(0,153,204,0.04))">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0099cc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
       <div class="prob-title">O Ads Manager não foi feito para decidir</div>
       <div class="prob-text">CTR aqui, CPA ali, ROAS em outra aba. Você gasta 40 min/dia tentando montar um quadro que deveria aparecer em 5 segundos.</div>
       <div class="prob-stat"><span class="prob-stat-val c" style="color:var(--brand-2)">40min</span>por dia perdidos em métricas desconexas</div>
