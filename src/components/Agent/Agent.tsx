@@ -4,7 +4,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useStore } from '../../store/useStore';
 import { AIAgent } from '../../services/aiAgent';
 import { localBridge, type BridgeStatus, type TaskHandle } from '../../services/localBridgeClient';
-import { mcpBridge, type McpBridgeStatus } from '../../services/mcpClient';
+import { mcpBridge, toCampaignContext, toCreativeContext, type McpBridgeStatus } from '../../services/mcpClient';
 import type { CreativeAnalysisResult } from '../../services/creativeVision';
 
 interface Message {
@@ -399,6 +399,7 @@ export default function Agent() {
   const isMobile = useIsMobile();
   const metrics = useStore((s) => s.metrics);
   const campaigns = useStore((s) => s.campaigns);
+  const storeCreatives = useStore((s) => s.creatives);
   const emqScore = useStore((s) => s.emqScore);
   const creativeAnalysisContext = useStore((s) => s.creativeAnalysisContext);
   const setCreativeAnalysisContext = useStore((s) => s.setCreativeAnalysisContext);
@@ -523,20 +524,16 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
   const sendViaMcp = useCallback(async (userMessage: string): Promise<string | null> => {
     try {
       const response = await mcpBridge.chat(userMessage, {
-        cpa: metrics.cpa,
-        roas: metrics.roas,
-        ctr: metrics.ctr,
-        cpm: metrics.cpm,
-        spend: metrics.spend,
-        conversions: metrics.conversions,
-        accountScore: metrics.accountScore,
-        emqScore: emqScore,
+        metrics,
+        emqScore,
+        campaigns: campaigns.map(toCampaignContext),
+        creatives: storeCreatives.map(toCreativeContext),
       });
       return response;
     } catch {
       return null;
     }
-  }, [metrics, emqScore]);
+  }, [metrics, emqScore, campaigns, storeCreatives]);
 
   const sendViaBridge = useCallback((userMessage: string) => {
     const activeCampaigns = campaigns.filter((c) => c.status === 'ACTIVE').length;

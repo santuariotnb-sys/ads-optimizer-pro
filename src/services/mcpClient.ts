@@ -1,17 +1,11 @@
 /**
- * mcpClient.ts — Cliente HTTP que conecta o React app ao Apex MCP HTTP Bridge.
+ * mcpClient.ts — Cliente HTTP que conecta o React app ao Apex Engine.
  *
- * Substitui o localBridgeClient.ts (que dependia de window.agentBridge).
- * Fala com o servidor HTTP local em localhost:3847.
- *
- * Uso:
- *   import { mcpBridge } from './mcpClient';
- *
- *   const status = await mcpBridge.getStatus();
- *   if (status.available) {
- *     const response = await mcpBridge.chat('Analise minhas campanhas', context);
- *   }
+ * Envia dados REAIS do Zustand store para o serverless function.
+ * O motor de análise trabalha com os dados recebidos, não com placeholders.
  */
+
+import type { Campaign, Creative, DashboardMetrics } from '../types/meta';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -21,15 +15,47 @@ export interface McpBridgeStatus {
   version?: string;
 }
 
+/** Dados reais enviados do store para o motor de análise */
 export interface McpChatContext {
-  cpa?: number;
-  roas?: number;
-  ctr?: number;
-  cpm?: number;
-  spend?: number;
-  conversions?: number;
-  accountScore?: number;
-  emqScore?: number;
+  metrics: DashboardMetrics;
+  emqScore: number;
+  campaigns: McpCampaign[];
+  creatives: McpCreative[];
+}
+
+/** Subset compacto de Campaign para enviar ao servidor */
+export interface McpCampaign {
+  name: string;
+  status: string;
+  objective: string;
+  daily_budget: number;
+  roas: number;
+  cpa: number;
+  ctr: number;
+  cpm: number;
+  spend: number;
+  conversions: number;
+  impressions: number;
+  frequency: number;
+  opportunity_score: number;
+  learning_days?: number;
+  learning_conversions?: number;
+}
+
+/** Subset compacto de Creative para enviar ao servidor */
+export interface McpCreative {
+  name: string;
+  entity_id_group: number | string;
+  hook_rate: number;
+  hold_rate: number;
+  ctr: number;
+  cpa: number;
+  cpm: number;
+  score: number;
+  status: string;
+  novelty_days: number;
+  spend: number;
+  cpm_trend: number[];
 }
 
 interface HealthResponse {
@@ -44,26 +70,19 @@ interface ChatResponse {
   error?: string;
 }
 
-// ─── Config ──────────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
-/** Em produção usa /api/apex/chat (Vercel serverless). Local usa localhost:3847. */
 function getBaseUrl(): string {
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    return ''; // Produção: relative path → /api/apex/chat
+    return '';
   }
-  return 'http://localhost:3847'; // Local: HTTP bridge
+  return 'http://localhost:3847';
 }
 
 const HEALTH_TIMEOUT_MS = 2000;
 const CHAT_TIMEOUT_MS = 30000;
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-async function fetchWithTimeout(
-  url: string,
-  options: RequestInit,
-  timeoutMs: number,
-): Promise<Response> {
+async function fetchWithTimeout(url: string, options: RequestInit, timeoutMs: number): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -73,42 +92,46 @@ async function fetchWithTimeout(
   }
 }
 
+/** Extrai campos compactos de Campaign para envio */
+export function toCampaignContext(c: Campaign): McpCampaign {
+  return {
+    name: c.name, status: c.status, objective: c.objective,
+    daily_budget: c.daily_budget, roas: c.roas, cpa: c.cpa,
+    ctr: c.ctr, cpm: c.cpm, spend: c.spend, conversions: c.conversions,
+    impressions: c.impressions, frequency: c.frequency,
+    opportunity_score: c.opportunity_score,
+    ...(c.learning_days != null ? { learning_days: c.learning_days } : {}),
+    ...(c.learning_conversions != null ? { learning_conversions: c.learning_conversions } : {}),
+  };
+}
+
+/** Extrai campos compactos de Creative para envio */
+export function toCreativeContext(c: Creative): McpCreative {
+  return {
+    name: c.name, entity_id_group: c.entity_id_group,
+    hook_rate: c.hook_rate, hold_rate: c.hold_rate,
+    ctr: c.ctr, cpa: c.cpa, cpm: c.cpm, score: c.score,
+    status: c.status, novelty_days: c.novelty_days,
+    spend: c.spend, cpm_trend: c.cpm_trend,
+  };
+}
+
 // ─── API ─────────────────────────────────────────────────────────────────────
 
 export const mcpBridge = {
-  /**
-   * Verifica se o HTTP Bridge está rodando.
-   * Timeout curto (2s) para não travar a UI.
-   */
   async getStatus(): Promise<McpBridgeStatus> {
     try {
       const base = getBaseUrl();
-      const res = await fetchWithTimeout(
-        `${base}/api/apex/chat`,
-        { method: 'GET' },
-        HEALTH_TIMEOUT_MS,
-      );
-
-      if (!res.ok) {
-        return { available: false, mode: 'offline' };
-      }
-
+      const res = await fetchWithTimeout(`${base}/api/apex/chat`, { method: 'GET' }, HEALTH_TIMEOUT_MS);
+      if (!res.ok) return { available: false, mode: 'offline' };
       const data = (await res.json()) as HealthResponse;
-      return {
-        available: data.ok,
-        mode: data.mode,
-        version: data.version,
-      };
+      return { available: data.ok, mode: data.mode, version: data.version };
     } catch {
       return { available: false, mode: 'offline' };
     }
   },
 
-  /**
-   * Envia mensagem para o Apex via HTTP Bridge.
-   * O servidor usa Claude API server-side (key segura) ou retorna resposta demo.
-   */
-  async chat(message: string, context?: McpChatContext): Promise<string> {
+  async chat(message: string, context: McpChatContext): Promise<string> {
     const base = getBaseUrl();
     const res = await fetchWithTimeout(
       `${base}/api/apex/chat`,
@@ -126,11 +149,7 @@ export const mcpBridge = {
     }
 
     const data = (await res.json()) as ChatResponse;
-
-    if (data.error) {
-      throw new Error(data.error);
-    }
-
+    if (data.error) throw new Error(data.error);
     return data.response;
   },
 };
