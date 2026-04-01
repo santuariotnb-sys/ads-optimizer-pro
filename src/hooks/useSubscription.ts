@@ -28,12 +28,12 @@ const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
   free: {
     maxCampaigns: 5,
     maxIntegrations: 1,
-    features: ['overview', 'campaigns', 'utm', 'financial', 'settings', 'audiences', 'alerts'],
+    features: ['overview', 'campaigns', 'utm', 'financial', 'settings', 'audiences', 'alerts', 'agentAI'],
   },
   starter: {
     maxCampaigns: 15,
     maxIntegrations: 3,
-    features: ['overview', 'campaigns', 'utm', 'financial', 'settings', 'audiences', 'alerts'],
+    features: ['overview', 'campaigns', 'utm', 'financial', 'settings', 'audiences', 'alerts', 'agentAI'],
   },
   pro: {
     maxCampaigns: 50,
@@ -62,7 +62,7 @@ const FEATURE_REQUIRED_PLAN: Record<FeatureId, PlanId> = {
   alerts: 'free',
   creativeIntel: 'pro',
   signalGateway: 'pro',
-  agentAI: 'pro',
+  agentAI: 'free',
   autoScale: 'agency',
   pipeline: 'agency',
 };
