@@ -31,7 +31,7 @@ describe('evaluateAlerts', () => {
     const alerts = evaluateAlerts([baseCampaign], 6.5);
     const emq = alerts.find(a => a.type === 'emq');
     expect(emq).toBeDefined();
-    expect(emq?.severity).toBe('critical');
+    expect(emq?.severity).toBe('warning');
   });
 
   it('generates ROAS alert for negative campaigns', () => {

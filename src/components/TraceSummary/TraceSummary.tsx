@@ -13,6 +13,8 @@ interface MetricCard {
   label: string;
   value: string;
   type: 'currency' | 'percent' | 'ratio' | 'list' | 'chart' | 'rates' | 'empty';
+  color?: string;
+  subtitle?: string;
 }
 
 // ---- Filter Select ----
@@ -143,11 +145,16 @@ function MetricCardUI({ card }: { card: MetricCard }) {
       <span style={{
         fontSize: 22, fontWeight: 600,
         fontFamily: card.type === 'currency' ? 'Space Grotesk' : 'JetBrains Mono',
-        color: COLORS.text,
+        color: card.color || COLORS.text,
         marginTop: 8,
       }}>
         {card.value}
       </span>
+      {card.subtitle && (
+        <span style={{ fontSize: 10, color: COLORS.textMuted, fontFamily: 'Outfit', marginTop: 4 }}>
+          {card.subtitle}
+        </span>
+      )}
     </div>
   );
 }
@@ -189,6 +196,10 @@ export default function TraceSummary() {
   const isMobile = useIsMobile();
   const metrics = useStore((s) => s.metrics);
   const [period, setPeriod] = useState<Period>('7d');
+  const [conta, setConta] = useState('all');
+  const [fonte, setFonte] = useState('all');
+  const [plataforma, setPlataforma] = useState('all');
+  const [produto, setProduto] = useState('all');
   const [updatedAt, setUpdatedAt] = useState('agora mesmo');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [summary, setSummary] = useState<SalesSummary | null>(null);
@@ -247,6 +258,16 @@ export default function TraceSummary() {
     { label: '', value: '', type: 'empty' },
     { label: 'Vendas por Fonte', value: '', type: 'list' },
     { label: 'Taxa de Aprovacao', value: '', type: 'rates' },
+    // Row 7 — Reconciliação
+    { label: 'Vendas (Webhook)', value: s ? `${s.totalSales}` : '0', type: 'ratio' },
+    { label: 'Conversões (Meta)', value: String(metrics?.conversions || 0), type: 'ratio' },
+    (() => {
+      const sales = s ? s.totalSales : 0;
+      const conv = metrics?.conversions || 0;
+      const rate = Math.min(sales, conv) / Math.max(sales, conv, 1) * 100;
+      const color = rate > 85 ? '#4ade80' : rate >= 60 ? '#facc15' : '#f87171';
+      return { label: 'Taxa de Match', value: rate.toFixed(1) + '%', type: 'percent' as const, color, subtitle: 'Quanto mais próximo de 100%, melhor a reconciliação' };
+    })(),
   ];
 
   return (
@@ -298,10 +319,10 @@ export default function TraceSummary() {
             { value: '30d', label: 'Ultimos 30 dias' },
           ]}
         />
-        <FilterSelect label="Conta de Anuncio" value="any" onChange={() => {}} options={[{ value: 'any', label: 'Qualquer' }]} />
-        <FilterSelect label="Fonte de Trafego" value="any" onChange={() => {}} options={[{ value: 'any', label: 'Qualquer' }]} />
-        <FilterSelect label="Plataforma" value="any" onChange={() => {}} options={[{ value: 'any', label: 'Qualquer' }]} />
-        <FilterSelect label="Produto" value="any" onChange={() => {}} options={[{ value: 'any', label: 'Qualquer' }]} />
+        <FilterSelect label="Conta de Anuncio" value={conta} onChange={setConta} options={[{ value: 'all', label: 'Qualquer' }]} />
+        <FilterSelect label="Fonte de Trafego" value={fonte} onChange={setFonte} options={[{ value: 'all', label: 'Qualquer' }]} />
+        <FilterSelect label="Plataforma" value={plataforma} onChange={setPlataforma} options={[{ value: 'all', label: 'Qualquer' }]} />
+        <FilterSelect label="Produto" value={produto} onChange={setProduto} options={[{ value: 'all', label: 'Qualquer' }]} />
       </div>
 
       {/* Metric Cards Grid */}

@@ -84,7 +84,8 @@ export function useSubscription() {
     async function loadPlan() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (cancelled || !user) {
+        if (cancelled) return;
+        if (!user) {
           setPlan('free');
           setLoading(false);
           return;

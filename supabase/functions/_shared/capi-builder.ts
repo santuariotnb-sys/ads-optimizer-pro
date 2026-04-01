@@ -7,6 +7,7 @@ export function buildCAPIPayload(
   clientIp: string,
   userAgent: string,
   accessToken: string,
+  testEventCode?: string,
 ): CAPIPayload {
   const userData: Record<string, unknown> = {};
 
@@ -49,10 +50,14 @@ export function buildCAPIPayload(
     custom_data: customData,
   };
 
-  return {
+  const payload: CAPIPayload = {
     data: [capiEvent],
     access_token: accessToken,
   };
+  if (testEventCode) {
+    (payload as Record<string, unknown>).test_event_code = testEventCode;
+  }
+  return payload;
 }
 
 export function getMetaEndpoint(pixelId: string): string {

@@ -8,9 +8,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { pixel_id, access_token, events, test_event_code } = req.body;
+  const { pixel_id, events, test_event_code } = req.body;
+  const accessToken = process.env.META_ACCESS_TOKEN || req.body.access_token;
 
-  if (!pixel_id || !access_token || !events?.length) {
+  if (!pixel_id || !accessToken || !events?.length) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -34,10 +35,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         },
       }));
 
-      const body: Record<string, unknown> = { data: JSON.stringify(enriched) };
+      const body: Record<string, unknown> = {
+        data: JSON.stringify(enriched),
+        access_token: accessToken,
+      };
       if (test_event_code) body.test_event_code = test_event_code;
 
-      const url = `https://graph.facebook.com/${API_VERSION}/${pixel_id}/events?access_token=${access_token}`;
+      const url = `https://graph.facebook.com/${API_VERSION}/${pixel_id}/events`;
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

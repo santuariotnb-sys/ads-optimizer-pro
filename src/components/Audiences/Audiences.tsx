@@ -3,6 +3,7 @@ import { formatCurrency, formatNumber } from '../../utils/formatters';
 import { Users, AlertTriangle, Link2 } from 'lucide-react';
 import { useState } from 'react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
 
 const glassCard: React.CSSProperties = {
   background: 'rgba(255,255,255,.34)',
@@ -81,13 +82,15 @@ function OverlapBar({ percent }: { percent: number }) {
 export default function Audiences() {
   const isMobile = useIsMobile();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const storeAudiences = useStore((s) => s.audiences);
+  const audiences = storeAudiences.length > 0 ? storeAudiences : mockAudiences;
 
   const overlappingPairs: { a: string; b: string; percent: number }[] = [];
-  for (let i = 0; i < mockAudiences.length; i++) {
-    for (let j = i + 1; j < mockAudiences.length; j++) {
-      const avg = (mockAudiences[i].overlap_percent + mockAudiences[j].overlap_percent) / 2;
+  for (let i = 0; i < audiences.length; i++) {
+    for (let j = i + 1; j < audiences.length; j++) {
+      const avg = (audiences[i].overlap_percent + audiences[j].overlap_percent) / 2;
       if (avg > 30) {
-        overlappingPairs.push({ a: mockAudiences[i].name, b: mockAudiences[j].name, percent: Math.round(avg) });
+        overlappingPairs.push({ a: audiences[i].name, b: audiences[j].name, percent: Math.round(avg) });
       }
     }
   }
@@ -110,7 +113,7 @@ export default function Audiences() {
               Audiências
             </h2>
             <span style={{ fontSize: 13, color: '#64748b' }}>
-              {mockAudiences.length} audiências ativas
+              {audiences.length} audiências ativas
             </span>
           </div>
         </div>
@@ -152,7 +155,7 @@ export default function Audiences() {
         gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(360px, 1fr))',
         gap: isMobile ? 16 : 20,
       }}>
-        {mockAudiences.map((aud) => (
+        {audiences.map((aud) => (
           <div
             key={aud.id}
             style={{
@@ -232,7 +235,7 @@ export default function Audiences() {
             </div>
           </div>
         ))}
-        {mockAudiences.length === 0 && (
+        {audiences.length === 0 && (
           <div className="tilt-card" style={{ ...glassCard, padding: 40, textAlign: 'center' }}>
             <div style={{ fontSize: 14, color: '#64748b' }}>Nenhuma audiência encontrada</div>
           </div>

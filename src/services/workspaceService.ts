@@ -119,11 +119,14 @@ export function generateTrackingScript(workspace: Workspace): string {
   if(Object.keys(utms).length>0)setCookie("_aop_utm",utms,30);
 
   // --- Event sender ---
+  function eid(){return"evt_"+Math.floor(Date.now()/1e3)+"_"+Math.random().toString(36).substr(2,8)}
   function sendEvent(name,params){
+    var evId=eid();
     var stored=getCookie("_aop_utm")||{};
     var payload={
       workspace_id:W,
       event:name,
+      event_id:evId,
       utms:stored,
       params:params||{},
       url:window.location.href,
@@ -131,9 +134,9 @@ export function generateTrackingScript(workspace: Workspace): string {
       timestamp:new Date().toISOString()
     };
 
-    // Meta Pixel
+    // Meta Pixel (3-arg form: custom_data, options with eventID)
     if(CFG.destinations.meta_capi&&CFG.pixels.meta&&typeof fbq==="function"){
-      fbq("track",name,params);
+      fbq("track",name,params||{},{eventID:evId});
     }
 
     // Google Ads

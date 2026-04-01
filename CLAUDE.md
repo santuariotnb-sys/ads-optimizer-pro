@@ -164,3 +164,39 @@ GitHub: https://github.com/santuariotnb-sys/ads-optimizer-pro
 ```bash
 vercel --prod
 ```
+
+## Landing Page (landing-everest.html)
+
+Arquivo: `public/landing-everest.html` — HTML standalone, sem React.
+Design system completo: `.claude/landing-design-system.md`
+URL: https://ads-optimizer-pro.vercel.app/landing-everest.html
+
+### Comando rápido para editar landing
+
+Formato: `SEÇÃO: o que mudar`
+
+Seções válidas: HERO, MARQUEE, PROBLEMA, SOLUCAO, XTRACKER, ROI, DIFERENCIAIS, PRICING, FAQ, CTA
+
+Exemplos:
+- `HERO: trocar headline`
+- `XTRACKER: adicionar coluna nos cards`
+- `PRICING: mudar preço para R$147`
+
+### Design Rules (frontend-design skill)
+
+- **Fontes**: Outfit (headings) | Plus Jakarta Sans (body) | JetBrains Mono (data)
+- **Cores**: Navy dominante (#0d1a2e) + cyan accent (#00ccff). Nunca distribuir cores igualmente.
+- **Glass**: blur 28-44px, bg rgba(255,255,255,0.42-0.58), border branco, shadow inset
+- **NUNCA**: Inter, Roboto, Arial, Space Grotesk, purple gradients, layouts genéricos
+- **Motion**: stagger reveals > micro-interactions. Scroll-trigger. Hover que surpreende.
+- **Spatial**: Assimetria controlada. Overlap. Negative space generoso.
+
+### Checklist deploy landing
+
+1. Responsivo (640px + 1024px)
+2. Vídeo Supabase carregando
+3. Barras animadas (anim-bar)
+4. Drag scroll momentum (mouse + touch)
+5. Tabs Xtracker + FAQ toggle
+6. Tilt 3D + fade-up scroll reveal
+7. `vercel.json` exclui `landing-` do rewrite SPA

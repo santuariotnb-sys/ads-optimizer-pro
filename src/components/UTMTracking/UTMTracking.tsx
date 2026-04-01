@@ -480,6 +480,7 @@ export default function UTMTracking() {
 
   // CONNECTION 1: Real sales data from Supabase with mock fallback
   const [realSales, setRealSales] = useState<VendaRow[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const [periodo, setPeriodo] = useState('7');
 
@@ -504,7 +505,7 @@ export default function UTMTracking() {
       .catch(() => {
         // On error, keep realSales empty → fallback to VENDAS_DATA
       });
-  }, [periodo]);
+  }, [periodo, refreshKey]);
 
   const vendasData = realSales.length > 0 ? realSales : VENDAS_DATA;
 
@@ -586,6 +587,7 @@ export default function UTMTracking() {
           Exportar
         </button>
         <button style={S.btnPrimary} type="button" onClick={() => {
+          setRefreshKey(k => k + 1);
           showToast('info', 'Dados atualizados');
         }}>
           <RefreshCw size={14} />

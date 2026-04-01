@@ -41,7 +41,9 @@ function SeverityIcon({ severity }: { severity: string }) {
 export default function Alerts() {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState<TabKey>('all');
-  const [localAlerts, setLocalAlerts] = useState(mockAlerts);
+  const mode = useStore((s) => s.mode);
+  const storeAlerts = useStore((s) => s.alerts);
+  const [localAlerts, setLocalAlerts] = useState(mode === 'demo' ? mockAlerts : storeAlerts);
   const dismissAlert = useStore((s) => s.dismissAlert);
 
   const counts: Record<TabKey, number> = {

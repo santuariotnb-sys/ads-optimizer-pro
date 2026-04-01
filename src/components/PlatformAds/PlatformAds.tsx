@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
+import { formatCurrency } from '../../utils/formatters';
 import {
   Settings, TrendingUp, TrendingDown, RefreshCw, Info, Search,
 } from 'lucide-react';
@@ -178,6 +180,8 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
   const isMobile = useIsMobile();
   const config = platformConfig[platform];
   const [activeTab, setActiveTab] = useState<SubTab>('campanhas');
+  const storeCampaigns = useStore((s) => s.campaigns);
+  const hasMetaCampaigns = platform === 'meta' && activeTab === 'campanhas' && storeCampaigns.length > 0;
 
   const columns = config.columns[activeTab];
 
@@ -374,7 +378,60 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
               </tr>
             </thead>
             <tbody>
-              {/* Empty state row */}
+              {hasMetaCampaigns ? storeCampaigns.map((campaign) => {
+                const statusColor = campaign.status === 'ACTIVE' ? '#4ade80' : campaign.status === 'PAUSED' ? '#64748b' : '#6366f1';
+                const statusLabel = campaign.status === 'ACTIVE' ? 'Ativo' : campaign.status === 'PAUSED' ? 'Pausado' : 'Aprendizado';
+                const revenue = campaign.roas * campaign.spend;
+                const lucro = revenue - campaign.spend;
+                const margem = revenue > 0 ? ((lucro / revenue) * 100).toFixed(1) : '0,0';
+                const roi = campaign.spend > 0 ? Math.round((lucro / campaign.spend) * 100) : 0;
+                const cpc = campaign.clicks > 0 ? campaign.spend / campaign.clicks : 0;
+                const colMap: Record<string, string> = {
+                  'STATUS': statusLabel,
+                  'CAMPANHA': campaign.name,
+                  'VEICULAÇÃO': campaign.status === 'ACTIVE' ? 'Ativa' : 'Pausada',
+                  'ORÇAMENTO': formatCurrency(campaign.daily_budget),
+                  'CPA DESEJADO': formatCurrency(campaign.cpa),
+                  'VENDAS': String(campaign.conversions),
+                  'CPA': formatCurrency(campaign.cpa),
+                  'GASTOS': formatCurrency(campaign.spend),
+                  'FATURAMENTO': formatCurrency(revenue),
+                  'LUCRO': formatCurrency(lucro),
+                  'ROAS': `${campaign.roas.toFixed(2)}x`,
+                  'MARGEM': `${margem}%`,
+                  'ROI': String(roi),
+                  'IC': '0',
+                  'CPI': formatCurrency(campaign.cpm),
+                  'CPC': formatCurrency(cpc),
+                  'CTR': `${campaign.ctr.toFixed(1)}%`,
+                  'CPM': formatCurrency(campaign.cpm),
+                  'IMPRESSÕES': String(campaign.impressions),
+                  'CLIQUES': String(campaign.clicks),
+                };
+                return (
+                  <tr key={campaign.id} style={{ transition: 'background 0.15s' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99,102,241,0.04)'; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+                  >
+                    <td style={{ ...S.td, textAlign: 'center' }}>
+                      <input type="checkbox" style={{ accentColor: config.color, cursor: 'pointer' }} />
+                    </td>
+                    {columns.map((col, i) => (
+                      <td key={col} style={{
+                        ...S.td,
+                        ...(i === 0 && col === 'STATUS' ? {} : i === 0 || col === 'CAMPANHA' ? { fontWeight: 600 } : { ...S.tdMono }),
+                      }}>
+                        {col === 'STATUS' ? (
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, fontWeight: 600, color: statusColor, padding: '3px 10px', borderRadius: 20, background: `${statusColor}15` }}>
+                            <span style={{ width: 6, height: 6, borderRadius: '50%', background: statusColor }} />
+                            {statusLabel}
+                          </span>
+                        ) : colMap[col] || emptyValue(col)}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              }) : (
               <tr>
                 <td style={{ ...S.td, textAlign: 'center' }}>
                   <input type="checkbox" disabled style={{ cursor: 'default' }} />
@@ -383,12 +440,12 @@ export default function PlatformAds({ platform }: PlatformAdsProps) {
                   <td key={col} style={{
                     ...S.td,
                     ...(i === 0 ? { fontWeight: 600 } : { ...S.tdMono }),
-                    ...(i === 0 ? {} : {}),
                   }}>
                     {i === 0 ? emptyRowLabel(activeTab, config.subTabLabels) : emptyValue(col)}
                   </td>
                 ))}
               </tr>
+              )}
             </tbody>
           </table>
         </div>

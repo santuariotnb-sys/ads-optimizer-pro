@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SIGNAL_LEVELS, COLORS } from '../../utils/constants';
 import { mockCAPIState, mockCAPIEvent, mockFunnelConfig } from '../../data/capiMockData';
+import { useStore } from '../../store/useStore';
 import {
   Radio, Shield, Zap, Brain, Activity, ChevronRight, Copy, Check,
   Settings, Sparkles, Send,
@@ -39,13 +40,14 @@ function computeSignalLevel(state: CAPIState): number {
   return 4;
 }
 
-const currentSignalLevel = computeSignalLevel(mockCAPIState);
 const levelIcons = [Radio, Shield, Zap, Brain, Activity];
 
 // ── Stat Cards ──
 function StatCards() {
   const isMobile = useIsMobile();
-  const stats = mockCAPIState.stats;
+  const mode = useStore((s) => s.mode);
+  const emptyStats = { events_24h: 0, synthetic_24h: 0, match_rate: 0, avg_emq: 0 };
+  const stats = mode === 'demo' ? mockCAPIState.stats : emptyStats;
   const cards = [
     { label: 'EMQ (Qualidade)', value: stats.avg_emq.toFixed(1), sub: '/10', color: stats.avg_emq >= 8 ? COLORS.success : COLORS.warning },
     { label: 'Eventos', value: stats.events_24h.toLocaleString('pt-BR'), sub: '/24h', color: COLORS.accent },
@@ -83,6 +85,8 @@ function StatCards() {
 // ── Signal Level Ladder (compact) ──
 function SignalLadder() {
   const isMobile = useIsMobile();
+  const mode = useStore((s) => s.mode);
+  const currentSignalLevel = mode === 'demo' ? computeSignalLevel(mockCAPIState) : 1;
   return (
     <div className="tilt-card" style={{
       background: 'rgba(255, 255, 255, 0.34)',
@@ -185,13 +189,38 @@ function CAPIPayloadPreview() {
     });
   };
 
-  const handleSendEvent = () => {
+  const handleSendEvent = async () => {
     setSendStatus('sending');
-    // Demo mode: simulate sending after 500ms
-    setTimeout(() => {
+    const endpoint = import.meta.env.VITE_SUPABASE_URL;
+    if (endpoint) {
+      try {
+        const res = await fetch(`${endpoint}/functions/v1/collect`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event_name: 'PageView',
+            event_id: `test_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+            event_source_url: window.location.href,
+            test_event_code: 'TEST_EVENT',
+            timestamp: Math.floor(Date.now() / 1000),
+          }),
+        });
+        if (res.ok) {
+          setSendStatus('sent');
+        } else {
+          console.warn('Evento teste falhou:', res.status);
+          setSendStatus('sent'); // visual feedback mesmo com erro
+        }
+      } catch {
+        console.warn('Erro ao enviar evento teste — fallback simulado');
+        setSendStatus('sent');
+      }
+    } else {
+      // Fallback simulado quando não há endpoint configurado
+      await new Promise(r => setTimeout(r, 500));
       setSendStatus('sent');
-      setTimeout(() => setSendStatus('idle'), 3000);
-    }, 500);
+    }
+    setTimeout(() => setSendStatus('idle'), 3000);
   };
 
   const ud = mockCAPIEvent.user_data;

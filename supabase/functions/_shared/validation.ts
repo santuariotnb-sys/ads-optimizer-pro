@@ -13,9 +13,25 @@ const BLOCKED_EVENTS = new Set([
   'BuyerScore', 'FatigueAlert', 'AuctionPressure',
 ]);
 
+// Synthetic events from Signal Engine — stored for analytics but NOT forwarded to Meta CAPI
+const SYNTHETIC_EVENTS = new Set([
+  'DeepEngagement', 'HighIntentVisitor', 'VideoEngaged',
+  'QualifiedLead', 'HighValuePurchase', 'UpsellCandidate', 'RepeatPurchase',
+  'PageLeave',
+]);
+
+export function isSyntheticEvent(event: BrowserEvent): boolean {
+  return SYNTHETIC_EVENTS.has(event.event_name) || event.is_synthetic === true;
+}
+
 export function validateEvent(event: BrowserEvent): ValidationResult {
   if (BLOCKED_EVENTS.has(event.event_name)) {
     return { valid: false, reason: `'${event.event_name}' é score interno, não evento real` };
+  }
+
+  // Allow synthetic events — they will be stored but not sent to Meta
+  if (isSyntheticEvent(event)) {
+    return { valid: true, reason: null };
   }
 
   if (!VALID_EVENTS.has(event.event_name) && !event.event_name.startsWith('custom_')) {

@@ -5,6 +5,8 @@ export interface BrowserEvent {
   event_id: string;
   pixel_fired: boolean;
   funnel_id?: string;
+  is_synthetic?: boolean;
+  test_event_code?: string;
 
   visitor: {
     fbp: string | null;
@@ -24,6 +26,7 @@ export interface BrowserEvent {
     utm_medium: string | null;
     utm_campaign: string | null;
     utm_content: string | null;
+    utm_term: string | null;
     device_type: string;
     landing_page: string;
   };

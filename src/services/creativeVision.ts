@@ -39,6 +39,10 @@ function formatTimestamp(seconds: number): string {
 
 // Gera timestamps estratégicos: hook (0-3s), corpo, CTA (final)
 function buildSmartTimestamps(duration: number, maxFrames: number): { time: number; label: string }[] {
+  if (!duration || !isFinite(duration) || duration <= 0) {
+    return [{ time: 0, label: 'hook' }];
+  }
+
   const stamps: { time: number; label: string }[] = [];
 
   // Hook: sempre capturar 0.5s e 2.5s
@@ -98,8 +102,13 @@ async function extractFromDomVideo(
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('Canvas 2D indisponível');
 
-  canvas.width = video.videoWidth || 640;
-  canvas.height = video.videoHeight || 360;
+  // Limitar resolução para reduzir tamanho do base64
+  const maxW = 800;
+  const vw = video.videoWidth || 640;
+  const vh = video.videoHeight || 360;
+  const scale = vw > maxW ? maxW / vw : 1;
+  canvas.width = Math.round(vw * scale);
+  canvas.height = Math.round(vh * scale);
 
   // Pausar o vídeo para fazer seek sem interferência
   const wasPlaying = !video.paused;
@@ -113,22 +122,31 @@ async function extractFromDomVideo(
     const ts = timestamps[i].time;
     onProgress?.(`Extraindo frame ${i + 1}/${timestamps.length}...`);
 
-    await new Promise<void>((resolve) => {
-      const onSeeked = () => {
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => { video.removeEventListener('seeked', onSeeked); resolve(); }, 5000);
+      function onSeeked() {
+        clearTimeout(timer);
         video.removeEventListener('seeked', onSeeked);
         resolve();
-      };
+      }
       video.addEventListener('seeked', onSeeked);
+      video.addEventListener('error', () => { clearTimeout(timer); reject(new Error(`Erro ao buscar frame em ${formatTimestamp(ts)}`)); }, { once: true });
       video.currentTime = ts;
     });
 
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    frames.push({
-      timestamp: formatTimestamp(ts),
-      dataUrl: canvas.toDataURL('image/jpeg', 0.85),
-      isHook: timestamps[i].label === 'hook',
-      description: timestamps[i].label,
-    });
+    try {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+      frames.push({
+        timestamp: formatTimestamp(ts),
+        dataUrl,
+        isHook: timestamps[i].label === 'hook',
+        description: timestamps[i].label,
+      });
+    } catch (drawErr) {
+      onProgress?.(`Frame ${i + 1} falhou, pulando...`);
+      // Skip this frame but continue extracting others
+    }
   }
 
   // Voltar ao início
@@ -157,7 +175,18 @@ export async function extractVideoFrames(
     return extractFromDomVideo(fileOrVideo, count, onProgress);
   }
 
-  // Se recebeu File, criar video no DOM (hidden) para Safari
+  // Verificar se o formato é suportado pelo browser
+  const mimeType = fileOrVideo.type || 'video/mp4';
+  const canPlay = document.createElement('video').canPlayType(mimeType);
+  if (!canPlay) {
+    throw new Error(
+      `Formato "${mimeType}" não é suportado pelo navegador.\n` +
+      'Formatos aceitos: MP4 (H.264), WebM.\n' +
+      'Dica: converta o vídeo para MP4 H.264 antes de enviar.'
+    );
+  }
+
+  // Se recebeu File, criar video no DOM (hidden)
   onProgress?.('Carregando vídeo...');
   const video = document.createElement('video');
   video.muted = true;
@@ -171,16 +200,28 @@ export async function extractVideoFrames(
   video.load();
 
   try {
-    // Esperar metadata para saber a duração
-    await new Promise<void>((resolve) => {
-      video.addEventListener('loadedmetadata', () => resolve(), { once: true });
+    // Esperar metadata com timeout e error handling
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Timeout ao carregar metadata do vídeo. Tente um formato MP4 H.264.')), 15000);
+      video.addEventListener('loadedmetadata', () => { clearTimeout(timer); resolve(); }, { once: true });
+      video.addEventListener('error', () => {
+        clearTimeout(timer);
+        const code = video.error?.code;
+        const msgs: Record<number, string> = {
+          1: 'Carregamento abortado',
+          2: 'Erro de rede ao carregar vídeo',
+          3: 'Formato não suportado pelo navegador. Use MP4 H.264.',
+          4: 'Formato não suportado pelo navegador. Use MP4 H.264.',
+        };
+        reject(new Error(msgs[code || 0] || `Erro ao carregar vídeo (code=${code})`));
+      }, { once: true });
     });
     const count = getFrameCount(video.duration || 30);
     onProgress?.(`Extraindo ${count} frames do vídeo...`);
     const frames = await extractFromDomVideo(video, count, onProgress);
     return frames;
   } finally {
-    document.body.removeChild(video);
+    try { document.body.removeChild(video); } catch { /* already removed */ }
     URL.revokeObjectURL(url);
   }
 }
@@ -283,7 +324,7 @@ export async function analyzeCreative(
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 2048,
+      max_tokens: 4096,
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content }],
     }),
@@ -296,9 +337,68 @@ export async function analyzeCreative(
 
   const data = await response.json();
   const text = data.content?.[0]?.text || '';
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Resposta da IA não contém JSON válido');
-  return JSON.parse(jsonMatch[0]) as CreativeAnalysisResult;
+  return parseAIResponse(text);
+}
+
+function parseAIResponse(text: string): CreativeAnalysisResult {
+  if (!text || text.trim().length === 0) {
+    throw new Error('Resposta vazia da IA. Tente novamente.');
+  }
+
+  // Remove markdown code fences se existir
+  let cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+
+  // Tenta extrair JSON — busca o objeto mais externo balanceado
+  let depth = 0;
+  let start = -1;
+  let end = -1;
+  for (let i = 0; i < cleaned.length; i++) {
+    if (cleaned[i] === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (cleaned[i] === '}') {
+      depth--;
+      if (depth === 0 && start !== -1) {
+        end = i + 1;
+        break;
+      }
+    }
+  }
+
+  if (start === -1) {
+    throw new Error('Resposta da IA não contém JSON válido. A IA pode ter retornado texto livre. Tente novamente.');
+  }
+
+  // Se JSON ficou truncado (depth > 0), tentar fechar as chaves
+  if (end === -1 && depth > 0) {
+    let truncated = cleaned.slice(start);
+    // Remover última vírgula ou valor incompleto
+    truncated = truncated.replace(/,\s*"[^"]*$/, '').replace(/,\s*$/, '');
+    // Fechar arrays e objetos abertos
+    for (let d = 0; d < depth; d++) truncated += d === 0 ? '}' : ']}'.slice(-1);
+    try {
+      return JSON.parse(truncated.replace(/,\s*([\]}])/g, '$1')) as CreativeAnalysisResult;
+    } catch { /* fall through to error */ }
+    throw new Error('Resposta da IA foi truncada (JSON incompleto). Tente novamente — a análise pode ter sido muito longa.');
+  }
+
+  let jsonStr = cleaned.slice(start, end);
+
+  // Remove trailing commas antes de } ou ]
+  jsonStr = jsonStr.replace(/,\s*([\]}])/g, '$1');
+
+  try {
+    return JSON.parse(jsonStr) as CreativeAnalysisResult;
+  } catch (parseErr) {
+    // Última tentativa: regex simples
+    const fallback = text.match(/\{[\s\S]*\}/);
+    if (fallback) {
+      try {
+        return JSON.parse(fallback[0].replace(/,\s*([\]}])/g, '$1')) as CreativeAnalysisResult;
+      } catch { /* fall through */ }
+    }
+    throw new Error(`Erro ao interpretar resposta da IA: ${parseErr instanceof Error ? parseErr.message : 'JSON inválido'}. Tente novamente.`);
+  }
 }
 
 export async function analyzeCreativeOpenAI(
@@ -325,7 +425,7 @@ export async function analyzeCreativeOpenAI(
     },
     body: JSON.stringify({
       model: 'gpt-4o',
-      max_tokens: 2048,
+      max_tokens: 4096,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content },
@@ -340,7 +440,5 @@ export async function analyzeCreativeOpenAI(
 
   const data = await response.json();
   const text = data.choices?.[0]?.message?.content || '';
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('Resposta da IA não contém JSON válido');
-  return JSON.parse(jsonMatch[0]) as CreativeAnalysisResult;
+  return parseAIResponse(text);
 }

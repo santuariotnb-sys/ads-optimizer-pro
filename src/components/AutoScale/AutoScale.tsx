@@ -175,9 +175,10 @@ export default function AutoScale() {
 
   const enabledRulesCount = rules.filter(r => ruleStates[r.id]).length;
   const stats = [
-    { label: 'Ações esta semana', value: '12', icon: <Activity size={20} color="#6366f1" /> }, // hardcoded — needs historical data
-    { label: 'Budget otimizado', value: 'R$ 8.400', icon: <TrendingUp size={20} color="#4ade80" /> }, // hardcoded — needs historical data
-    { label: 'Campanhas afetadas', value: String(enabledRulesCount), icon: <Zap size={20} color="#6366f1" /> },
+    // TODO: derivar de log histórico quando disponível no backend
+    { label: 'Ações esta semana (demo)', value: '12', icon: <Activity size={20} color="#6366f1" /> },
+    { label: 'Budget otimizado (demo)', value: 'R$ 8.400', icon: <TrendingUp size={20} color="#4ade80" /> },
+    { label: 'Regras ativas', value: String(enabledRulesCount), icon: <Zap size={20} color="#6366f1" /> },
   ];
 
   return (

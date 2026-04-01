@@ -1,6 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { enrichIdentity, calculatePredictedLTV } from '../_shared/enrichment.ts';
-import { validateEvent } from '../_shared/validation.ts';
+import { validateEvent, isSyntheticEvent } from '../_shared/validation.ts';
 import { buildCAPIPayload } from '../_shared/capi-builder.ts';
 import { sendToMeta } from '../_shared/delivery.ts';
 import type { BrowserEvent } from '../_shared/types.ts';
@@ -101,15 +101,19 @@ Deno.serve(async (req: Request) => {
       supabase, userId, funnelId, enrichedIdentity.customer_type
     );
 
-    // 5. BUILD CAPI PAYLOAD
-    const capiPayload = buildCAPIPayload(
-      event, enrichedIdentity, predictedLtv, clientIp, userAgent, capiToken
-    );
+    // 5. BUILD CAPI PAYLOAD & SEND TO META (skip synthetic events)
+    const isSynthetic = isSyntheticEvent(event);
+    let metaResponse = { status: 0, body: { skipped: 'synthetic_event' }, attempts: 0 };
 
-    // 6. SEND TO META
-    const metaResponse = await sendToMeta(capiPayload, pixelId);
+    if (!isSynthetic) {
+      const capiPayload = buildCAPIPayload(
+        event, enrichedIdentity, predictedLtv, clientIp, userAgent, capiToken,
+        event.test_event_code
+      );
+      metaResponse = await sendToMeta(capiPayload, pixelId);
+    }
 
-    // 7. LOG EVENT
+    // 6. LOG EVENT
     await supabase.from('gateway_events').insert({
       user_id: userId,
       funnel_id: funnelId || null,

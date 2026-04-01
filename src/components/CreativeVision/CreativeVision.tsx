@@ -54,6 +54,8 @@ export default function CreativeVision() {
   const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [carouselFiles, setCarouselFiles] = useState<File[]>([]);
+  const [carouselPreviews, setCarouselPreviews] = useState<string[]>([]);
   const [actionPlan, setActionPlan] = useState<string | null>(null);
   const [generatingPlan, setGeneratingPlan] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -107,6 +109,14 @@ export default function CreativeVision() {
       setError('Arquivo muito grande. Máximo 500MB.');
       return;
     }
+    // Validar formato de vídeo antes de aceitar
+    if (f.type.startsWith('video/')) {
+      const canPlay = document.createElement('video').canPlayType(f.type);
+      if (!canPlay) {
+        setError(`Formato "${f.type}" não suportado pelo navegador. Use MP4 (H.264) ou WebM.`);
+        return;
+      }
+    }
     setFile(f);
     setResult(null);
     setFrames([]);
@@ -119,16 +129,29 @@ export default function CreativeVision() {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    const f = e.dataTransfer.files[0];
-    if (f) handleFile(f);
-  }, [handleFile]);
+    if (creativeType === 'carousel') {
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')).slice(0, 10);
+      if (files.length > 0) {
+        setCarouselFiles(files);
+        setCarouselPreviews(prev => { prev.forEach(URL.revokeObjectURL); return files.map(f => URL.createObjectURL(f)); });
+        setFile(files[0]);
+        setPreview(null);
+        setResult(null);
+        setFrames([]);
+        setError(null);
+      }
+    } else {
+      const f = e.dataTransfer.files[0];
+      if (f) handleFile(f);
+    }
+  }, [handleFile, creativeType]);
 
   const [progress, setProgress] = useState<string | null>(null);
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handleAnalyze = async () => {
-    if (!file || !apiKey) return;
+    if ((!file && !(creativeType === 'carousel' && carouselFiles.length > 0)) || !apiKey) return;
     setShowConfirmModal(false);
     setAnalyzing(true);
     setError(null);
@@ -139,18 +162,44 @@ export default function CreativeVision() {
       let extractedFrames: FrameData[];
 
       if (creativeType === 'video') {
-        const source = videoRef.current && videoRef.current.readyState >= 1 ? videoRef.current : file;
+        // Tentar DOM video primeiro, fallback para File
+        let source: HTMLVideoElement | File = file!;
+        if (videoRef.current && videoRef.current.readyState >= 2 && isFinite(videoRef.current.duration)) {
+          source = videoRef.current;
+        }
         try {
+          setProgress('Carregando vídeo...');
           extractedFrames = await extractVideoFrames(source, setProgress);
         } catch (extractErr) {
-          throw new Error(extractErr instanceof Error ? extractErr.message : 'Erro ao extrair frames');
+          // Se DOM video falhou, tentar com File diretamente
+          if (source instanceof HTMLVideoElement && file) {
+            setProgress('Tentando método alternativo...');
+            try {
+              extractedFrames = await extractVideoFrames(file, setProgress);
+            } catch (retryErr) {
+              throw new Error(retryErr instanceof Error ? retryErr.message : 'Erro ao extrair frames');
+            }
+          } else {
+            throw new Error(extractErr instanceof Error ? extractErr.message : 'Erro ao extrair frames');
+          }
         }
-        if (extractedFrames.length === 0) {
+        if (!extractedFrames || extractedFrames.length === 0) {
           throw new Error('Não foi possível extrair frames do vídeo. Tente outro formato (MP4 H.264).');
         }
+      } else if (creativeType === 'carousel' && carouselFiles.length > 0) {
+        setProgress(`Processando ${carouselFiles.length} slides...`);
+        const slideFrames: FrameData[] = [];
+        for (let i = 0; i < carouselFiles.length; i++) {
+          setProgress(`Slide ${i + 1}/${carouselFiles.length}...`);
+          const frame = await imageToFrame(carouselFiles[i]);
+          frame.timestamp = `Slide ${i + 1}`;
+          frame.description = i === 0 ? 'hook' : i === carouselFiles.length - 1 ? 'cta' : `slide_${i + 1}`;
+          slideFrames.push(frame);
+        }
+        extractedFrames = slideFrames;
       } else {
         setProgress('Processando imagem...');
-        const frame = await imageToFrame(file);
+        const frame = await imageToFrame(file!);
         extractedFrames = [frame];
       }
 
@@ -163,11 +212,21 @@ export default function CreativeVision() {
           ? await analyzeCreative(extractedFrames, apiKey, creativeType)
           : await analyzeCreativeOpenAI(extractedFrames, apiKey, creativeType);
       } catch (apiErr) {
-        throw new Error(apiErr instanceof Error ? apiErr.message : 'Erro ao conectar com a IA');
+        const msg = apiErr instanceof Error ? apiErr.message : String(apiErr);
+        if (msg.includes('Failed to fetch') || msg.includes('Load failed') || msg.includes('NetworkError')) {
+          throw new Error(
+            'Erro de conexão com a API. Possíveis causas:\n' +
+            '• API key inválida ou expirada\n' +
+            '• Bloqueio de CORS (extensão de ad-blocker pode interferir)\n' +
+            '• Problema de rede\n\n' +
+            'Tente: desativar extensões do browser e verificar a API key.'
+          );
+        }
+        throw new Error(msg);
       }
 
       setResult(analysisResult);
-      saveToHistory(file?.name || 'criativo', analysisResult);
+      saveToHistory(creativeType === 'carousel' ? `carousel (${carouselFiles.length} slides)` : (file?.name || 'criativo'), analysisResult);
       setProgress(null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Erro desconhecido na análise';
@@ -330,7 +389,7 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
   };
 
   const hasKey = apiKey.length > 10;
-  const canAnalyze = file && hasKey && !analyzing;
+  const canAnalyze = ((creativeType === 'carousel' ? carouselFiles.length > 0 : !!file)) && hasKey && !analyzing;
 
   return (
     <motion.div
@@ -535,24 +594,56 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
           onDrop={handleDrop}
           onDragOver={e => { e.preventDefault(); setDragOver(true); }}
           onDragLeave={() => setDragOver(false)}
-          onClick={() => fileRef.current?.click()}
+          onClick={() => { if (creativeType !== 'carousel' || carouselPreviews.length === 0) fileRef.current?.click(); }}
           style={{
-            padding: preview ? 0 : 48,
+            padding: (preview || (creativeType === 'carousel' && carouselPreviews.length > 0)) ? 0 : 48,
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', minHeight: preview ? 'auto' : 200,
+            cursor: 'pointer', minHeight: (preview || (creativeType === 'carousel' && carouselPreviews.length > 0)) ? 'auto' : 200,
             borderRadius: 28, overflow: 'hidden',
             border: dragOver ? '2px dashed #6366f1' : '2px dashed transparent',
             background: dragOver ? 'rgba(99,102,241,0.04)' : 'transparent',
             transition: 'all .2s',
           }}
         >
-          {preview ? (
+          {creativeType === 'carousel' && carouselPreviews.length > 0 ? (
+            <div style={{ width: '100%', padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#6366f1' }}>{carouselFiles.length} slides</span>
+              </div>
+              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', paddingBottom: 8 }}>
+                {carouselPreviews.map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`Slide ${i + 1}`}
+                    style={{
+                      width: 200, height: 200, objectFit: 'cover', borderRadius: 12,
+                      border: '2px solid rgba(99,102,241,0.2)', flexShrink: 0,
+                    }}
+                  />
+                ))}
+                <div
+                  style={{
+                    width: 200, height: 200, borderRadius: 12, border: '2px dashed rgba(99,102,241,0.3)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    cursor: 'pointer', color: '#94a3b8', fontSize: 13,
+                  }}
+                  onClick={(e) => { e.stopPropagation(); fileRef.current?.click(); }}
+                >
+                  + Adicionar
+                </div>
+              </div>
+            </div>
+          ) : preview ? (
             creativeType === 'video' ? (
               <video
                 ref={videoRef}
                 src={preview}
                 controls
                 preload="auto"
+                onError={() => {
+                  // Video preview failed — don't block analysis
+                }}
                 style={{ width: '100%', maxHeight: 360, objectFit: 'contain', borderRadius: 28 }}
               />
             ) : (
@@ -562,10 +653,10 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
             <>
               <Upload size={32} style={{ color: '#94a3b8', marginBottom: 12 }} />
               <p style={{ fontSize: 14, color: '#64748b', fontWeight: 500, margin: 0 }}>
-                Arraste ou clique para enviar
+                {creativeType === 'carousel' ? 'Arraste ou clique para enviar (até 10 imagens)' : 'Arraste ou clique para enviar'}
               </p>
               <p style={{ fontSize: 11, color: '#94a3b8', margin: '6px 0 0' }}>
-                MP4, MOV, JPG, PNG, WebP — Máx 500MB
+                {creativeType === 'carousel' ? 'JPG, PNG, WebP — Máx 10 slides' : 'MP4, MOV, JPG, PNG, WebP — Máx 500MB'}
               </p>
             </>
           )}
@@ -573,8 +664,26 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
         <input
           ref={fileRef}
           type="file"
-          accept="image/*,video/mp4,video/quicktime"
-          onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+          accept={creativeType === 'carousel' ? 'image/*' : 'image/*,video/mp4,video/quicktime'}
+          multiple={creativeType === 'carousel'}
+          onChange={e => {
+            if (creativeType === 'carousel') {
+              const files = Array.from(e.target.files || []).slice(0, 10);
+              if (files.length > 0) {
+                setCarouselFiles(files);
+                setCarouselPreviews(prev => { prev.forEach(URL.revokeObjectURL); return files.map(f => URL.createObjectURL(f)); });
+                setFile(files[0]);
+                setPreview(null);
+                setResult(null);
+                setFrames([]);
+                setError(null);
+              }
+            } else {
+              const f = e.target.files?.[0];
+              if (f) handleFile(f);
+            }
+            e.target.value = '';
+          }}
           style={{ display: 'none' }}
         />
       </AlpineCard>
@@ -592,7 +701,13 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
             return (
               <button
                 key={t.id}
-                onClick={() => setCreativeType(t.id)}
+                onClick={() => {
+                  setCreativeType(t.id);
+                  if (t.id !== 'carousel') {
+                    setCarouselFiles([]);
+                    setCarouselPreviews(prev => { prev.forEach(URL.revokeObjectURL); return []; });
+                  }
+                }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 6,
                   padding: '8px 14px', borderRadius: 10, border: 'none', cursor: 'pointer',
@@ -663,7 +778,7 @@ ${actionPlan ? `<h2>Plano de Acao</h2><pre style="white-space:pre-wrap;backgroun
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b' }}>
                 <span>Arquivo</span>
                 <span style={{ color: '#0f172a', fontWeight: 500, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {file?.name}
+                  {creativeType === 'carousel' ? `${carouselFiles.length} slides` : file?.name}
                 </span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#64748b' }}>

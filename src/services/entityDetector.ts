@@ -3,6 +3,7 @@ import type { Creative, EntityIDGroup } from '../types/meta';
 export function analyzeCreativeSimilarity(creatives: Creative[]): EntityIDGroup[] {
   const groups = new Map<number, Creative[]>();
   for (const creative of creatives) {
+    if (creative.entity_id_group == null) continue;
     const group = groups.get(creative.entity_id_group) || [];
     group.push(creative);
     groups.set(creative.entity_id_group, group);
@@ -24,7 +25,7 @@ export function calculateVisualSimilarity(hashA: string, hashB: string): number 
   for (let i = 0; i < len; i++) {
     if (hashA[i] === hashB[i]) matches++;
   }
-  return matches / len;
+  return len > 0 ? matches / len : 0;
 }
 
 export function getOvercrowdedEntities(groups: EntityIDGroup[]): EntityIDGroup[] {

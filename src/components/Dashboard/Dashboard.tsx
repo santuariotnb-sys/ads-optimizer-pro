@@ -22,15 +22,38 @@ const Dashboard: React.FC = () => {
   const storeMetrics = useStore((s) => s.metrics);
   const isMobile = useIsMobile();
 
-  const campaigns = storeCampaigns.length > 0 ? storeCampaigns : mockCampaigns;
+  const mode = useStore((s) => s.mode);
+  const allCampaigns = storeCampaigns.length > 0 ? storeCampaigns : (mode === 'demo' ? mockCampaigns : []);
+
+  // Filter campaigns by selected period
+  const campaigns = allCampaigns.filter((c) => {
+    if (!c.created_time) return true;
+    const now = new Date();
+    const created = new Date(c.created_time);
+    const diffDays = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24);
+    switch (selectedPeriod) {
+      case 'today': return diffDays <= 1;
+      case '7d': return diffDays <= 7;
+      case '14d': return diffDays <= 14;
+      case '30d': return diffDays <= 30;
+      default: return true;
+    }
+  });
+  const emptyCards = [
+    { label: 'CPA', value: 'R$ 0,00', change: 0, sparkline: [] },
+    { label: 'ROAS', value: '0.00x', change: 0, sparkline: [] },
+    { label: 'CTR', value: '0.00%', change: 0, sparkline: [] },
+    { label: 'CPM', value: 'R$ 0,00', change: 0, sparkline: [] },
+    { label: 'MER', value: '0.00x', change: 0, sparkline: [] },
+  ];
   const metricCards = storeMetrics.cpa > 0 ? [
     { label: 'CPA', value: `R$ ${storeMetrics.cpa.toFixed(2).replace('.', ',')}`, change: mockMetricCards[0].change, sparkline: mockMetricCards[0].sparkline },
     { label: 'ROAS', value: `${storeMetrics.roas.toFixed(2)}x`, change: mockMetricCards[1].change, sparkline: mockMetricCards[1].sparkline },
     { label: 'CTR', value: `${storeMetrics.ctr.toFixed(2)}%`, change: mockMetricCards[2].change, sparkline: mockMetricCards[2].sparkline },
     { label: 'CPM', value: `R$ ${storeMetrics.cpm.toFixed(2).replace('.', ',')}`, change: mockMetricCards[3].change, sparkline: mockMetricCards[3].sparkline },
     { label: 'MER', value: `${storeMetrics.mer.toFixed(2)}x`, change: mockMetricCards[4].change, sparkline: mockMetricCards[4].sparkline },
-  ] : mockMetricCards;
-  const dashboardMetrics = storeMetrics.accountScore > 0 ? storeMetrics : mockDashboardMetrics;
+  ] : (mode === 'demo' ? mockMetricCards : emptyCards);
+  const dashboardMetrics = storeMetrics.accountScore > 0 ? storeMetrics : (mode === 'demo' ? mockDashboardMetrics : storeMetrics);
 
   return (
     <motion.div

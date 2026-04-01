@@ -3,8 +3,6 @@ import { META_APP_ID, META_REDIRECT_URI } from '../utils/constants';
 const SCOPES = [
   'ads_management',
   'ads_read',
-  'business_management',
-  'pages_read_engagement',
 ].join(',');
 
 export function getMetaLoginUrl(): string {
@@ -19,12 +17,7 @@ export function getMetaLoginUrl(): string {
 }
 
 export function openMetaLogin(): void {
-  const url = getMetaLoginUrl();
-  const width = 600;
-  const height = 700;
-  const left = window.screenX + (window.outerWidth - width) / 2;
-  const top = window.screenY + (window.outerHeight - height) / 2;
-  window.open(url, 'meta-login', `width=${width},height=${height},left=${left},top=${top}`);
+  window.location.href = getMetaLoginUrl();
 }
 
 export function parseCallbackToken(): string | null {

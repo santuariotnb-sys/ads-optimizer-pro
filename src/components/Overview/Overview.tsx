@@ -17,6 +17,7 @@ import { useStore } from '../../store/useStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { formatCurrency, formatNumber, getStatusColor } from '../../utils/formatters';
 import { mockCampaigns, mockDashboardMetrics } from '../../data/mockData';
+import type { DashboardMetrics } from '../../types/meta';
 
 /* ────────────────────────── helpers ────────────────────────── */
 
@@ -329,18 +330,20 @@ export default function Overview() {
   const setCurrentModule = useStore((s) => s.setCurrentModule);
   void theme; // tema disponível para uso futuro
 
-  const liveCampaigns = campaigns.length > 0 ? campaigns : mockCampaigns;
+  const mode = useStore((s) => s.mode);
+  const liveCampaigns = campaigns.length > 0 ? campaigns : (mode === 'demo' ? mockCampaigns : []);
   const topCampaigns = [...liveCampaigns]
     .filter((c) => c.status !== 'DELETED')
     .sort((a, b) => b.roas - a.roas)
     .slice(0, 4);
 
-  const cpa = metrics.cpa || mockDashboardMetrics.cpa;
-  const roas = metrics.roas || mockDashboardMetrics.roas;
-  const spend = metrics.spend || mockDashboardMetrics.spend;
-  const conversions = metrics.conversions || mockDashboardMetrics.conversions;
-  const accountScore = metrics.accountScore || mockDashboardMetrics.accountScore;
-  const emq = emqScore || 8.7;
+  const fallback = mode === 'demo' ? mockDashboardMetrics : { cpa: 0, roas: 0, spend: 0, conversions: 0, accountScore: 0 } as DashboardMetrics;
+  const cpa = metrics.cpa || fallback.cpa;
+  const roas = metrics.roas || fallback.roas;
+  const spend = metrics.spend || fallback.spend;
+  const conversions = metrics.conversions || fallback.conversions;
+  const accountScore = metrics.accountScore || fallback.accountScore;
+  const emq = emqScore || (mode === 'demo' ? 8.7 : 0);
 
   const animatedCPA = useCountUp(cpa, 1600, 2);
   const animatedROAS = useCountUp(roas, 1600, 1);

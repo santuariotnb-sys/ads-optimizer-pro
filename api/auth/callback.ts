@@ -1,8 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const META_APP_ID = process.env.META_APP_ID || '';
-const META_APP_SECRET = process.env.META_APP_SECRET || '';
-const REDIRECT_URI = process.env.META_REDIRECT_URI || 'https://ads-optimizer-pro.vercel.app/auth/callback';
+const META_APP_ID = process.env.META_APP_ID || process.env.VITE_META_APP_ID || '';
+const META_APP_SECRET = process.env.META_APP_SECRET || process.env.VITE_META_APP_SECRET || '';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://ads-optimizer-pro.vercel.app';
 const API_VERSION = 'v21.0';
 
@@ -17,9 +16,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing authorization code' });
   }
 
+  // Derive redirect_uri from the actual request URL — guarantees exact match with dialog
+  const proto = req.headers['x-forwarded-proto'] || 'https';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'ads-optimizer-pro.vercel.app';
+  const redirectUri = `${proto}://${host}/api/auth/callback`;
+
   try {
     // Exchange code for short-lived token
-    const tokenUrl = `https://graph.facebook.com/${API_VERSION}/oauth/access_token?client_id=${META_APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&client_secret=${META_APP_SECRET}&code=${code}`;
+    const tokenUrl = `https://graph.facebook.com/${API_VERSION}/oauth/access_token?client_id=${META_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&client_secret=${META_APP_SECRET}&code=${code}`;
     const tokenRes = await fetch(tokenUrl);
     const tokenData = await tokenRes.json();
 

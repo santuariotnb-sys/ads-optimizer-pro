@@ -60,11 +60,35 @@ export default function Integrations() {
   // Anuncios
   const [expandedPlatform, setExpandedPlatform] = useState<string | null>(null);
 
-  // Webhooks & Credentials
-  const [webhooks, setWebhooks] = useState<Webhook[]>([{ id: 'wh-1', name: 'Webhook Exemplo', platform: 'Hotmart', active: false }]);
-  const [credentials, setCredentials] = useState<Credential[]>([]);
+  // Webhooks & Credentials — persisted to sessionStorage
+  const defaultWebhooks: Webhook[] = [{ id: 'wh-1', name: 'Webhook Exemplo', platform: 'Hotmart', active: false }];
+  const defaultPixels: Pixel[] = [{ id: 'px-1', name: 'Pixel Principal', pixelId: '123456789', type: 'Meta', product: 'Qualquer', active: false }];
+
+  const [webhooks, setWebhooksRaw] = useState<Webhook[]>(() => {
+    const saved = sessionStorage.getItem('integ_webhooks');
+    return saved ? JSON.parse(saved) : defaultWebhooks;
+  });
+  const [credentials, setCredentialsRaw] = useState<Credential[]>(() => {
+    const saved = sessionStorage.getItem('integ_credentials');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [showCredentialModal, setShowCredentialModal] = useState(false);
   const [newCredName, setNewCredName] = useState('');
+
+  function updateWebhooks(val: Webhook[] | ((prev: Webhook[]) => Webhook[])) {
+    setWebhooksRaw(prev => {
+      const next = typeof val === 'function' ? val(prev) : val;
+      sessionStorage.setItem('integ_webhooks', JSON.stringify(next));
+      return next;
+    });
+  }
+  function updateCredentials(val: Credential[] | ((prev: Credential[]) => Credential[])) {
+    setCredentialsRaw(prev => {
+      const next = typeof val === 'function' ? val(prev) : val;
+      sessionStorage.setItem('integ_credentials', JSON.stringify(next));
+      return next;
+    });
+  }
 
   // UTMs
   const [utmModal, setUtmModal] = useState<string | null>(null);
@@ -78,8 +102,18 @@ export default function Integrations() {
   const [utmTerm, setUtmTerm] = useState('');
   const [utmErrors, setUtmErrors] = useState<{ source?: boolean; medium?: boolean }>({});
 
-  // Pixel
-  const [pixels, setPixels] = useState<Pixel[]>([{ id: 'px-1', name: 'Pixel Principal', pixelId: '123456789', type: 'Meta', product: 'Qualquer', active: false }]);
+  // Pixel — persisted to sessionStorage
+  const [pixels, setPixelsRaw] = useState<Pixel[]>(() => {
+    const saved = sessionStorage.getItem('integ_pixels');
+    return saved ? JSON.parse(saved) : defaultPixels;
+  });
+  function updatePixels(val: Pixel[] | ((prev: Pixel[]) => Pixel[])) {
+    setPixelsRaw(prev => {
+      const next = typeof val === 'function' ? val(prev) : val;
+      sessionStorage.setItem('integ_pixels', JSON.stringify(next));
+      return next;
+    });
+  }
   const [showPixelDrawer, setShowPixelDrawer] = useState(false);
   const [pixelForm, setPixelForm] = useState({ name: '', type: 'Meta (Facebook)', leadRule: 'Desabilitado', atcRule: 'Desabilitado', icRule: 'Habilitado', icText: 'COMPRAR AGORA', purchaseRule: 'Apenas vendas aprovadas', purchaseValue: 'Valor da venda', product: 'Qualquer', ipRule: 'Enviar IPv6 se houver. Enviar IPv4 se nao houver IPv6' });
 
@@ -194,8 +228,8 @@ export default function Integrations() {
                         if (p.id === 'meta') {
                           const clientId = import.meta.env.VITE_META_APP_ID;
                           if (!clientId) { setNotice('Configure VITE_META_APP_ID no .env para conectar Meta Ads'); return; }
-                          const redirect = import.meta.env.VITE_META_REDIRECT_URI || `${window.location.origin}/auth/callback`;
-                          window.location.href = `https://www.facebook.com/v25.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirect)}&scope=ads_read,ads_management`;
+                          const redirect = import.meta.env.VITE_META_REDIRECT_URI || `${window.location.origin}/api/auth/callback`;
+                          window.location.href = `https://www.facebook.com/v21.0/dialog/oauth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirect)}&scope=ads_read,ads_management&response_type=code`;
                         } else {
                           setNotice(`Integração com ${p.name} será disponibilizada em breve`);
                         }
@@ -241,7 +275,7 @@ export default function Integrations() {
             <button style={btn} onClick={() => {
               const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
               const webhookUrl = supabaseUrl ? `${supabaseUrl}/functions/v1/webhook-sales` : 'https://seu-projeto.supabase.co/functions/v1/webhook-sales';
-              setWebhooks(prev => [...prev, { id: uid(), name: `Webhook ${prev.length + 1}`, platform: 'Custom', active: false }]);
+              updateWebhooks(prev => [...prev, { id: uid(), name: `Webhook ${prev.length + 1}`, platform: 'Custom', active: false }]);
               navigator.clipboard.writeText(webhookUrl);
               setCopiedField('new-webhook');
               setTimeout(() => setCopiedField(null), 2000);
@@ -290,7 +324,7 @@ export default function Integrations() {
                 </div>
                 <label style={label}>Nome</label>
                 <input value={newCredName} onChange={e => setNewCredName(e.target.value)} placeholder="Nome da credencial" style={{ ...input, marginBottom: 20 }} />
-                <button style={btn} onClick={() => { if (newCredName.trim()) { setCredentials(prev => [...prev, { id: uid(), name: newCredName.trim(), active: false }]); setShowCredentialModal(false); } }}>
+                <button style={btn} onClick={() => { if (newCredName.trim()) { updateCredentials(prev => [...prev, { id: uid(), name: newCredName.trim(), active: false }]); setShowCredentialModal(false); } }}>
                   Criar Credencial
                 </button>
               </motion.div>
@@ -521,7 +555,7 @@ export default function Integrations() {
                   <button style={{ ...btn, background: c.text, color: c.bg, justifyContent: 'center', width: '100%', padding: '14px 20px' }}
                     onClick={() => {
                       if (pixelForm.name.trim()) {
-                        setPixels(prev => [...prev, { id: uid(), name: pixelForm.name.trim(), pixelId: String(Math.floor(Math.random() * 900000000) + 100000000), type: pixelForm.type.split(' ')[0], product: pixelForm.product, active: false }]);
+                        updatePixels(prev => [...prev, { id: uid(), name: pixelForm.name.trim(), pixelId: String(Math.floor(Math.random() * 900000000) + 100000000), type: pixelForm.type.split(' ')[0], product: pixelForm.product, active: false }]);
                         setShowPixelDrawer(false);
                       }
                     }}>

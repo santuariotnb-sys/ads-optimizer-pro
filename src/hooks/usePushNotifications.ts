@@ -25,9 +25,11 @@ export function usePushNotifications(): UsePushNotifications {
 
   useEffect(() => {
     if (!isSupported) return;
+    let cancelled = false;
     getCurrentSubscription().then((sub) => {
-      setIsSubscribed(!!sub);
+      if (!cancelled) setIsSubscribed(!!sub);
     });
+    return () => { cancelled = true; };
   }, [isSupported]);
 
   const subscribe = useCallback(async () => {

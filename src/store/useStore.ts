@@ -58,11 +58,17 @@ interface AppState {
   setOnboardingStep: (step: number) => void;
 }
 
+// Restore persisted auth from sessionStorage
+const _rawToken = sessionStorage.getItem('_ao_token');
+const _savedToken = _rawToken && _rawToken.trim() !== '' ? _rawToken : null;
+const _rawAccount = sessionStorage.getItem('_ao_account');
+const _savedAccount = _rawAccount && _rawAccount.trim() !== '' ? _rawAccount : null;
+
 export const useStore = create<AppState>((set) => ({
   theme: 'dark',
-  mode: 'demo',
-  accessToken: null,
-  adAccountId: null,
+  mode: _savedToken ? 'live' : 'demo',
+  accessToken: _savedToken,
+  adAccountId: _savedAccount,
 
   campaigns: [],
   adSets: [],
@@ -87,8 +93,16 @@ export const useStore = create<AppState>((set) => ({
   currentWorkspace: null,
   onboardingStep: 0,
 
-  setAccessToken: (token) => set({ accessToken: token, mode: token ? 'live' : 'demo' }),
-  setAdAccountId: (id) => set({ adAccountId: id }),
+  setAccessToken: (token) => {
+    if (token) sessionStorage.setItem('_ao_token', token);
+    else sessionStorage.removeItem('_ao_token');
+    set({ accessToken: token, mode: token ? 'live' : 'demo' });
+  },
+  setAdAccountId: (id) => {
+    if (id) sessionStorage.setItem('_ao_account', id);
+    else sessionStorage.removeItem('_ao_account');
+    set({ adAccountId: id });
+  },
   setCampaigns: (campaigns) => set({ campaigns }),
   setAdSets: (adSets) => set({ adSets }),
   setAds: (ads) => set({ ads }),

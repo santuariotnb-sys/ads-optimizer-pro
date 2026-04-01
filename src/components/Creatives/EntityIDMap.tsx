@@ -3,6 +3,7 @@ import { mockEntityGroups } from '../../data/mockData';
 import { formatCurrency } from '../../utils/formatters';
 import { Layers, AlertTriangle } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useStore } from '../../store/useStore';
 
 const COLORS = {
   surface: 'rgba(22, 22, 32, 0.85)',
@@ -20,7 +21,8 @@ const groupColors = ['#6366f1', '#8b5cf6', '#4f46e5', '#f97316', '#60a5fa'];
 export default function EntityIDMap() {
   const isMobile = useIsMobile();
   const [hoveredGroup, setHoveredGroup] = useState<number | null>(null);
-  const groups = mockEntityGroups;
+  const mode = useStore((s) => s.mode);
+  const groups = mode === 'demo' ? mockEntityGroups : [];
   const totalCreatives = groups.reduce((s, g) => s + g.creatives.length, 0);
   const totalEntities = groups.length;
   const overcrowded = groups.filter(g => g.is_overcrowded);

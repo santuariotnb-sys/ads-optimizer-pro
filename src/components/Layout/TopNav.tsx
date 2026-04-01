@@ -33,6 +33,8 @@ export default function TopNav() {
   const isMobile = useIsMobile();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const alerts = useStore((s) => s.alerts);
+  const [bellOpen, setBellOpen] = useState(false);
 
   const [userName, setUserName] = useState('Usuário');
   useEffect(() => {
@@ -167,36 +169,75 @@ export default function TopNav() {
         {/* Right side */}
         <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 8 : 12, minWidth: isMobile ? 'auto' : 180, justifyContent: 'flex-end' }}>
           {/* Bell */}
-          <button
-            onClick={() => alert('Nenhuma notificação nova')}
-            style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 36,
-              height: 36,
-              borderRadius: 10,
-              border: '1px solid rgba(255,255,255,.30)',
-              background: 'rgba(255,255,255,.12)',
-              color: '#475569',
-              cursor: 'pointer',
-            }}
-          >
-            <Bell size={18} />
-            <span
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setBellOpen(!bellOpen)}
               style={{
-                position: 'absolute',
-                top: 6,
-                right: 6,
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: '#ef4444',
-                border: '2px solid rgba(255,255,255,.80)',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                border: '1px solid rgba(255,255,255,.30)',
+                background: bellOpen ? 'rgba(255,255,255,.28)' : 'rgba(255,255,255,.12)',
+                color: '#475569',
+                cursor: 'pointer',
               }}
-            />
-          </button>
+            >
+              <Bell size={18} />
+              {alerts.filter(a => !a.dismissed).length > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: 6,
+                    right: 6,
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    background: '#ef4444',
+                    border: '2px solid rgba(255,255,255,.80)',
+                  }}
+                />
+              )}
+            </button>
+            {bellOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 44,
+                  right: 0,
+                  width: 280,
+                  background: 'rgba(255,255,255,.82)',
+                  backdropFilter: 'blur(28px) saturate(1.6)',
+                  WebkitBackdropFilter: 'blur(28px) saturate(1.6)',
+                  border: '1px solid rgba(255,255,255,.55)',
+                  borderRadius: 14,
+                  boxShadow: '0 12px 40px rgba(15,23,42,.16)',
+                  padding: 10,
+                  zIndex: 200,
+                }}
+              >
+                {alerts.length === 0 ? (
+                  <div style={{ padding: '14px 10px', fontSize: 13, color: '#64748b', textAlign: 'center', fontFamily: "'Outfit', sans-serif" }}>
+                    Nenhuma notificação nova
+                  </div>
+                ) : (
+                  alerts.filter(a => !a.dismissed).slice(0, 3).map((a) => (
+                    <div key={a.id} style={{ padding: '8px 10px', borderRadius: 8, marginBottom: 2, background: 'rgba(15,23,42,.03)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 600, color: a.severity === 'critical' ? '#ef4444' : a.severity === 'warning' ? '#f59e0b' : '#6366f1', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 2, fontFamily: "'Outfit', sans-serif" }}>
+                        {a.type}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>
+                        {a.title}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
 
           {/* User avatar */}
           <button

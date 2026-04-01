@@ -26,8 +26,8 @@ export function evaluateAutoScale(campaigns: Campaign[], cpaTarget: number): Sca
       if (hoursSinceChange < AUTO_SCALE.MIN_INTERVAL_HOURS) continue;
     }
 
-    // Auto-scale up: CPA abaixo do alvo + score alto
-    if (campaign.cpa < cpaTarget && campaign.status === 'ACTIVE' && campaign.opportunity_score >= 70) {
+    // Auto-scale up: CPA abaixo do alvo + score alto + ROAS positivo
+    if (campaign.cpa < cpaTarget && campaign.roas > 1 && campaign.status === 'ACTIVE' && campaign.opportunity_score >= 70) {
       const increase = campaign.daily_budget * (1 + AUTO_SCALE.MAX_BUDGET_CHANGE_PCT / 100);
       actions.push({
         type: 'scale_up',

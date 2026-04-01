@@ -253,7 +253,8 @@ function CreativeCard({ creative, isMobile }: { creative: Creative; isMobile: bo
 export default function Creatives() {
   const isMobile = useIsMobile();
   const storeCreatives = useStore((s) => s.creatives);
-  const baseCreatives = storeCreatives.length > 0 ? storeCreatives : mockCreativesData;
+  const mode = useStore((s) => s.mode);
+  const baseCreatives = storeCreatives.length > 0 ? storeCreatives : (mode === 'demo' ? mockCreativesData : []);
   const [filter, setFilter] = useState<Filter>('all');
   const [sortBy, setSortBy] = useState<SortKey>('score');
 

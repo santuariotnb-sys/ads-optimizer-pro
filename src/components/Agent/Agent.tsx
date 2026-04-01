@@ -352,9 +352,9 @@ function buildBridgeContext(
   return [
     'Contexto: App Ads.Everest. Dados atuais do gestor de trafego:',
     `- Campanhas ativas: ${campaignCount}`,
-    `- CPA medio: R$ ${cpa.toFixed(2)}`,
-    `- ROAS medio: ${roas.toFixed(2)}x`,
-    `- EMQ Score: ${emq.toFixed(1)}`,
+    `- CPA medio: R$ ${(cpa ?? 0).toFixed(2)}`,
+    `- ROAS medio: ${(roas ?? 0).toFixed(2)}x`,
+    `- EMQ Score: ${(emq ?? 0).toFixed(1)}`,
     '',
   ].join('\n');
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { mockEMQ } from '../../data/mockData';
 import { EMQ_WEIGHTS } from '../../utils/constants';
+import { useStore } from '../../store/useStore';
 import { Activity, AlertTriangle } from 'lucide-react';
 import type { EMQBreakdown } from '../../types/meta';
 import { useIsMobile } from '../../hooks/useMediaQuery';
@@ -28,7 +29,9 @@ const paramLabels: Record<string, string> = {
 export default function EMQMonitor() {
   const isMobile = useIsMobile();
   const [hoveredParam, setHoveredParam] = useState<string | null>(null);
-  const emq = mockEMQ;
+  const mode = useStore((s) => s.mode);
+  const storeEmq = useStore((s) => s.emqScore);
+  const emq = mode === 'demo' ? mockEMQ : { email: 0, phone: 0, external_id: 0, ip_ua: 0, fbp: 0, fbc: 0, total: storeEmq } as EMQBreakdown;
   const maxWeights = EMQ_WEIGHTS;
   const maxTotal = Object.values(maxWeights).reduce((s, v) => s + v, 0);
   const isLow = emq.total < 8.0;

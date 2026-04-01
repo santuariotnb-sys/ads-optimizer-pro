@@ -6,6 +6,7 @@ import { ChevronDown, ChevronUp, Pause, TrendingUp, Copy, AlertTriangle } from '
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useStore } from '../../store/useStore';
 import { showToast } from '../ui/toastStore';
+import { MetaApiService } from '../../services/metaApi';
 
 const statusLabel: Record<string, string> = {
   ACTIVE: 'Ativo',
@@ -27,7 +28,10 @@ const Campaigns: React.FC = () => {
   const [searchFocused, setSearchFocused] = useState(false);
   const isMobile = useIsMobile();
   const storeCampaigns = useStore((s) => s.campaigns);
-  const campaigns = storeCampaigns.length > 0 ? storeCampaigns : mockCampaigns;
+  const mode = useStore((s) => s.mode);
+  const accessToken = useStore((s) => s.accessToken);
+  const adAccountId = useStore((s) => s.adAccountId);
+  const campaigns = storeCampaigns.length > 0 ? storeCampaigns : (mode === 'demo' ? mockCampaigns : []);
 
   const toggle = (id: string) => {
     setExpandedIds((prev) => {
@@ -364,7 +368,20 @@ const Campaigns: React.FC = () => {
                   ].map((btn) => (
                     <button
                       key={btn.label}
-                      onClick={(e) => { e.stopPropagation(); showToast('info', `${btn.label}: disponível no modo Live. Conecte sua conta Meta nas Configurações.`); }}
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        if (btn.label === 'Pausar' && mode === 'live' && accessToken) {
+                          try {
+                            const api = new MetaApiService(accessToken, adAccountId || '');
+                            await api.updateStatus(campaign.id, 'PAUSED');
+                            showToast('success', `Campanha "${campaign.name}" pausada com sucesso.`);
+                          } catch {
+                            showToast('error', 'Erro ao pausar campanha na Meta API.');
+                          }
+                        } else {
+                          showToast('info', `${btn.label}: disponível no modo Live. Conecte sua conta Meta nas Configurações.`);
+                        }
+                      }}
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',

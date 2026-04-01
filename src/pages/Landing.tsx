@@ -44,10 +44,9 @@ function useCountUp(target: number, duration = 1600, trigger: boolean) {
 }
 
 function useIsMobileLanding() {
-  const [m, setM] = useState(false);
+  const [m, setM] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   useEffect(() => {
     const check = () => setM(window.innerWidth < 768);
-    check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
@@ -306,18 +305,13 @@ function HeroSection() {
     }}>
       {/* Video background */}
       <video
-        autoPlay
-        muted
-        loop
-        playsInline
+        autoPlay muted loop playsInline preload="auto"
+        src="https://hfxgotszsexyodcibxtf.supabase.co/storage/v1/object/public/assets/landing-bg.mp4"
         style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', opacity: 0.35, pointerEvents: 'none',
-          zIndex: 0,
+          objectFit: 'cover', opacity: 0.40, pointerEvents: 'none', zIndex: 0,
         }}
-      >
-        <source src="https://hfxgotszsexyodcibxtf.supabase.co/storage/v1/object/public/assets/landing-bg.mp4" type="video/mp4" />
-      </video>
+      />
       {/* Dark overlay on video */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 1,

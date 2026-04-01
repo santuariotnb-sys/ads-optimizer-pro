@@ -31,6 +31,7 @@ const SignalGateway = lazy(() => import('./components/SignalGateway/SignalGatewa
 const SignalAudit = lazy(() => import('./components/SignalAudit/SignalAudit'));
 const TraceSummary = lazy(() => import('./components/TraceSummary/TraceSummary'));
 const OnboardingWizard = lazy(() => import('./components/Onboarding/OnboardingWizard'));
+const AdManager = lazy(() => import('./components/AdManager/AdManager'));
 
 import PlanGate from './components/ui/PlanGate';
 import { parseCallbackToken } from './services/metaAuth';
@@ -56,6 +57,7 @@ const comandoNav = [
   { id: 'cmd-audiences', label: 'Públicos', icon: Users },
   { id: 'cmd-alerts', label: 'Alertas', icon: Bell },
   { id: 'cmd-apex', label: 'Apex', icon: Bot },
+  { id: 'cmd-admanager', label: 'Gerenciador', icon: Megaphone },
   { id: 'cmd-flow', label: 'Flow Builder', icon: GitBranch },
   { id: 'cmd-financial', label: 'Financeiro', icon: DollarSign },
   { id: 'cmd-settings', label: 'Configurações', icon: SettingsIcon },
@@ -127,6 +129,9 @@ function ModuleRouter() {
     case 'opt-alerts': // backward compat
     case 'alerts':
       return <Alerts />;
+    case 'cmd-admanager':
+    case 'admanager':
+      return <AdManager />;
     case 'cmd-apex':
     case 'opt-agent': // backward compat
     case 'agent':
@@ -298,12 +303,14 @@ export default function App() {
     async function fetchLiveData() {
       setIsLoading(true);
       try {
-        const [campaignsRes, audiencesRes] = await Promise.all([
+        const [campaignsResult, audiencesResult] = await Promise.allSettled([
           api.fetchCampaigns(),
           api.fetchAudiences(),
-        ]) as [Record<string, unknown>, Record<string, unknown>];
+        ]);
+        const campaignsRes = campaignsResult.status === 'fulfilled' ? campaignsResult.value as Record<string, unknown> : null;
+        const audiencesRes = audiencesResult.status === 'fulfilled' ? audiencesResult.value as Record<string, unknown> : null;
 
-        if (campaignsRes?.data) {
+        if (campaignsRes?.data && Array.isArray(campaignsRes.data)) {
           interface MetaCampaign { id: string; name: string; status?: string; objective?: string; daily_budget?: number; lifetime_budget?: number; created_time?: string }
           const campaigns = (campaignsRes.data as MetaCampaign[]).map((c) => ({
             id: c.id,
@@ -319,37 +326,64 @@ export default function App() {
           }));
           setCampaigns(campaigns);
 
-          for (const campaign of campaigns) {
-            try {
-              const insights = await api.fetchInsights(
+          // Fetch insights em paralelo (não sequencial)
+          const insightResults = await Promise.allSettled(
+            campaigns.map((campaign) =>
+              api.fetchInsights(
                 campaign.id,
                 'spend,impressions,clicks,cpc,cpm,ctr,actions,action_values',
                 'last_7d'
-              ) as Record<string, unknown>;
-              if (insights?.data) {
-                const d = (insights.data as Record<string, unknown>[])[0];
-                const actions = (d?.actions || []) as Record<string, unknown>[];
-                const actionValues = (d?.action_values || []) as Record<string, unknown>[];
-                const conversions = String(actions.find((a) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || '0');
-                const revenue = String(actionValues.find((a) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || '0');
-                const spend = parseFloat(String(d.spend || '0'));
-                const convCount = parseInt(conversions);
-                Object.assign(campaign, {
-                  spend,
-                  impressions: parseInt(String(d.impressions || '0')),
-                  clicks: parseInt(String(d.clicks || '0')),
-                  ctr: parseFloat(String(d.ctr || '0')),
-                  cpm: parseFloat(String(d.cpm || '0')),
-                  conversions: convCount,
-                  cpa: convCount > 0 ? spend / convCount : 0,
-                  roas: spend > 0 ? parseFloat(revenue) / spend : 0,
-                });
-              }
-            } catch {
-              // Skip failed individual fetches
+              )
+            )
+          );
+
+          for (let i = 0; i < campaigns.length; i++) {
+            const result = insightResults[i];
+            if (result.status !== 'fulfilled') continue;
+            const insights = result.value as Record<string, unknown>;
+            if (insights?.data) {
+              const d = (insights.data as Record<string, unknown>[])[0];
+              if (!d) continue;
+              const actions = (d?.actions || []) as Record<string, unknown>[];
+              const actionValues = (d?.action_values || []) as Record<string, unknown>[];
+              const conversions = String(actions.find((a) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || '0');
+              const revenue = String(actionValues.find((a) => a.action_type === 'offsite_conversion.fb_pixel_purchase')?.value || '0');
+              const spend = parseFloat(String(d.spend || '0'));
+              const convCount = parseInt(conversions);
+              Object.assign(campaigns[i], {
+                spend,
+                impressions: parseInt(String(d.impressions || '0')),
+                clicks: parseInt(String(d.clicks || '0')),
+                ctr: parseFloat(String(d.ctr || '0')),
+                cpm: parseFloat(String(d.cpm || '0')),
+                conversions: convCount,
+                cpa: convCount > 0 ? spend / convCount : 0,
+                roas: spend > 0 ? parseFloat(revenue) / spend : 0,
+              });
             }
           }
           setCampaigns([...campaigns]);
+
+          // Calcular métricas agregadas para o Dashboard
+          const totalSpend = campaigns.reduce((s, c) => s + (c.spend || 0), 0);
+          const totalConversions = campaigns.reduce((s, c) => s + (c.conversions || 0), 0);
+          const totalImpressions = campaigns.reduce((s, c) => s + (c.impressions || 0), 0);
+          const totalClicks = campaigns.reduce((s, c) => s + (c.clicks || 0), 0);
+          const totalRevenue = campaigns.reduce((s, c) => s + (c.spend > 0 ? c.spend * c.roas : 0), 0);
+          const activeCampaigns = campaigns.filter((c) => c.status === 'ACTIVE');
+          const avgScore = activeCampaigns.length > 0
+            ? activeCampaigns.reduce((s, c) => s + c.opportunity_score, 0) / activeCampaigns.length
+            : 0;
+          setMetrics({
+            cpa: totalConversions > 0 ? totalSpend / totalConversions : 0,
+            roas: totalSpend > 0 ? totalRevenue / totalSpend : 0,
+            ctr: totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0,
+            cpm: totalImpressions > 0 ? (totalSpend / totalImpressions) * 1000 : 0,
+            mer: totalSpend > 0 ? totalRevenue / totalSpend : 0,
+            spend: totalSpend,
+            conversions: totalConversions,
+            accountScore: Math.round(avgScore),
+          });
 
           // CONNECTION 3: Persist campaign metrics to Supabase (fire-and-forget)
           try {
@@ -384,12 +418,13 @@ export default function App() {
                 video_p75: 0,
                 video_p100: 0,
               }));
-              supabase
-                .from('campaign_metrics')
-                .upsert(metricsRows, { onConflict: 'campaign_id,date' })
-                .then(({ error: upsertErr }) => {
-                  if (upsertErr) console.warn('Campaign metrics upsert error:', upsertErr.message);
-                });
+              Promise.resolve(
+                supabase
+                  .from('campaign_metrics')
+                  .upsert(metricsRows, { onConflict: 'campaign_id,date' })
+              ).then(({ error: upsertErr }) => {
+                if (upsertErr) console.warn('Campaign metrics upsert error:', upsertErr.message);
+              }).catch((e: unknown) => console.warn('Campaign metrics persist failed:', e));
             }
           } catch (e) {
             console.warn('Campaign metrics persist skipped:', e);
@@ -407,6 +442,9 @@ export default function App() {
           }));
           setAudiences(audiences);
         }
+
+        // Signal Audit: populate with mock baseline (audit runs client-side)
+        setSignalAudit(mockSignalAudit);
 
         // CONNECTION 4: Evaluate and persist alerts in live mode
         if (campaignsRes?.data) {
@@ -435,12 +473,13 @@ export default function App() {
                 campaign_id: a.campaign_id || null,
                 dismissed: a.dismissed || false,
               }));
-              supabase
-                .from('alerts')
-                .upsert(alertRows, { onConflict: 'user_id,type,campaign_id' })
-                .then(({ error: alertErr }) => {
-                  if (alertErr) console.warn('Alerts upsert error:', alertErr.message);
-                });
+              Promise.resolve(
+                supabase
+                  .from('alerts')
+                  .upsert(alertRows, { onConflict: 'user_id,type,campaign_id' })
+              ).then(({ error: alertErr }) => {
+                if (alertErr) console.warn('Alerts upsert error:', alertErr.message);
+              }).catch((e: unknown) => console.warn('Alerts persist failed:', e));
             }
           } catch (e) {
             console.warn('Alerts persist skipped:', e);
@@ -454,7 +493,7 @@ export default function App() {
     }
 
     fetchLiveData();
-  }, [mode, accessToken, adAccountId, setCampaigns, setAudiences, setAlerts, setIsLoading]);
+  }, [mode, accessToken, adAccountId, setCampaigns, setAudiences, setAlerts, setMetrics, setIsLoading, setSignalAudit]);
 
   const activeTab = getActiveTab(currentModule);
   const subNavItems = getSubNavItems(activeTab);

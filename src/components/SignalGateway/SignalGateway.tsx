@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useIsMobile } from '../../hooks/useMediaQuery';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
+import { useStore } from '../../store/useStore';
 import {
   fetchGatewayStats, fetchGatewayPipeline, fetchFunnelConfig,
   saveFunnelConfig, calculateEPV, generateTrackingScript,
@@ -27,6 +28,11 @@ const MOCK_STATS: GatewayStats = {
   deliveryFailed: 513,
   recoveryCount: 3854,
   totalValue: 156290,
+  dedupCount: 8480,
+  capiOnlyCount: 3854,
+  pixelOnlyCount: 513,
+  bothCount: 8480,
+  rejectedCount: 513,
 };
 
 const MOCK_PIPELINE: GatewayPipeline = {
@@ -91,6 +97,27 @@ export default function SignalGateway() {
   const [copied, setCopied] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
+  const [testResult, setTestResult] = useState('');
+  const [testLoading, setTestLoading] = useState(false);
+
+  async function sendTestEvent() {
+    if (!SUPABASE_URL) { setTestResult('Configure VITE_SUPABASE_URL'); return; }
+    setTestLoading(true); setTestResult('');
+    try {
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/collect`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event_name: 'PageView',
+          event_id: `test_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+          event_source_url: window.location.href,
+          test_event_code: 'TEST_EVENT',
+          timestamp: Math.floor(Date.now() / 1000),
+        }),
+      });
+      setTestResult(res.ok ? 'Evento enviado com sucesso!' : `Erro: ${res.status}`);
+    } catch { setTestResult('Falha na conexão'); }
+    finally { setTestLoading(false); }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -102,14 +129,16 @@ export default function SignalGateway() {
           fetchFunnelConfig(),
         ]);
         if (cancelled) return;
-        // If Supabase returned empty/zero data, use mocks
-        setStats(s && s.eventsTotal > 0 ? s : MOCK_STATS);
-        setPipeline(p && p.pageviews > 0 ? p : MOCK_PIPELINE);
+        // If Supabase returned empty/zero data, use mocks only in demo mode
+        const mode = useStore.getState().mode;
+        setStats(s && s.eventsTotal > 0 ? s : (mode === 'demo' ? MOCK_STATS : null));
+        setPipeline(p && p.pageviews > 0 ? p : (mode === 'demo' ? MOCK_PIPELINE : null));
         if (f) setFunnel(f);
       } catch {
         if (cancelled) return;
-        setStats(MOCK_STATS);
-        setPipeline(MOCK_PIPELINE);
+        const mode = useStore.getState().mode;
+        setStats(mode === 'demo' ? MOCK_STATS : null);
+        setPipeline(mode === 'demo' ? MOCK_PIPELINE : null);
       }
     }
     load();
@@ -226,7 +255,7 @@ export default function SignalGateway() {
 
       {tab === 'dashboard' && <DashboardTab stats={stats} pipeline={pipeline} recoveryRate={recoveryRate} matchRate={matchRate} deliveryRate={deliveryRate} epv={epv} funnel={funnel} isMobile={isMobile} />}
       {tab === 'funnel' && <FunnelTab funnel={funnel} setFunnel={setFunnel} epv={epv} saving={saving} saveMsg={saveMsg} onSave={handleSaveFunnel} isMobile={isMobile} />}
-      {tab === 'script' && <ScriptTab funnel={funnel} copied={copied} onCopy={handleCopyScript} isMobile={isMobile} />}
+      {tab === 'script' && <ScriptTab funnel={funnel} copied={copied} onCopy={handleCopyScript} isMobile={isMobile} testResult={testResult} testLoading={testLoading} onTestEvent={sendTestEvent} />}
     </motion.div>
   );
 }
@@ -360,6 +389,87 @@ function DashboardTab({ stats, pipeline, recoveryRate, matchRate, deliveryRate, 
             <span style={{ fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
               Delivery: <span style={{ color: deliveryRate >= 95 ? '#4ade80' : '#facc15', fontWeight: 600 }}>{deliveryRate}%</span>
             </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Deduplicação */}
+      {(() => {
+        const deliveryRate = stats ? (stats.deliverySuccess / Math.max(stats.eventsTotal, 1) * 100) : 0;
+        const rateColor = deliveryRate > 90 ? '#4ade80' : deliveryRate >= 70 ? '#facc15' : '#f87171';
+        return (
+          <div className="tilt-card" style={{ ...glassCard, padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Shield size={18} style={{ color: '#8b5cf6', flexShrink: 0 }} />
+              <div style={{ flex: 1, minWidth: 180 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>Deduplicação via event_id</span>
+                <p style={{ fontSize: 11, color: '#64748b', margin: '2px 0 0' }}>O mesmo event_id é enviado pelo Pixel e pela CAPI, permitindo ao Meta desduplicar automaticamente</p>
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'Outfit' }}>Eventos CAPI</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', fontFamily: 'Space Grotesk' }}>{stats ? formatNumber(stats.eventsTotal) : '—'}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'Outfit' }}>Delivery OK</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', fontFamily: 'Space Grotesk' }}>{stats ? formatNumber(stats.deliverySuccess) : '—'}</span>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontSize: 11, color: '#64748b', fontFamily: 'Outfit' }}>Taxa de entrega</span>
+                <span style={{ fontSize: 16, fontWeight: 700, color: rateColor, fontFamily: 'Space Grotesk' }}>{stats ? deliveryRate.toFixed(1) + '%' : '—'}</span>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Signal Observability */}
+      <div className="tilt-card" style={glassCard}>
+        <h3 style={{ fontSize: 14, fontWeight: 600, color: '#0f172a', marginBottom: 20, fontFamily: "'Outfit', sans-serif" }}>
+          Observabilidade de Sinal
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 16 }}>
+          {/* Dedup / Coverage */}
+          <ObservabilityCard
+            title="Cobertura de Dedup"
+            description="Eventos com Pixel + CAPI (event_id compartilhado)"
+            value={stats?.bothCount || 0}
+            total={stats?.deliverySuccess || 1}
+            color="#8b5cf6"
+          />
+          <ObservabilityCard
+            title="Conversões Adicionais"
+            description="Eventos capturados só pelo CAPI (Pixel bloqueado/falhou)"
+            value={stats?.capiOnlyCount || 0}
+            total={stats?.deliverySuccess || 1}
+            color="#4ade80"
+          />
+          <ObservabilityCard
+            title="Eventos Rejeitados"
+            description="Falha no envio à Meta (validação/auth/rate limit)"
+            value={stats?.rejectedCount || 0}
+            total={stats?.eventsTotal || 1}
+            color="#f87171"
+          />
+        </div>
+
+        {/* Visual bar: Pixel vs CAPI coverage */}
+        <div style={{ marginTop: 20, padding: 16, borderRadius: 12, background: 'rgba(15,23,42,0.03)', border: '1px solid rgba(15,23,42,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <span style={{ fontSize: 12, color: '#64748b', fontWeight: 500, fontFamily: "'Outfit', sans-serif" }}>COBERTURA PIXEL vs CAPI</span>
+            <span style={{ fontSize: 11, color: '#94a3b8' }}>{formatNumber(stats?.eventsTotal || 0)} eventos</span>
+          </div>
+          <CoverageBar
+            both={stats?.bothCount || 0}
+            capiOnly={stats?.capiOnlyCount || 0}
+            pixelOnly={stats?.pixelOnlyCount || 0}
+            total={stats?.eventsTotal || 1}
+          />
+          <div style={{ display: 'flex', gap: 16, marginTop: 10, flexWrap: 'wrap' }}>
+            <LegendItem color="#8b5cf6" label="Pixel + CAPI (dedup)" />
+            <LegendItem color="#4ade80" label="CAPI Only (recuperado)" />
+            <LegendItem color="#60a5fa" label="Pixel Only" />
           </div>
         </div>
       </div>
@@ -518,9 +628,10 @@ function FunnelTab({ funnel, setFunnel, epv, saving, saveMsg, onSave, isMobile }
 }
 
 /* ============ SCRIPT TAB ============ */
-function ScriptTab({ funnel, copied, onCopy }: {
+function ScriptTab({ funnel, copied, onCopy, testResult, testLoading, onTestEvent }: {
   funnel: Partial<FunnelConfig>; copied: boolean;
   onCopy: () => void; isMobile: boolean;
+  testResult: string; testLoading: boolean; onTestEvent: () => void;
 }) {
   const gatewayUrl = funnel.gateway_url || `${SUPABASE_URL}/functions/v1/collect`;
   const script = generateTrackingScript(gatewayUrl, funnel.id || 'CONFIGURE_FUNNEL_FIRST');
@@ -575,6 +686,36 @@ function ScriptTab({ funnel, copied, onCopy }: {
           <CodeExample title="Evento Custom" code='AdsEdge.custom("ProtocolCompleted", { value: 0, currency: "BRL" });' />
         </div>
       </div>
+
+      {/* Testar Conexão */}
+      <div className="tilt-card" style={{ ...glassCard, padding: 16, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+        <Zap size={18} style={{ color: '#6366f1', flexShrink: 0 }} />
+        <div style={{ flex: 1, minWidth: 200 }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#0f172a', fontFamily: "'Outfit', sans-serif" }}>Testar Conexão</span>
+          <p style={{ fontSize: 12, color: '#64748b', margin: '2px 0 0' }}>Envia um PageView de teste para a Edge Function</p>
+        </div>
+        <button
+          onClick={onTestEvent}
+          disabled={testLoading}
+          style={{
+            padding: '8px 20px', borderRadius: 10, border: '1px solid rgba(99,102,241,0.3)',
+            background: 'rgba(99,102,241,0.08)', color: '#a5b4fc',
+            fontSize: 13, fontWeight: 600, cursor: testLoading ? 'not-allowed' : 'pointer',
+            fontFamily: "'Outfit', sans-serif", opacity: testLoading ? 0.6 : 1,
+            transition: 'all 0.2s',
+          }}
+        >
+          {testLoading ? 'Enviando...' : 'Testar Evento'}
+        </button>
+        {testResult && (
+          <span style={{
+            fontSize: 12, fontWeight: 600,
+            color: testResult.includes('sucesso') ? '#4ade80' : '#f87171',
+          }}>
+            {testResult}
+          </span>
+        )}
+      </div>
     </div>
   );
 }
@@ -588,6 +729,46 @@ function CodeExample({ title, code }: { title: string; code: string }) {
         fontSize: 12, color: '#94a3b8', fontFamily: "'JetBrains Mono', monospace",
         margin: 0, overflow: 'auto',
       }}>{code}</pre>
+    </div>
+  );
+}
+
+function ObservabilityCard({ title, description, value, total, color }: {
+  title: string; description: string; value: number; total: number; color: string;
+}) {
+  const pct = total > 0 ? Math.round((value / total) * 100) : 0;
+  return (
+    <div style={{ padding: 16, borderRadius: 12, background: 'rgba(15,23,42,0.03)', border: '1px solid rgba(15,23,42,0.06)' }}>
+      <span style={{ fontSize: 12, color: '#64748b', fontWeight: 500, fontFamily: "'Outfit', sans-serif" }}>{title}</span>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, margin: '8px 0 4px' }}>
+        <span style={{ fontSize: 24, fontWeight: 700, color, fontFamily: "'Space Grotesk', sans-serif" }}>{formatNumber(value)}</span>
+        <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 600, fontFamily: "'Space Grotesk', sans-serif" }}>{pct}%</span>
+      </div>
+      <span style={{ fontSize: 11, color: '#94a3b8', lineHeight: 1.4 }}>{description}</span>
+    </div>
+  );
+}
+
+function CoverageBar({ both, capiOnly, pixelOnly, total }: {
+  both: number; capiOnly: number; pixelOnly: number; total: number;
+}) {
+  const bPct = total > 0 ? (both / total) * 100 : 0;
+  const cPct = total > 0 ? (capiOnly / total) * 100 : 0;
+  const pPct = total > 0 ? (pixelOnly / total) * 100 : 0;
+  return (
+    <div style={{ display: 'flex', height: 12, borderRadius: 6, overflow: 'hidden', background: 'rgba(15,23,42,0.08)' }}>
+      {bPct > 0 && <div style={{ width: `${bPct}%`, background: '#8b5cf6', transition: 'width 0.5s ease' }} />}
+      {cPct > 0 && <div style={{ width: `${cPct}%`, background: '#4ade80', transition: 'width 0.5s ease' }} />}
+      {pPct > 0 && <div style={{ width: `${pPct}%`, background: '#60a5fa', transition: 'width 0.5s ease' }} />}
+    </div>
+  );
+}
+
+function LegendItem({ color, label }: { color: string; label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ width: 8, height: 8, borderRadius: 2, background: color }} />
+      <span style={{ fontSize: 11, color: '#94a3b8' }}>{label}</span>
     </div>
   );
 }

@@ -82,8 +82,8 @@ export default function Settings() {
     if (provider === 'meta') {
       const appId = import.meta.env.VITE_META_APP_ID;
       if (!appId) { alert('Configure VITE_META_APP_ID no .env para conectar o Meta Ads.'); return; }
-      const redirectUri = import.meta.env.VITE_META_REDIRECT_URI || window.location.origin + '/auth/callback';
-      window.location.assign(`https://www.facebook.com/v21.0/dialog/oauth?client_id=${appId}&redirect_uri=${redirectUri}&scope=ads_read,ads_management,read_insights&response_type=token`);
+      const redirectUri = import.meta.env.VITE_META_REDIRECT_URI || window.location.origin + '/api/auth/callback';
+      window.location.assign(`https://www.facebook.com/v21.0/dialog/oauth?client_id=${appId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=ads_read,ads_management&response_type=code`);
       return;
     }
     if (mode !== 'live') {

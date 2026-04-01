@@ -39,7 +39,7 @@ export class AIAgent {
     }
 
     const data = await response.json();
-    return data.content[0].text;
+    return data?.content?.[0]?.text || 'Erro ao processar resposta da IA.';
   }
 
   private buildSystemPrompt(context: AgentContext): string {
@@ -50,15 +50,15 @@ export class AIAgent {
 - Estratégias de lance e budget
 
 Dados atuais da conta:
-- CPA: R$ ${context.metrics.cpa.toFixed(2)}
-- ROAS: ${context.metrics.roas.toFixed(2)}x
-- CTR: ${context.metrics.ctr.toFixed(2)}%
-- CPM: R$ ${context.metrics.cpm.toFixed(2)}
-- Investimento: R$ ${context.metrics.spend.toLocaleString('pt-BR')}
-- Conversões: ${context.metrics.conversions}
-- Score da Conta: ${context.metrics.accountScore}/100
-- EMQ: ${context.emqScore}/10
-- Campanhas ativas: ${context.campaigns.filter(c => c.status === 'ACTIVE').length}
+- CPA: R$ ${(context.metrics.cpa ?? 0).toFixed(2)}
+- ROAS: ${(context.metrics.roas ?? 0).toFixed(2)}x
+- CTR: ${(context.metrics.ctr ?? 0).toFixed(2)}%
+- CPM: R$ ${(context.metrics.cpm ?? 0).toFixed(2)}
+- Investimento: R$ ${(context.metrics.spend ?? 0).toLocaleString('pt-BR')}
+- Conversões: ${context.metrics.conversions ?? 0}
+- Score da Conta: ${context.metrics.accountScore ?? 0}/100
+- EMQ: ${context.emqScore ?? 0}/10
+- Campanhas ativas: ${context.campaigns?.filter(c => c.status === 'ACTIVE').length ?? 0}
 
 Responda sempre em português brasileiro. Seja direto, prático e baseado em dados.${context.creativeAnalysis ? `
 

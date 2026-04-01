@@ -20,7 +20,7 @@ export async function hashUserData(userData: {
     result.em = [await hashSHA256(userData.email)];
   }
   if (userData.phone) {
-    result.ph = [await hashSHA256(userData.phone)];
+    result.ph = [await hashSHA256(userData.phone.replace(/\D/g, ''))];
   }
   if (userData.external_id) {
     result.external_id = [await hashSHA256(userData.external_id)];
