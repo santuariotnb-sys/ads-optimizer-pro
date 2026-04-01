@@ -765,6 +765,8 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
 
     if (connectionMode === 'mcp') {
       const isLive = mcpStatus?.mode === 'live';
+      const color = isLive ? '#4ade80' : '#6366f1';
+      const label = isLive ? 'Apex Live' : 'Apex Engine';
       return (
         <div
           style={{
@@ -778,10 +780,8 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
             border: `1px solid ${isLive ? 'rgba(74,222,128,0.2)' : 'rgba(99,102,241,0.2)'}`,
           }}
         >
-          <Terminal size={12} style={{ color: isLive ? '#4ade80' : '#6366f1' }} />
-          <span style={{ fontSize: 11, color: isLive ? '#4ade80' : '#6366f1', fontWeight: 500 }}>
-            {isLive ? 'Apex Live' : 'Apex Server'}
-          </span>
+          <Terminal size={12} style={{ color }} />
+          <span style={{ fontSize: 11, color, fontWeight: 500 }}>{label}</span>
         </div>
       );
     }
@@ -1062,7 +1062,7 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
           }}
         >
           {connectionMode === 'mcp'
-            ? `Apex MCP Server ${mcpStatus?.mode === 'live' ? '— Claude API ativa' : '— modo local'}`
+            ? `Apex ${mcpStatus?.mode === 'live' ? '— Claude API ativa' : '— Motor de analise ativo'}`
             : connectionMode === 'bridge'
               ? 'Claude Code conectado localmente via Agent Bridge'
               : connectionMode === 'api'

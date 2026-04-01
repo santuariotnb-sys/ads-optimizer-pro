@@ -17,7 +17,7 @@
 
 export interface McpBridgeStatus {
   available: boolean;
-  mode: 'live' | 'demo' | 'offline';
+  mode: 'live' | 'demo' | 'engine' | 'offline';
   version?: string;
 }
 
@@ -34,13 +34,13 @@ export interface McpChatContext {
 
 interface HealthResponse {
   ok: boolean;
-  mode: 'live' | 'demo';
+  mode: 'live' | 'demo' | 'engine';
   version: string;
 }
 
 interface ChatResponse {
   response: string;
-  mode: 'live' | 'demo' | 'error';
+  mode: 'live' | 'demo' | 'engine' | 'error';
   error?: string;
 }
 
