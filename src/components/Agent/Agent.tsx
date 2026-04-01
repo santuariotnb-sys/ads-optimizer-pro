@@ -4,6 +4,7 @@ import { useIsMobile } from '../../hooks/useMediaQuery';
 import { useStore } from '../../store/useStore';
 import { AIAgent } from '../../services/aiAgent';
 import { localBridge, type BridgeStatus, type TaskHandle } from '../../services/localBridgeClient';
+import { mcpBridge, type McpBridgeStatus } from '../../services/mcpClient';
 import type { CreativeAnalysisResult } from '../../services/creativeVision';
 
 interface Message {
@@ -13,7 +14,7 @@ interface Message {
   timestamp: Date;
 }
 
-type ConnectionMode = 'bridge' | 'api' | 'demo';
+type ConnectionMode = 'mcp' | 'bridge' | 'api' | 'demo';
 
 const quickTopics = [
   { id: 'overview', label: 'Visao Geral', icon: Sparkles, question: 'Faca uma analise geral da minha conta de anuncios.' },
@@ -431,22 +432,34 @@ Escolha um dos topicos abaixo ou digite sua pergunta:`,
   const [hasActiveTask, setHasActiveTask] = useState(false);
   const streamBufferRef = useRef('');
 
-  // Determine connection mode
+  // MCP state
+  const [mcpStatus, setMcpStatus] = useState<McpBridgeStatus | null>(null);
+
+  // Determine connection mode — MCP first, then bridge, api, demo
   const connectionMode: ConnectionMode = (() => {
+    if (mcpStatus?.available) return 'mcp';
     if (bridgeStatus?.available && bridgeStatus.authenticated) return 'bridge';
     if (getAnthropicKey()) return 'api';
     return 'demo';
   })();
 
-  // Check bridge status on mount
+  // Check MCP bridge + legacy bridge status on mount
   useEffect(() => {
     let cancelled = false;
+
+    // Check MCP bridge first (fast, 2s timeout)
+    mcpBridge.getStatus().then((status) => {
+      if (!cancelled) setMcpStatus(status);
+    });
+
+    // Also check legacy bridge
     localBridge.getStatus().then((status) => {
       if (!cancelled) {
         setBridgeStatus(status);
         setBridgeChecked(true);
       }
     });
+
     return () => { cancelled = true; };
   }, []);
 
@@ -506,6 +519,24 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
       return null;
     }
   }, [metrics, campaigns, emqScore]);
+
+  const sendViaMcp = useCallback(async (userMessage: string): Promise<string | null> => {
+    try {
+      const response = await mcpBridge.chat(userMessage, {
+        cpa: metrics.cpa,
+        roas: metrics.roas,
+        ctr: metrics.ctr,
+        cpm: metrics.cpm,
+        spend: metrics.spend,
+        conversions: metrics.conversions,
+        accountScore: metrics.accountScore,
+        emqScore: emqScore,
+      });
+      return response;
+    } catch {
+      return null;
+    }
+  }, [metrics, emqScore]);
 
   const sendViaBridge = useCallback((userMessage: string) => {
     const activeCampaigns = campaigns.filter((c) => c.status === 'ACTIVE').length;
@@ -599,7 +630,21 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
     };
     setMessages((prev) => [...prev, userMsg]);
 
-    if (connectionMode === 'bridge') {
+    if (connectionMode === 'mcp') {
+      setIsTyping(true);
+      sendViaMcp(question).then((mcpResponse) => {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `assistant-${++msgIdRef.current}`,
+            role: 'assistant',
+            content: mcpResponse || demoResponses[topicId] || 'Desculpe, nao tenho uma resposta para isso ainda.',
+            timestamp: new Date(),
+          },
+        ]);
+      });
+    } else if (connectionMode === 'bridge') {
       setIsTyping(true);
       sendViaBridge(question);
     } else if (connectionMode === 'api') {
@@ -633,7 +678,27 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
     setMessages((prev) => [...prev, userMsg]);
     setInput('');
 
-    if (connectionMode === 'bridge') {
+    if (connectionMode === 'mcp') {
+      setIsTyping(true);
+      sendViaMcp(trimmed).then((mcpResponse) => {
+        setIsTyping(false);
+        if (mcpResponse) {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `assistant-${++msgIdRef.current}`,
+              role: 'assistant',
+              content: mcpResponse,
+              timestamp: new Date(),
+            },
+          ]);
+        } else {
+          addAssistantMessage(
+            `**Erro de conexão com o Apex MCP Server.** Verifique se o servidor está rodando:\n\n\`cd ads-optimizer-pro && npx tsx mcp-server/src/http-bridge.ts\``
+          );
+        }
+      });
+    } else if (connectionMode === 'bridge') {
       setIsTyping(true);
       sendViaBridge(trimmed);
     } else if (connectionMode === 'api') {
@@ -696,7 +761,30 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
 
   // Connection status badge
   const renderConnectionBadge = () => {
-    if (!bridgeChecked) return null;
+    if (!bridgeChecked && !mcpStatus) return null;
+
+    if (connectionMode === 'mcp') {
+      const isLive = mcpStatus?.mode === 'live';
+      return (
+        <div
+          style={{
+            marginLeft: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '4px 10px',
+            borderRadius: 20,
+            background: isLive ? 'rgba(74,222,128,0.1)' : 'rgba(99,102,241,0.1)',
+            border: `1px solid ${isLive ? 'rgba(74,222,128,0.2)' : 'rgba(99,102,241,0.2)'}`,
+          }}
+        >
+          <Terminal size={12} style={{ color: isLive ? '#4ade80' : '#6366f1' }} />
+          <span style={{ fontSize: 11, color: isLive ? '#4ade80' : '#6366f1', fontWeight: 500 }}>
+            {isLive ? 'Apex Live' : 'Apex Server'}
+          </span>
+        </div>
+      );
+    }
 
     if (connectionMode === 'bridge') {
       return (
@@ -973,11 +1061,13 @@ Pergunte qualquer coisa sobre este criativo -- posso sugerir melhorias, analisar
             textAlign: 'center',
           }}
         >
-          {connectionMode === 'bridge'
-            ? 'Claude Code conectado localmente via Agent Bridge'
-            : connectionMode === 'api'
-              ? 'Conectado via API key'
-              : 'Modo demonstracao -- configure uma API key ou instale o Agent Bridge'}
+          {connectionMode === 'mcp'
+            ? `Apex MCP Server ${mcpStatus?.mode === 'live' ? '— Claude API ativa' : '— modo local'}`
+            : connectionMode === 'bridge'
+              ? 'Claude Code conectado localmente via Agent Bridge'
+              : connectionMode === 'api'
+                ? 'Conectado via API key'
+                : 'Modo demonstracao — inicie o Apex Server ou configure uma API key'}
         </p>
       </div>
     </div>
