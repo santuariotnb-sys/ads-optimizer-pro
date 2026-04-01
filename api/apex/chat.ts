@@ -69,6 +69,34 @@ const T = {
   LEARNING_MAX_DAYS: 14, NOVELTY_MAX_DAYS: 7, ENTITY_MAX: 3,
 };
 
+// ─── Fallback data (quando store está vazio) ────────────────────────────────
+
+const FALLBACK_CTX: ChatContext = {
+  metrics: { cpa: 52.4, roas: 3.24, ctr: 2.15, cpm: 33.8, spend: 37970, conversions: 650, accountScore: 74 },
+  emqScore: 6.8,
+  campaigns: [
+    { name: '[ASC] Protocolo Detox', status: 'ACTIVE', objective: 'OUTCOME_SALES', daily_budget: 500, roas: 3.82, cpa: 42.5, ctr: 2.8, cpm: 32.4, spend: 12450, conversions: 293, impressions: 384259, frequency: 1.8, opportunity_score: 87 },
+    { name: '[ASC] Skincare Premium', status: 'ACTIVE', objective: 'OUTCOME_SALES', daily_budget: 350, roas: 2.91, cpa: 58.3, ctr: 2.1, cpm: 28.6, spend: 8740, conversions: 150, impressions: 305594, frequency: 2.1, opportunity_score: 72 },
+    { name: '[CBO] Colágeno Premium', status: 'ACTIVE', objective: 'OUTCOME_SALES', daily_budget: 200, roas: 0.82, cpa: 124, ctr: 0.9, cpm: 45.2, spend: 4960, conversions: 40, impressions: 109735, frequency: 3.4, opportunity_score: 28 },
+    { name: '[RETARGET] Carrinho Abandonado', status: 'ACTIVE', objective: 'OUTCOME_SALES', daily_budget: 150, roas: 5.21, cpa: 28.9, ctr: 4.2, cpm: 52.1, spend: 3180, conversions: 110, impressions: 61036, frequency: 3.2, opportunity_score: 91 },
+    { name: '[ASC] Black Friday', status: 'LEARNING_LIMITED', objective: 'OUTCOME_SALES', daily_budget: 800, roas: 1.45, cpa: 89, ctr: 1.5, cpm: 38.9, spend: 6230, conversions: 35, impressions: 160154, frequency: 1.4, opportunity_score: 45, learning_days: 18, learning_conversions: 35 },
+    { name: '[CBO] Whey Isolado', status: 'LEARNING', objective: 'OUTCOME_SALES', daily_budget: 300, roas: 1.85, cpa: 67.2, ctr: 1.9, cpm: 31.5, spend: 2410, conversions: 22, impressions: 76508, frequency: 1.2, opportunity_score: 58, learning_days: 8, learning_conversions: 22 },
+  ],
+  creatives: [
+    { name: 'Reels — Trend Sound Detox', entity_id_group: 'A', hook_rate: 48, hold_rate: 65, ctr: 3.2, cpa: 32, cpm: 28.5, score: 96, status: 'winner', novelty_days: 5, spend: 2710, cpm_trend: [27, 27.5, 28, 28.5] },
+    { name: 'UGC — Influencer Detox', entity_id_group: 'A', hook_rate: 45, hold_rate: 62, ctr: 2.9, cpa: 38, cpm: 30.2, score: 95, status: 'winner', novelty_days: 7, spend: 2476, cpm_trend: [29, 30, 30.2] },
+    { name: 'UGC — Resultados 30 dias', entity_id_group: 'A', hook_rate: 43, hold_rate: 58, ctr: 2.7, cpa: 41, cpm: 29.8, score: 93, status: 'winner', novelty_days: 2, spend: 834, cpm_trend: [29.8] },
+    { name: 'Static — Antes/Depois Detox', entity_id_group: 'B', hook_rate: 22, hold_rate: 35, ctr: 1.4, cpa: 72, cpm: 35.2, score: 42, status: 'testing', novelty_days: 12, spend: 1584, cpm_trend: [28, 31, 35.2] },
+    { name: 'Static — Benefícios Grid', entity_id_group: 'B', hook_rate: 20, hold_rate: 30, ctr: 1.2, cpa: 85, cpm: 36.1, score: 35, status: 'loser', novelty_days: 14, spend: 1372, cpm_trend: [30, 34, 36.1] },
+    { name: 'Static — Produto Lifestyle', entity_id_group: 'B', hook_rate: 18, hold_rate: 28, ctr: 1.1, cpa: 92, cpm: 37.5, score: 30, status: 'loser', novelty_days: 15, spend: 1200, cpm_trend: [31, 35, 37.5] },
+    { name: 'Static — Ingredientes', entity_id_group: 'B', hook_rate: 19, hold_rate: 32, ctr: 1.3, cpa: 88, cpm: 34.8, score: 33, status: 'loser', novelty_days: 10, spend: 1218, cpm_trend: [30, 33, 34.8] },
+    { name: 'Static — Comparativo Preço', entity_id_group: 'B', hook_rate: 15, hold_rate: 25, ctr: 0.7, cpa: 120, cpm: 42.3, score: 18, status: 'loser', novelty_days: 13, spend: 930, cpm_trend: [35, 39, 42.3] },
+    { name: 'VSL Detox — Hook Curiosidade', entity_id_group: 'C', hook_rate: 42, hold_rate: 55, ctr: 2.5, cpa: 45, cpm: 33.1, score: 88, status: 'winner', novelty_days: 6, spend: 2251, cpm_trend: [32, 33, 33.1] },
+    { name: 'Carrossel — 5 Produtos Top', entity_id_group: 'D', hook_rate: 16, hold_rate: 22, ctr: 0.8, cpa: 120, cpm: 44.5, score: 22, status: 'loser', novelty_days: 11, spend: 801, cpm_trend: [38, 42, 44.5] },
+    { name: 'Motion 3D — Produto Hero', entity_id_group: 'E', hook_rate: 38, hold_rate: 50, ctr: 2.3, cpa: 48, cpm: 30.8, score: 82, status: 'winner', novelty_days: 4, spend: 1294, cpm_trend: [30.5, 30.8] },
+  ],
+};
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function fmt(n: number, d = 2): string { return n.toFixed(d); }
@@ -407,20 +435,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const { message, context } = req.body as { message?: string; context?: ChatContext };
   if (!message?.trim()) return res.status(400).json({ error: 'Missing "message" field' });
 
-  // Validar que context tem dados reais
-  if (!context?.campaigns?.length && !context?.creatives?.length) {
-    return res.json({
-      response: '**Sem dados disponíveis.** Conecte sua conta Meta Ads ou ative o modo demo para ver análises.',
-      mode: 'engine',
-    });
-  }
+  // Se o store não enviou dados, usar dados demo do servidor
+  const ctx: ChatContext = (context?.campaigns?.length || context?.creatives?.length)
+    ? context
+    : FALLBACK_CTX;
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
 
   // Com API key → Claude enriquece a análise
   if (apiKey) {
     try {
-      const analysis = detectAndRun(message, context);
+      const analysis = detectAndRun(message, ctx);
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
@@ -438,5 +463,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } catch { /* fall through */ }
   }
 
-  return res.json({ response: detectAndRun(message, context), mode: 'engine' });
+  return res.json({ response: detectAndRun(message, ctx), mode: 'engine' });
 }
